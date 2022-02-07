@@ -1,5 +1,18 @@
 import type { AppProps } from "next/app";
 import Head from "next/head";
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  useQuery,
+  gql,
+} from "@apollo/client";
+
+const client = new ApolloClient({
+  uri: "http://localhost:3999/graphql",
+  cache: new InMemoryCache(),
+  credentials: "include",
+});
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -16,7 +29,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         />
       </Head>
 
-      <Component {...pageProps} />
+      <ApolloProvider client={client}>
+        <Component {...pageProps} />
+      </ApolloProvider>
 
       {/* bootstrap script */}
       <script

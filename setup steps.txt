@@ -30,6 +30,13 @@ authentication:
         npm i -D @types/redis @types/connect-redis @types/ioredis @types/express-session
 
 nextjs:
-    1. 
+    1.  !!!beaware of folder structure!!!
         npx create-next-app@latest --typescript
-        https://www.apollographql.com/docs/react/get-started/
+
+        apollo client: https://www.apollographql.com/docs/react/get-started/
+        npm install @apollo/client graphql
+
+        npm install graphql
+        npm install @graphql-codegen/cli
+        npx graphql-codegen init
+        again! npm install
