@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "watch-server": "npm run watch --prefix server",
-    "server": "npm run dev --prefix server",
-    "dev": "concurrently \"npm run watch-server\" \"npm run server\""
+    "watch-server": "npm run watch --prefix backend",
+    "server": "npm run dev --prefix backend",
+    "dev": "concurrently \"npm run watch-server\" \"npm run server\" "
   },
   "author": "",
   "license": "ISC",

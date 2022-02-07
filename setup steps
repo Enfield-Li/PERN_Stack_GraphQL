@@ -1,8 +1,12 @@
 set up server:
-    1. npm i express apollo-server-express graphql type-graphql reflect-metadata typeorm pg 
-    2. npm i -D @types/express @types/graphql @types/node ts-node-dev typescript 
-    2.5. graphql: ^15.3.0
-    3. npx tsconfig.json
+    1. 
+        npm i express apollo-server-express graphql type-graphql reflect-metadata typeorm pg 
+    2. 
+        npm i -D @types/express @types/graphql @types/node ts-node-dev typescript 
+    2.5. 
+        graphql: ^15.3.0
+    3. 
+        npx tsconfig.json
     4. ts script: {
             "watch": "tsc -w",
             "dev": "ts-node-dev --respawn dist/index.js",
@@ -15,4 +19,7 @@ set up server:
             "client": "npm run dev --prefix frontend",
             "dev": "concurrently \"npm run watch-server\" \"npm run server\" \"npm run client\""
         },
-    5. "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js"
+    5. 
+        "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js"
+    6. 
+        npx typeorm migration:create -n new
