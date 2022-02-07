@@ -28,3 +28,8 @@ authentication:
     1.
         npm i express-session connect-redis ioredis
         npm i -D @types/redis @types/connect-redis @types/ioredis @types/express-session
+
+nextjs:
+    1. 
+        npx create-next-app@latest --typescript
+        https://www.apollographql.com/docs/react/get-started/
