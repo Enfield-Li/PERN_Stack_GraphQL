@@ -49,25 +49,58 @@ export class UserResolver {
     const errors = validateRegister(input);
     if (errors) return { errors };
 
+    let user;
+
     const hashedPassword = await argon2.hash(input.password);
 
-    let user;
+    const { username, email } = input;
+
     try {
       user = await User.create({
-        username: input.username,
-        email: input.email,
+        username,
+        email,
         password: hashedPassword,
       }).save();
     } catch (err) {
       if (err.code === "23505") {
-        console.log(err);
         return {
           errors: {
             field: "username",
-            message: "username already taken",
+            message: "Username already taken",
           },
         };
       }
+    }
+
+    return { user };
+  }
+
+  @Mutation(() => UserResponse)
+  async login(
+    @Arg("usernameOrEmail") usernameOrEmail: string,
+    @Arg("password") password: string
+  ): Promise<UserResponse> {
+    const user = await User.findOne(
+      usernameOrEmail.includes("@")
+        ? { where: { email: usernameOrEmail } }
+        : { where: { username: usernameOrEmail } }
+    );
+    if (!user) {
+      return {
+        errors: {
+          field: "usernameOrEmial",
+          message: "Username or Email doesn't exist.",
+        },
+      };
+    }
+    const isValid = await argon2.verify(user.password, password);
+    if (!isValid) {
+      return {
+        errors: {
+          field: "password",
+          message: "Wrong password",
+        },
+      };
     }
 
     return { user };
