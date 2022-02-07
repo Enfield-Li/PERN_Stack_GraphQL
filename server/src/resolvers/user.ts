@@ -8,6 +8,7 @@ import {
   InputType,
   Mutation,
   ObjectType,
+  Query,
   Resolver,
 } from "type-graphql";
 import argon2 from "argon2";
@@ -72,13 +73,16 @@ export class UserResolver {
       }
     }
 
+    req.session.userId = user?.id;
+
     return { user };
   }
 
   @Mutation(() => UserResponse)
   async login(
     @Arg("usernameOrEmail") usernameOrEmail: string,
-    @Arg("password") password: string
+    @Arg("password") password: string,
+    @Ctx() { req }: MyContext
   ): Promise<UserResponse> {
     const user = await User.findOne(
       usernameOrEmail.includes("@")
@@ -103,6 +107,17 @@ export class UserResolver {
       };
     }
 
+    req.session.userId = user?.id;
+
     return { user };
+  }
+
+  @Query(() => User, { nullable: true })
+  async me(@Ctx() { req }: MyContext): Promise<User | undefined> {
+    if (!req.session.userId) return undefined;
+
+    const user = await User.findOne(req.session.userId);
+
+    return user;
   }
 }

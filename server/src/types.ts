@@ -3,6 +3,6 @@ import { Request, Response } from "express";
 
 export type MyContext = {
   // em: EntityManager;
-  req: Request;
+  req: Request & { session: { userId?: number } };
   res: Response;
 };
