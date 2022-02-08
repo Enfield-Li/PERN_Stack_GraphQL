@@ -1,6 +1,18 @@
 import { UserInput } from "./../resolvers/user";
 
 export const validateRegister = (input: UserInput) => {
+  if (input.username.length < 3)
+    return {
+      field: "username",
+      message: "Username must be longer than 3 characters",
+    };
+
+  if (input.username.includes("@"))
+    return {
+      field: "username",
+      message: "Username cannot include an @",
+    };
+
   if (!input.email.includes("@"))
     return { field: "email", message: "Invalid email" };
 
@@ -8,18 +20,6 @@ export const validateRegister = (input: UserInput) => {
     return {
       field: "password",
       message: "Password must be longer than 3 characters",
-    };
-
-  if (input.username.includes("@"))
-    return {
-      field: "username",
-      message: "cannot include an @",
-    };
-
-  if (input.username.length < 3)
-    return {
-      field: "username",
-      message: "Username must be longer than 3 characters",
     };
 
   return null;

@@ -63,11 +63,20 @@ export class UserResolver {
         password: hashedPassword,
       }).save();
     } catch (err) {
-      if (err.code === "23505") {
+      if (err.detail.includes("username")) {
         return {
           errors: {
             field: "username",
             message: "Username already taken",
+          },
+        };
+      }
+
+      if (err.detail.includes("email")) {
+        return {
+          errors: {
+            field: "email",
+            message: "Email already taken",
           },
         };
       }

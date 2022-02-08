@@ -40,3 +40,5 @@ nextjs:
         npm install @graphql-codegen/cli
         npx graphql-codegen init
         again! npm install
+
+        npm i formik

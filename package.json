@@ -6,7 +6,8 @@
   "scripts": {
     "watch-server": "npm run watch --prefix server",
     "server": "npm run dev --prefix server",
-    "dev": "concurrently \"npm run watch-server\" \"npm run server\" "
+    "client": "npm run dev --prefix client",
+    "dev": "concurrently \"npm run watch-server\" \"npm run server\" \"npm run client\""
   },
   "author": "",
   "license": "ISC",

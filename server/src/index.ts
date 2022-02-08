@@ -75,7 +75,9 @@ const main = async () => {
   });
 
   app.listen(3999, () =>
-    console.log("server running at http://localhost:3999/graphql")
+    console.log(
+      "Server running at http://localhost:3999/graphql, Client running at http://localhost:3000"
+    )
   );
 };
 
