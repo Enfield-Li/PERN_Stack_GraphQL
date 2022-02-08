@@ -57,11 +57,42 @@ export class UserResolver {
     const { username, email } = input;
 
     try {
-      user = await User.create({
-        username,
-        email,
-        password: hashedPassword,
-      }).save();
+      // user = await User.create({
+      //   username,
+      //   email,
+      //   password: hashedPassword,
+      // }).save();
+      // console.log("user: ", user);
+
+      const result = await getConnection()
+        .createQueryBuilder()
+        .insert()
+        .into(User)
+        .values({
+          username,
+          email,
+          password: hashedPassword,
+        })
+        .returning("*")
+        .execute();
+
+      user = result.raw[0];
+
+      // const result = await getConnection().query(
+      //   `
+      //  INSERT INTO "user"("username", "email", "password")
+      //  VALUES ($1, $2, $3) RETURNING "id", "createdAt", "updatedAt"
+      // `,
+      //   [username, email, hashedPassword]
+      // );
+      // console.log("result: ", result);
+      // result:  [
+      //    {
+      //      id: 45,
+      //      createdAt: 2022-02-08T07:48:29.370Z,
+      //      updatedAt: 2022-02-08T07:48:29.370Z
+      //    }
+      //  ]
     } catch (err) {
       if (err.detail.includes("username")) {
         return {
@@ -98,14 +129,16 @@ export class UserResolver {
         ? { where: { email: usernameOrEmail } }
         : { where: { username: usernameOrEmail } }
     );
+
     if (!user) {
       return {
         errors: {
-          field: "usernameOrEmial",
+          field: "usernameOrEmail",
           message: "Username or Email doesn't exist.",
         },
       };
     }
+
     const isValid = await argon2.verify(user.password, password);
     if (!isValid) {
       return {

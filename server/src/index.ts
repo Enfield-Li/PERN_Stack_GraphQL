@@ -81,4 +81,4 @@ const main = async () => {
   );
 };
 
-main().catch((err) => console.error(err));
+main().catch((err) => console.error("error from server: ", err));

@@ -4,23 +4,25 @@ import { Formik, Form } from "formik";
 import { useRegisterMutation } from "../generated/graphql";
 import { toError } from "../utils/toError";
 import InputWrapper from "../components/InputWrapper";
+import { useRouter } from "next/router";
 
 interface registerProps {}
 
 const register: NextPage<registerProps> = ({}) => {
   const [register] = useRegisterMutation();
+  const router = useRouter();
 
   return (
     <Formik
       initialValues={{ username: "", email: "", password: "" }}
       onSubmit={async (values, { setErrors }) => {
         const res = await register({ variables: { input: values } });
-        console.log(res);
 
-        if (res.data?.register.errors?.field) {
+        if (res.data?.register.errors) {
+          setErrors(toError(res.data.register.errors));
           // make graphql error obj into formik error obj
 
-          // res.data.register.errors: {
+          // data.register.errors: {
           //           field: "username",
           //           message: "Username already taken",
           //           __typename: "FieldError",
@@ -31,12 +33,13 @@ const register: NextPage<registerProps> = ({}) => {
           //     email: string;
           //     password: string;
           // })
-          setErrors(toError(res.data.register.errors));
+        } else if (res.data?.register.user) {
+          router.push("/");
         }
       }}
     >
-      {({ isSubmitting, values, handleChange, errors }) => (
-        <Form className="container">
+      {({ isSubmitting }) => (
+        <Form className="container mt-3">
           <InputWrapper label="Username" name="username" />
           <InputWrapper label="Email" name="email" type="email" />
           <InputWrapper label="Password" name="password" type="password" />

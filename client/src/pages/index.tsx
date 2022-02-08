@@ -1,7 +1,13 @@
 import type { NextPage } from "next";
+import Navbar from "../components/Navbar";
 
 const Home: NextPage = () => {
-  return <div className="container">hello word</div>;
+  return (
+    <>
+      <Navbar />
+      <div className="container">hello word</div>
+    </>
+  );
 };
 
 export default Home;

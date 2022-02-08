@@ -9,8 +9,6 @@ type InputWrapperProps = InputHTMLAttributes<HTMLInputElement> & {
 
 const InputWrapper: React.FC<InputWrapperProps> = ({ label, ...props }) => {
   const [field, { error }] = useField(props);
-  //   console.log(field);
-  //   console.log(props);
 
   return (
     <div className="mb-3">
