@@ -16,6 +16,7 @@ const InputWrapper: React.FC<InputWrapperProps> = ({ label, ...props }) => {
         {label}
       </label>
       <input
+        required={true}
         type="text"
         className="form-control"
         id={field.name}

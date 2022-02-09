@@ -1,45 +1,16 @@
-import { COOKIE_NAME } from "./../constants";
-import { validateRegister } from "./../utils/validateRegister";
-import { MyContext } from "./../types";
-import { User } from "../entities/User";
+import { registerUserToDB } from "./../actions/dbQuery";
+import { COOKIE_NAME } from "../utils/constants";
 import {
-  Arg,
-  Ctx,
-  Field,
-  InputType,
-  Mutation,
-  ObjectType,
-  Query,
-  Resolver,
-} from "type-graphql";
+  validateSingleFieldFromDB,
+  validateSingleField,
+  validateUserInput,
+  validateFieldsFromDB,
+} from "../utils/validateUserFromDB";
+import { MyContext } from "../types/contextType";
+import { User } from "../entities/User";
+import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import argon2 from "argon2";
-import { getConnection } from "typeorm";
-
-@ObjectType()
-class FieldError {
-  @Field()
-  field: string;
-  @Field()
-  message: string;
-}
-
-@ObjectType()
-class UserResponse {
-  @Field(() => User, { nullable: true })
-  user?: User;
-  @Field(() => FieldError, { nullable: true })
-  errors?: FieldError;
-}
-
-@InputType()
-export class UserInput {
-  @Field()
-  username: string;
-  @Field()
-  email: string;
-  @Field()
-  password: string;
-}
+import { UserResponse, UserInput } from "../types/resolvertypes";
 
 @Resolver()
 export class UserResolver {
@@ -48,70 +19,29 @@ export class UserResolver {
     @Arg("input") input: UserInput,
     @Ctx() { req }: MyContext
   ): Promise<UserResponse> {
-    const errors = validateRegister(input);
+    const errors = validateUserInput(input);
     if (errors) return { errors };
-
+    
     let user;
+    const { username, email } = input;
 
     const hashedPassword = await argon2.hash(input.password);
 
-    const { username, email } = input;
-
     try {
-      // user = await User.create({
-      //   username,
-      //   email,
-      //   password: hashedPassword,
-      // }).save();
-      // console.log("user: ", user);
-
-      const result = await getConnection()
-        .createQueryBuilder()
-        .insert()
-        .into(User)
-        .values({
-          username,
-          email,
-          password: hashedPassword,
-        })
-        .returning("*")
-        .execute();
+      const result = await registerUserToDB({
+        username,
+        email,
+        password: hashedPassword,
+      });
 
       user = result.raw[0];
-
-      // const result = await getConnection().query(
-      //   `
-      //  INSERT INTO "user"("username", "email", "password")
-      //  VALUES ($1, $2, $3) RETURNING "id", "createdAt", "updatedAt"
-      // `,
-      //   [username, email, hashedPassword]
-      // );
-      // console.log("result: ", result);
-      // result:  [
-      //    {
-      //      id: 45,
-      //      createdAt: 2022-02-08T07:48:29.370Z,
-      //      updatedAt: 2022-02-08T07:48:29.370Z
-      //    }
-      //  ]
     } catch (err) {
-      if (err.detail.includes("username")) {
-        return {
-          errors: {
-            field: "username",
-            message: "Username already taken",
-          },
-        };
-      }
+      const fieldError = validateFieldsFromDB(err.detail, [
+        "username",
+        "email",
+      ]);
 
-      if (err.detail.includes("email")) {
-        return {
-          errors: {
-            field: "email",
-            message: "Email already taken",
-          },
-        };
-      }
+      return fieldError;
     }
 
     req.session.userId = user?.id;
@@ -130,24 +60,15 @@ export class UserResolver {
         ? { where: { email: usernameOrEmail } }
         : { where: { username: usernameOrEmail } }
     );
+    console.log("user: ", user);
 
     if (!user) {
-      return {
-        errors: {
-          field: "usernameOrEmail",
-          message: "Username or Email doesn't exist.",
-        },
-      };
+      return validateSingleField("usernameOrEmail");
     }
 
     const isValid = await argon2.verify(user.password, password);
     if (!isValid) {
-      return {
-        errors: {
-          field: "password",
-          message: "Wrong password",
-        },
-      };
+      return validateSingleField("password");
     }
 
     req.session.userId = user?.id;
