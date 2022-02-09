@@ -53,12 +53,12 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
   }
 
   return (
-    <div className="bg-primary py-2">
+    <div className="bg-white">
       <ul className="nav justify-content-between container">
         <li className="nav-item">
           <NextLink href={"/"}>
             <a
-              className="nav-link active text-dark h1"
+              className="nav-link active text-dark h2"
               aria-current="page"
               href="#"
             >

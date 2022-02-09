@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 
 const Home: NextPage = () => {
   return (
-    <div>
+    <div style={{ backgroundColor: "#dae0e6" }}>
       <Navbar />
       <MainContent />
     </div>
