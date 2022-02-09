@@ -1,21 +1,34 @@
 import React from "react";
 import NextLink from "next/link";
-import { useMeQuery } from "../generated/graphql";
+import { useLogoutMutation, useMeQuery } from "../generated/graphql";
+import { useApolloClient } from "@apollo/client";
 
 interface NavbarProps {}
 
 const Navbar: React.FC<NavbarProps> = ({}) => {
+  const [logout, { loading: logoutBtnLoading }] = useLogoutMutation();
+  const apolloClient = useApolloClient();
   const { data, loading } = useMeQuery();
-  console.log(data);
 
   let body = null;
 
   if (loading) {
+    // body show nothing
   } else if (data?.me) {
     body = (
       <div className="d-flex align-items-center">
         <li className="me-3">{data.me?.username}</li>
-        <li>logout</li>
+        <button
+          type="button"
+          className="btn btn-link text-dark text-decoration-none"
+          disabled={logoutBtnLoading}
+          onClick={async () => {
+            await logout();
+            await apolloClient.resetStore();
+          }}
+        >
+          logout
+        </button>
       </div>
     );
   } else {
@@ -45,7 +58,7 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
         <li className="nav-item">
           <NextLink href={"/"}>
             <a
-              className="nav-link active text-dark"
+              className="nav-link active text-dark h1"
               aria-current="page"
               href="#"
             >
@@ -58,4 +71,5 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
     </div>
   );
 };
+
 export default Navbar;

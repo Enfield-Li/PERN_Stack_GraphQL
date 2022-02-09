@@ -11,7 +11,7 @@ const login: React.FC<loginProps> = ({}) => {
   const router = useRouter();
   const [login, { data }] = useLoginMutation();
   // behavior: data will return undefined at first and then actual data
-  // console.log("data from mutation: ", data);
+  console.log("data from mutation: ", data);
 
   return (
     <Formik

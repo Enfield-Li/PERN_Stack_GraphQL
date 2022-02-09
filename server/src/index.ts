@@ -1,6 +1,7 @@
+import "reflect-metadata";
+import { COOKIE_NAME } from "./constants";
 import { User } from "./entities/User";
 import { Post } from "./entities/Post";
-import "reflect-metadata";
 import { PostResolver } from "./resolvers/post";
 import { UserResolver } from "./resolvers/user";
 import { MyContext } from "./types";
@@ -40,7 +41,7 @@ const main = async () => {
         client: redis,
         disableTouch: true,
       }),
-      name: "coolID",
+      name: COOKIE_NAME,
       secret: "hard_coded_secret",
       saveUninitialized: false,
       resave: false,
