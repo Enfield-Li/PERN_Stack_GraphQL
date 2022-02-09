@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import express from "express";
-import sessionConfig from "./utils/sessionConfig";
+import session from "./utils/sessionConfig";
 import connectDB from "./utils/connectDB";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
@@ -13,8 +13,7 @@ const main = async () => {
   // await Post.delete({});
 
   const app = express();
-
-  app.use(sessionConfig);
+  app.use(session);
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
@@ -27,19 +26,18 @@ const main = async () => {
       res,
     }),
   });
-
   await apolloServer.start();
   apolloServer.applyMiddleware({
     app,
     cors: {
-      origin: ["https://studio.apollographql.com", "http://localhost:3000"],
+      origin: ["https://studio.apollographql.com", "http://localhost:3998"],
       credentials: true,
     },
   });
 
   app.listen(3999, () =>
     console.log(
-      "Server running at http://localhost:3999/graphql, Client running at http://localhost:3000"
+      "Server running at http://localhost:3999/graphql, Client running at http://localhost:3998"
     )
   );
 };

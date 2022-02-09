@@ -1,10 +1,10 @@
-import { FieldError, UserInput, UserResponse } from "../types/resolvertypes";
-
-type usernameOrEmail = "username" | "email" | "usernameOrEmail" | "password";
-
-interface errorResponse {
-  errors: FieldError;
-}
+import {
+  ErrorResponse,
+  InputField,
+  FieldError,
+  UserInput,
+  UserResponse,
+} from "../types/resolvertypes";
 
 export const validateUserInput = (input: UserInput) => {
   if (input.username.length < 3)
@@ -47,7 +47,7 @@ export const validateSingleFieldFromDB = (
 
 export const validateFieldsFromDB = (
   errDetail: any,
-  fieldsToValidate: usernameOrEmail[]
+  fieldsToValidate: InputField[]
 ): UserResponse => {
   let error: FieldError = { field: "", message: "" };
 
@@ -63,6 +63,6 @@ export const validateFieldsFromDB = (
   return { errors: error };
 };
 
-export const validateSingleField = (field: usernameOrEmail): errorResponse => {
+export const validateSingleField = (field: InputField): ErrorResponse => {
   return { errors: { field: field, message: "invalid " + field } };
 };

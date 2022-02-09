@@ -26,3 +26,9 @@ export class UserInput {
   @Field()
   password: string;
 }
+
+export type InputField = "username" | "email" | "usernameOrEmail" | "password";
+
+export interface ErrorResponse {
+  errors: FieldError;
+}

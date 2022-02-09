@@ -5,7 +5,7 @@ import {
   validateSingleField,
   validateUserInput,
   validateFieldsFromDB,
-} from "../utils/validateUserFromDB";
+} from "../actions/validateUserFromDB";
 import { MyContext } from "../types/contextType";
 import { User } from "../entities/User";
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
