@@ -21,6 +21,7 @@ const register: NextPage<registerProps> = ({}) => {
         if (res.data?.register.errors) {
           setErrors(toError(res.data.register.errors));
           // make graphql error obj into formik error obj
+          // same as setErrors({res.data.register.errors.field = res.data.register.errors.message})
 
           // data.register.errors: {
           //           field: "username",

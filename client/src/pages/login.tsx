@@ -2,14 +2,14 @@ import { Form, Formik } from "formik";
 import { useRouter } from "next/router";
 import React from "react";
 import InputWrapper from "../components/InputWrapper";
-import { useLoginMutation } from "../generated/graphql";
+import { MeDocument, MeQuery, useLoginMutation } from "../generated/graphql";
 import { toError } from "../utils/toError";
 
 interface loginProps {}
 
 const login: React.FC<loginProps> = ({}) => {
-  const [login, { data }] = useLoginMutation();
   const router = useRouter();
+  const [login, { data }] = useLoginMutation();
   // behavior: data will return undefined at first and then actual data
   // console.log("data from mutation: ", data);
 
@@ -17,8 +17,25 @@ const login: React.FC<loginProps> = ({}) => {
     <Formik
       initialValues={{ usernameOrEmail: "", password: "" }}
       onSubmit={async (values, { setErrors }) => {
-        const res = await login({ variables: values });
-        console.log("data from response: ", res.data);
+        const res = await login({
+          variables: values,
+          // simplest using refetch to update cache
+          //   refetchQueries: [
+          //     {
+          //       query: MeDocument,
+          //     },
+          //   ],
+          update: (cache, { data }) => {
+            console.log("cache: ", cache);
+            // generic
+            cache.writeQuery<MeQuery>({
+              query: MeDocument,
+              data: {
+                me: data?.login.user,
+              },
+            });
+          },
+        });
 
         if (res.data?.login.errors) {
           setErrors(toError(res.data.login.errors));
