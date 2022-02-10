@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import express from "express";
-import session from "./utils/sessionConfig";
+import { sessionConfig, redis } from "./utils/sessionConfig";
 import connectDB from "./utils/connectDB";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
@@ -13,7 +13,7 @@ const main = async () => {
   // await Post.delete({});
 
   const app = express();
-  app.use(session);
+  app.use(sessionConfig);
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
@@ -24,6 +24,7 @@ const main = async () => {
       //   em: connectDB.manager,
       req,
       res,
+      redis,
     }),
   });
   await apolloServer.start();

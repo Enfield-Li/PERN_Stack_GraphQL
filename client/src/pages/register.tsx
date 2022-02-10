@@ -5,6 +5,7 @@ import { useRegisterMutation } from "../generated/graphql";
 import { toError } from "../utils/toError";
 import InputWrapper from "../components/InputWrapper";
 import { useRouter } from "next/router";
+import FormWrapper from "../components/FormWrapper";
 
 interface registerProps {}
 
@@ -13,53 +14,32 @@ const register: NextPage<registerProps> = ({}) => {
   const router = useRouter();
 
   return (
+    // note $1
     <Formik
       initialValues={{ username: "", email: "", password: "" }}
       onSubmit={async (values, { setErrors }) => {
         const res = await register({ variables: { input: values } });
 
         if (res.data?.register.errors) {
-          setErrors(toError(res.data.register.errors));
-          // make graphql error obj into formik error obj
-          // same as setErrors({res.data.register.errors.field = res.data.register.errors.message})
-
-          // data.register.errors: {
-          //           field: "username",
-          //           message: "Username already taken",
-          //           __typename: "FieldError",
-          //         },
-          // to
-          // setErrors({
-          //     username: string;
-          //     email: string;
-          //     password: string;
-          // })
+          setErrors(toError(res.data.register.errors)); // note $2
         } else if (res.data?.register.user) {
           router.push("/");
         }
       }}
     >
-      {({ isSubmitting }) => (
-        <Form className="container mt-3">
+      {(props) => (
+        <FormWrapper props={props} formUsage="Register">
           <InputWrapper label="Username" name="username" />
           <InputWrapper label="Email" name="email" type="email" />
           <InputWrapper label="Password" name="password" type="password" />
-
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="btn btn-primary"
-          >
-            Submit
-          </button>
-        </Form>
+        </FormWrapper>
       )}
     </Formik>
   );
 };
 export default register;
 
-// ⬇⬇⬇ original form & formik form template ⬇⬇⬇
+// $1
 
 //  <div className="mb-3">
 //             <label htmlFor="nameInput" className="form-label">
@@ -141,3 +121,20 @@ export default register;
 //       </form>
 //     )}
 //   </Formik>
+
+// $2
+
+// make graphql error obj into formik error obj
+// same as setErrors({res.data.register.errors.field = res.data.register.errors.message})
+
+// data.register.errors: {
+//           field: "username",
+//           message: "Username already taken",
+//           __typename: "FieldError",
+//         },
+// to
+// setErrors({
+//     username: string;
+//     email: string;
+//     password: string;
+// })

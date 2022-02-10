@@ -1,3 +1,5 @@
+import { FORGET_PASSWORD_PREFIX } from "./../utils/constants";
+import { UserInputField } from "./../types/resolvertypes";
 import { registerUserToDB } from "./../actions/dbQuery";
 import { COOKIE_NAME } from "../utils/constants";
 import {
@@ -11,6 +13,8 @@ import { User } from "../entities/User";
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import argon2 from "argon2";
 import { UserResponse, UserInput } from "../types/resolvertypes";
+import { v4 } from "uuid";
+import sendEmail from "../utils/mailer";
 
 @Resolver()
 export class UserResolver {
@@ -21,7 +25,7 @@ export class UserResolver {
   ): Promise<UserResponse> {
     const errors = validateUserInput(input);
     if (errors) return { errors };
-    
+
     let user;
     const { username, email } = input;
 
@@ -44,7 +48,7 @@ export class UserResolver {
       return fieldError;
     }
 
-    req.session.userId = user?.id;
+    req.session.userId = user.id;
 
     return { user };
   }
@@ -62,16 +66,12 @@ export class UserResolver {
     );
     console.log("user: ", user);
 
-    if (!user) {
-      return validateSingleField("usernameOrEmail");
-    }
+    if (!user) return validateSingleField("usernameOrEmail");
 
     const isValid = await argon2.verify(user.password, password);
-    if (!isValid) {
-      return validateSingleField("password");
-    }
+    if (!isValid) return validateSingleField("password");
 
-    req.session.userId = user?.id;
+    req.session.userId = user.id;
 
     return { user };
   }
@@ -98,5 +98,80 @@ export class UserResolver {
         resolve(true);
       })
     );
+  }
+
+  @Mutation(() => Boolean)
+  async forgotPassword(
+    @Arg("email") email: UserInputField,
+    @Ctx() { redis }: MyContext
+  ): Promise<boolean> {
+    const user = await User.findOne({ where: { email } });
+    if (!user) return true;
+
+    const token = v4();
+
+    // (method) IORedis.Commands.set(key: IORedis.KeyType,
+    //   value: IORedis.ValueType,
+    //   expiryMode ?: string | any[] | undefined,
+    //   time ?: string | number | undefined, setMode ?: string | number | undefined): Promise <...>
+    redis.set(
+      FORGET_PASSWORD_PREFIX + token,
+      user.id,
+      "ex",
+      1000 * 60 * 60 * 24 // one day
+    );
+
+    sendEmail(
+      email,
+      `<a href=http://localhost:3998/change-password/${token}>Change password</a>`
+    );
+
+    return true;
+  }
+
+  @Mutation(() => UserResponse)
+  async changePassword(
+    @Arg("token") token: string,
+    @Arg("newPassword") newPassword: string,
+    @Ctx() { req, redis }: MyContext
+  ): Promise<UserResponse> {
+    if (newPassword.length < 3) return validateSingleField("password");
+
+    const key = FORGET_PASSWORD_PREFIX + token;
+    const userId = await redis.get(key);
+
+    if (!userId) {
+      return {
+        errors: {
+          field: "password",
+          message: "token expired",
+        },
+      };
+    }
+
+    const userIdNum = parseInt(userId);
+
+    const user = await User.findOne(userIdNum);
+
+    if (!user) {
+      return {
+        errors: {
+          field: "password",
+          message: "user no longer exists",
+        },
+      };
+    }
+
+    await redis.del(key);
+
+    await User.update(
+      { id: userIdNum },
+      { password: await argon2.hash(newPassword) }
+    );
+
+    // log in user after change password
+    req.session.userId = user.id;
+
+    return { user };
   }
 }

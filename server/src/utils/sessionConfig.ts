@@ -4,9 +4,9 @@ import session from "express-session";
 import connectRedis from "connect-redis";
 
 const RedisStore = connectRedis(session);
-const redis = new Redis();
+export const redis = new Redis();
 
-export = session({
+export const sessionConfig = session({
   store: new RedisStore({
     client: redis,
     disableTouch: true,

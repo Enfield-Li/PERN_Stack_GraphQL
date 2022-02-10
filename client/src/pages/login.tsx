@@ -1,11 +1,16 @@
 import { Form, Formik } from "formik";
 import { useRouter } from "next/router";
 import React from "react";
+import FormWrapper from "../components/FormWrapper";
 import InputWrapper from "../components/InputWrapper";
 import { MeDocument, MeQuery, useLoginMutation } from "../generated/graphql";
 import { toError } from "../utils/toError";
 
 interface loginProps {}
+interface initialValues {
+  usernameOrEmail: string;
+  password: string;
+}
 
 const login: React.FC<loginProps> = ({}) => {
   const router = useRouter();
@@ -13,9 +18,11 @@ const login: React.FC<loginProps> = ({}) => {
   // behavior: data will return undefined at first and then actual data
   // console.log("data from mutation: ", data);
 
+  const initialValues: initialValues = { usernameOrEmail: "", password: "" };
+
   return (
     <Formik
-      initialValues={{ usernameOrEmail: "", password: "" }}
+      initialValues={initialValues}
       onSubmit={async (values, { setErrors }) => {
         const res = await login({
           variables: values,
@@ -46,19 +53,11 @@ const login: React.FC<loginProps> = ({}) => {
         }
       }}
     >
-      {({ isSubmitting }) => (
-        <Form className="container mt-3">
+      {(props) => (
+        <FormWrapper props={props} formUsage="Login">
           <InputWrapper label="Username" name="usernameOrEmail" />
           <InputWrapper label="Password" name="password" type="password" />
-
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="btn btn-primary"
-          >
-            Submit
-          </button>
-        </Form>
+        </FormWrapper>
       )}
     </Formik>
   );

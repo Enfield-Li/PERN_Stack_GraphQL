@@ -1,6 +1,6 @@
 import {
   ErrorResponse,
-  InputField,
+  UserInputField,
   FieldError,
   UserInput,
   UserResponse,
@@ -47,7 +47,7 @@ export const validateSingleFieldFromDB = (
 
 export const validateFieldsFromDB = (
   errDetail: any,
-  fieldsToValidate: InputField[]
+  fieldsToValidate: UserInputField[]
 ): UserResponse => {
   let error: FieldError = { field: "", message: "" };
 
@@ -63,6 +63,6 @@ export const validateFieldsFromDB = (
   return { errors: error };
 };
 
-export const validateSingleField = (field: InputField): ErrorResponse => {
-  return { errors: { field: field, message: "invalid " + field } };
+export const validateSingleField = (field: UserInputField): ErrorResponse => {
+  return { errors: { field: field, message: "Invalid " + field } };
 };

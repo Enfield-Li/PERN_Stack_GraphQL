@@ -1,7 +1,7 @@
 import { useField } from "formik";
 import React, { InputHTMLAttributes } from "react";
 
-type InputWrapperProps = InputHTMLAttributes<HTMLInputElement> & {
+export type InputWrapperProps = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
   name: string;
   type?: "textarea" | "password" | "email";

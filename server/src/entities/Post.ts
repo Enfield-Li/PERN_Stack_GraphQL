@@ -30,4 +30,8 @@ export class Post extends BaseEntity {
   @Field()
   @Column()
   contents: string;
+
+  @Field()
+  @Column()
+  creator: number;
 }
