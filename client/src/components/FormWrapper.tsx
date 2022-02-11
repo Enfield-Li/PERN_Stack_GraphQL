@@ -1,26 +1,22 @@
 import {
   Form,
-  FormikConfig,
-  FormikFormProps,
   FormikProps,
-  FormikValues,
 } from "formik";
 import Link from "next/link";
-import React from "react";
 
 type FormUsage = "Login" | "Register" | "changePassword";
 
-interface FormWrapperProps {
+interface FormWrapperProps<Values> {
   children: React.ReactNode;
-  props: FormikProps<FormikFormProps>;
+  props: FormikProps<Values>;
   formUsage?: FormUsage;
 }
 
-const FormWrapper: React.FC<FormWrapperProps> = ({
+const FormWrapper = <Values,>({
   children,
   props,
   formUsage,
-}): JSX.Element => {
+}: FormWrapperProps<Values>) => {
   let addtionalAssist = null;
 
   if (formUsage === "Login")
@@ -50,3 +46,5 @@ const FormWrapper: React.FC<FormWrapperProps> = ({
   );
 };
 export default FormWrapper;
+
+import React from "react";

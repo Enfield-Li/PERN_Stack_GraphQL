@@ -1,4 +1,4 @@
-import { Form, Formik } from "formik";
+import { Formik } from "formik";
 import { useRouter } from "next/router";
 import React from "react";
 import FormWrapper from "../components/FormWrapper";
@@ -18,11 +18,9 @@ const login: React.FC<loginProps> = ({}) => {
   // behavior: data will return undefined at first and then actual data
   // console.log("data from mutation: ", data);
 
-  const initialValues: initialValues = { usernameOrEmail: "", password: "" };
-
   return (
-    <Formik
-      initialValues={initialValues}
+    <Formik<initialValues>
+      initialValues={{ usernameOrEmail: "", password: "" }}
       onSubmit={async (values, { setErrors }) => {
         const res = await login({
           variables: values,
@@ -53,12 +51,15 @@ const login: React.FC<loginProps> = ({}) => {
         }
       }}
     >
-      {(props) => (
-        <FormWrapper props={props} formUsage="Login">
-          <InputWrapper label="Username" name="usernameOrEmail" />
-          <InputWrapper label="Password" name="password" type="password" />
-        </FormWrapper>
-      )}
+      {(props) => {
+        // props.initialValues.password
+        return (
+          <FormWrapper props={props} formUsage="Login">
+            <InputWrapper label="Username" name="usernameOrEmail" />
+            <InputWrapper label="Password" name="password" type="password" />
+          </FormWrapper>
+        );
+      }}
     </Formik>
   );
 };

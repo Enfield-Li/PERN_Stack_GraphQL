@@ -1,0 +1,50 @@
+https://github.com/jaredpalmer/formik/discussions/3485
+// Values is a generic which can be used as a placeholder and passed on to other types.
+// When using this interface and checking `props`, TS will know that `props.values.username` for example is a string.
+interface FormWrapperProps<Values> {
+  children: React.ReactNode;
+  props: FormikProps<Values>;
+}
+
+// there is no place to define a generic using this typescript syntax:
+// const FormWrapper: React.FC<FormWrapperProps>
+// instead, you must define a generic function:
+const FormWrapper = <Values,>({
+  children,
+  props,
+}: FormWrapperProps<Values>) => {
+  // Note that because the generic is still not concrete at this point (is it the placeholder `Values`), 
+  // you cannot use `props.values.username` or otherwise know the shape of `props.values`.
+  return <Form className="container mt-3 w-50">
+    <div className="d-grid">
+      {children}
+  
+      <button
+        type="submit"
+        disabled={props.isSubmitting}
+        className="btn btn-primary w-auto"
+      >
+        Submit
+      </button>
+    </div>
+  </Form>
+};
+
+// Formik uses the same generic shape, and it is reflected back to the calling code with a resolved `Values`. 
+// This is when Generics are extremely useful.
+const MyForm = () => <Formik initialValues={{username: "", email: "", password: ""}}>
+      {(props) => {
+        // since the generic of Formik is concrete 
+        // (it resolves to {username: string, email: string, password: string} due to the value of initialValues)
+        // TS knows the shape of `props.values` and can use `props.values.username` here
+        return <FormWrapper props={props}>
+          <InputWrapper label="Username" name="username" />
+          <InputWrapper label="Email" name="email" type="email" />
+          <InputWrapper label="Password" name="password" type="password" />
+        </FormWrapper>
+      }}
+</Formik>
+
+// If you already have a type for the shape of your Form Values, 
+// you could pass that to Formik so it can validate the type and doesn't infer the wrong shape, like:
+const MyForm = () => <Formik<MyFormShape> initialValues={{username: 1 /* ERROR */}} />;

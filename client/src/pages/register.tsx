@@ -27,13 +27,15 @@ const register: NextPage<registerProps> = ({}) => {
         }
       }}
     >
-      {(props) => (
-        <FormWrapper props={props} formUsage="Register">
-          <InputWrapper label="Username" name="username" />
-          <InputWrapper label="Email" name="email" type="email" />
-          <InputWrapper label="Password" name="password" type="password" />
-        </FormWrapper>
-      )}
+      {(props) => {
+        return (
+          <FormWrapper props={props} formUsage="Register">
+            <InputWrapper label="Username" name="username" />
+            <InputWrapper label="Email" name="email" type="email" />
+            <InputWrapper label="Password" name="password" type="password" />
+          </FormWrapper>
+        );
+      }}
     </Formik>
   );
 };
