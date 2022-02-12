@@ -64,7 +64,6 @@ export class UserResolver {
         ? { where: { email: usernameOrEmail } }
         : { where: { username: usernameOrEmail } }
     );
-    console.log("user: ", user);
 
     if (!user) return validateSingleField("usernameOrEmail");
 
@@ -91,7 +90,7 @@ export class UserResolver {
       req.session.destroy((err) => {
         res.clearCookie(COOKIE_NAME);
         if (err) {
-          console.log(err);
+          console.error(err);
           resolve(false);
           return;
         }

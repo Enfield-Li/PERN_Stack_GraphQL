@@ -7,17 +7,26 @@ interface NavbarProps {}
 
 const Navbar: React.FC<NavbarProps> = ({}) => {
   const [logout, { loading: logoutBtnLoading }] = useLogoutMutation();
+
   const apolloClient = useApolloClient();
   const { data, loading } = useMeQuery();
 
-  let body = null;
+  let userStatus = null;
 
   if (loading) {
     // body show nothing
   } else if (data?.me) {
-    body = (
+    userStatus = (
       <div className="d-flex align-items-center">
-        <li className="me-3">{data.me?.username}</li>
+        <NextLink href="/create-post">
+          <button className="btn btn-link text-dark text-decoration-none me-2">
+            Create post
+          </button>
+        </NextLink>
+        <button className="btn btn-link text-dark text-decoration-none me-2">
+          {data.me?.username}
+        </button>
+
         <button
           type="button"
           className="btn btn-link text-dark text-decoration-none"
@@ -32,7 +41,7 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
       </div>
     );
   } else {
-    body = (
+    userStatus = (
       <div className="d-flex align-items-center">
         <li className="nav-item">
           <NextLink href={"/login"}>
@@ -66,7 +75,7 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
             </a>
           </NextLink>
         </li>
-        {body}
+        {userStatus}
       </ul>
     </div>
   );

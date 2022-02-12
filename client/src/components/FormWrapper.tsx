@@ -1,10 +1,12 @@
-import {
-  Form,
-  FormikProps,
-} from "formik";
+import { Form, FormikProps } from "formik";
 import Link from "next/link";
 
-type FormUsage = "Login" | "Register" | "changePassword";
+type FormUsage =
+  | "Login"
+  | "Register"
+  | "Change password"
+  | "Create Post"
+  | "Update Post";
 
 interface FormWrapperProps<Values> {
   children: React.ReactNode;
@@ -25,7 +27,7 @@ const FormWrapper = <Values,>({
   if (formUsage === "Register")
     addtionalAssist = <Link href={"/login"}>Got an account?</Link>;
 
-  if (formUsage === "changePassword")
+  if (formUsage === "Change password")
     addtionalAssist = <Link href={"/login"}>Or you can login!</Link>;
 
   return (
@@ -38,7 +40,7 @@ const FormWrapper = <Values,>({
           disabled={props.isSubmitting}
           className="btn btn-primary w-auto"
         >
-          {formUsage === "changePassword" ? "Change Password" : formUsage}
+          {formUsage}
         </button>
       </div>
       <div className="pt-3">{addtionalAssist}</div>

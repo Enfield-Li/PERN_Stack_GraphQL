@@ -77,22 +77,25 @@ export type Post = {
   __typename?: 'Post';
   contents: Scalars['String'];
   createdAt: Scalars['String'];
+  creator: User;
+  creatorId: Scalars['Float'];
   id: Scalars['Float'];
+  points: Scalars['Float'];
   title: Scalars['String'];
   updatedAt: Scalars['String'];
 };
 
 export type Query = {
   __typename?: 'Query';
-  findPost?: Maybe<Post>;
+  Post?: Maybe<Post>;
   hello: Scalars['String'];
   me?: Maybe<User>;
   posts: Array<Post>;
 };
 
 
-export type QueryFindPostArgs = {
-  id: Scalars['String'];
+export type QueryPostArgs = {
+  id: Scalars['Int'];
 };
 
 export type User = {
@@ -100,6 +103,7 @@ export type User = {
   createdAt: Scalars['String'];
   email: Scalars['String'];
   id: Scalars['Float'];
+  posts: Post;
   updatedAt: Scalars['String'];
   username: Scalars['String'];
 };
@@ -177,6 +181,13 @@ export type UpdatePostMutationVariables = Exact<{
 
 export type UpdatePostMutation = { __typename?: 'Mutation', updatePost?: { __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, contents: string } | null };
 
+export type PostQueryVariables = Exact<{
+  postId: Scalars['Int'];
+}>;
+
+
+export type PostQuery = { __typename?: 'Query', Post?: { __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, contents: string, creatorId: number, points: number } | null };
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -185,7 +196,7 @@ export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: nu
 export type PostsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type PostsQuery = { __typename?: 'Query', posts: Array<{ __typename?: 'Post', id: number, title: string, contents: string, createdAt: string, updatedAt: string }> };
+export type PostsQuery = { __typename?: 'Query', posts: Array<{ __typename?: 'Post', id: number, title: string, creatorId: number, contents: string, createdAt: string, updatedAt: string, points: number }> };
 
 export const UserInfoFragmentDoc = gql`
     fragment UserInfo on User {
@@ -482,6 +493,47 @@ export function useUpdatePostMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UpdatePostMutationHookResult = ReturnType<typeof useUpdatePostMutation>;
 export type UpdatePostMutationResult = Apollo.MutationResult<UpdatePostMutation>;
 export type UpdatePostMutationOptions = Apollo.BaseMutationOptions<UpdatePostMutation, UpdatePostMutationVariables>;
+export const PostDocument = gql`
+    query Post($postId: Int!) {
+  Post(id: $postId) {
+    id
+    createdAt
+    updatedAt
+    title
+    contents
+    creatorId
+    points
+  }
+}
+    `;
+
+/**
+ * __usePostQuery__
+ *
+ * To run a query within a React component, call `usePostQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePostQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePostQuery({
+ *   variables: {
+ *      postId: // value for 'postId'
+ *   },
+ * });
+ */
+export function usePostQuery(baseOptions: Apollo.QueryHookOptions<PostQuery, PostQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PostQuery, PostQueryVariables>(PostDocument, options);
+      }
+export function usePostLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PostQuery, PostQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PostQuery, PostQueryVariables>(PostDocument, options);
+        }
+export type PostQueryHookResult = ReturnType<typeof usePostQuery>;
+export type PostLazyQueryHookResult = ReturnType<typeof usePostLazyQuery>;
+export type PostQueryResult = Apollo.QueryResult<PostQuery, PostQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {
@@ -521,9 +573,11 @@ export const PostsDocument = gql`
   posts {
     id
     title
+    creatorId
     contents
     createdAt
     updatedAt
+    points
   }
 }
     `;

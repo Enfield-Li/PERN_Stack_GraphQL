@@ -17,7 +17,6 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({}) => {
     <Formik
       initialValues={{ password: "" }}
       onSubmit={async (values, { setErrors }) => {
-        console.log(router.query);
         const res = await changePassword({
           variables: {
             newPassword: values.password,

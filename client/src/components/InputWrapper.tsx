@@ -5,17 +5,22 @@ export type InputWrapperProps = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
   name: string;
   type?: "textarea" | "password" | "email";
+  textarea?: boolean;
 };
 
-const InputWrapper: React.FC<InputWrapperProps> = ({ label, ...props }) => {
+const InputWrapper: React.FC<InputWrapperProps> = ({
+  label,
+  textarea,
+  ...props
+}) => {
   const [field, { error }] = useField(props);
-
+  const InputType = textarea ? "textarea" : "input";
   return (
     <div className="mb-3">
       <label htmlFor={field.name} className="form-label">
         {label}
       </label>
-      <input
+      <InputType
         required={true}
         type="text"
         className="form-control"
