@@ -3,7 +3,6 @@ import { UserInputField } from "./../types/resolvertypes";
 import { registerUserToDB } from "./../actions/dbQuery";
 import { COOKIE_NAME } from "../utils/constants";
 import {
-  validateSingleFieldFromDB,
   validateSingleField,
   validateUserInput,
   validateFieldsFromDB,

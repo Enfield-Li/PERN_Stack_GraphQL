@@ -1,3 +1,4 @@
+import { Post } from "./../entities/Post";
 import { User } from "../entities/User";
 import { ObjectType, Field, InputType } from "type-graphql";
 
@@ -17,6 +18,14 @@ export class UserResponse {
   errors?: FieldError;
 }
 
+@ObjectType()
+export class PaginatedPosts {
+  @Field(() => [Post])
+  posts: Post[];
+  @Field(() => Boolean, { nullable: false })
+  hasMore: boolean;
+}
+
 @InputType()
 export class UserInput {
   @Field()
@@ -27,7 +36,11 @@ export class UserInput {
   password: string;
 }
 
-export type UserInputField = "username" | "email" | "usernameOrEmail" | "password";
+export type UserInputField =
+  | "username"
+  | "email"
+  | "usernameOrEmail"
+  | "password";
 
 export interface ErrorResponse {
   errors: FieldError;

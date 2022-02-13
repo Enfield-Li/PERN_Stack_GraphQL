@@ -1,9 +1,9 @@
-import { Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
 import { Post } from "./Post";
 import { User } from "./User";
 
 @Entity()
-export class Votes {
+export class Votes extends BaseEntity {
   @Column()
   value: boolean;
 

@@ -30,11 +30,7 @@ const ForgotPassword: React.FC<ForgotPassword> = ({}) => {
             We are sending you an email to change the password.
           </p>
         ) : (
-          <FormWrapper
-            props={props}
-            formUsage="changePassword"
-            disableBtn={isSent}
-          >
+          <FormWrapper props={props} formUsage="Change password">
             <InputWrapper label="Email" name="email" />
           </FormWrapper>
         )

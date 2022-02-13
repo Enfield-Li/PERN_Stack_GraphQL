@@ -1,22 +1,67 @@
+import { User } from "./../entities/User";
+import { PaginatedPosts } from "./../types/resolvertypes";
+import { Votes } from "./../entities/Votes";
 import { MyContext } from "./../types/contextType";
 import { isAuth } from "./../middleware/isAuth";
-import { getConnection } from "typeorm";
+import { getConnection, TransactionManager } from "typeorm";
 import { Post } from "../entities/Post";
 import {
   Arg,
   Ctx,
+  Field,
+  FieldResolver,
   Int,
   Mutation,
   Query,
   Resolver,
+  Root,
   UseMiddleware,
 } from "type-graphql";
 
-@Resolver()
+@Resolver(() => Post)
 export class PostResolver {
-  @Query(() => [Post])
-  posts(): Promise<Post[]> {
-    return Post.find();
+  @Query(() => PaginatedPosts)
+  async posts(
+    @Arg("limit", () => Int, { defaultValue: 10, nullable: true })
+    limit: number,
+    @Arg("cursor", () => String, { nullable: true }) cursor: string | null
+  ): Promise<PaginatedPosts> {
+    const inputLimit = Math.min(50, limit);
+    const inputLimitPlus = inputLimit + 1;
+
+    const posts = await getConnection().query(
+      `
+        select * from post
+        order by "createdAt" desc
+        limit $1
+      `,
+      [inputLimitPlus]
+    );
+
+    return { posts: posts, hasMore: posts.length === inputLimitPlus };
+  }
+
+  @FieldResolver(() => String)
+  contentSnippets(@Root() post: Post) {
+    return post.contents.slice(0, 50);
+  }
+
+  @FieldResolver(() => User)
+  async creator(@Root() post: Post): Promise<User | undefined> {
+    return await User.findOne(post.creatorId);
+  }
+
+  @FieldResolver(() => Boolean, { nullable: true })
+  @UseMiddleware(isAuth)
+  async voteStatus(
+    @Root() post: Post,
+    @Ctx() { req }: MyContext
+  ): Promise<boolean | undefined> {
+    const vote = await Votes.findOne({
+      where: { postId: post.id, userId: req.session.userId },
+    });
+
+    return vote?.value;
   }
 
   @Query(() => Post, { nullable: true })
@@ -76,6 +121,66 @@ export class PostResolver {
     const userId = req.session.userId;
 
     await Post.delete({ id, creatorId: userId });
+
+    return true;
+  }
+
+  @Mutation(() => Boolean)
+  async vote(
+    @Arg("postId", () => Int) postId: number,
+    @Arg("value") value: boolean,
+    @Ctx() { req }: MyContext
+  ): Promise<boolean> {
+    const voteValue = value ? 1 : -1;
+    const userId = req.session.userId;
+
+    const userVotes = await Votes.findOne({ where: { postId, userId } });
+
+    console.log("userVotes: ", userVotes);
+    console.log("userVotes.value: ", userVotes?.value);
+
+    if (!userVotes) {
+      await getConnection().transaction(async (tem) => {
+        // const res = tem.create(Votes, { postId, userId, value });
+        const res = await tem.query(
+          `
+            insert into votes ("userId", "postId", value)
+            values ($1, $2, $3)
+          `,
+          [userId, postId, value]
+        );
+        console.log("res: ", res);
+
+        await tem.query(
+          `
+            update post 
+            set points = points + $1
+            where id = $2 
+          `,
+          [voteValue, postId]
+        );
+      });
+    } else if (userVotes && userVotes.value !== value) {
+      await getConnection().transaction(async (tem) => {
+        await tem.query(
+          `
+            update votes
+            set value = $1
+            where "postId" = $2 and "userId" = $3;
+          `,
+          [value, postId, userId]
+        );
+
+        await tem.query(
+          `
+            update post
+            set points = points + $1
+            where id = $2
+          `,
+          [voteValue * 2, postId]
+        );
+      });
+    }
 
     return true;
   }

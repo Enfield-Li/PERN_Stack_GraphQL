@@ -6,13 +6,14 @@ import {
 } from "../generated/graphql";
 import Spinner from "./Spinner";
 import NextLink from "next/link";
+import VoteSection from "../components/voteSection";
 
 interface MainContentProps {}
 
 const MainContent: React.FC<MainContentProps> = ({}) => {
   const { data, loading } = usePostsQuery();
   const [deletePost] = useDeletePostMutation();
-  const { data: meData, error, loading: meLoading } = useMeQuery();
+  const { data: meData } = useMeQuery();
 
   return (
     <div className="mt-3">
@@ -21,23 +22,21 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
           <Spinner />
         </div>
       ) : (
-        data?.posts.map((post) => (
+        data?.posts.posts.map((post) => (
           <div className="card my-3" key={post.id}>
             <div className="card-body">
               <div className="d-flex justify-content-between">
                 <div className="d-flex">
-                  <div className="me-3">
-                    <i className="bi bi-caret-up"></i>
-                    <div className="text-center">{post.points}</div>
-                    <i className="bi bi-caret-down"></i>
-                  </div>
-                  <div>
+                  <VoteSection post={post} />
+                  <div className="align-self-center">
                     <NextLink href={"/post/[id]"} as={`/post/${post.id}`}>
                       <a className="card-title text-dark text-decoration-none h3">
                         {post.title}
                       </a>
                     </NextLink>
-                    <p className="card-text mt-2 text-muted">{post.contents}</p>
+                    <p className="card-text mt-2 text-muted">
+                      {post.contentSnippets}...
+                    </p>
                   </div>
                 </div>
                 {meData?.me?.id === post.creatorId ? (

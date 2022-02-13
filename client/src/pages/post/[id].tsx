@@ -21,7 +21,7 @@ const Post: React.FC<PostProps> = ({}) => {
   return (
     <LayoutWrapper>
       <h2>{data?.Post?.title}</h2>
-      <p>{data?.Post?.contents}</p>
+      <p className="text-justify">{data?.Post?.contents}</p>
     </LayoutWrapper>
   );
 };
