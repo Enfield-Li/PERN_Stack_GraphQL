@@ -97,7 +97,7 @@ export type Post = {
   points: Scalars['Float'];
   title: Scalars['String'];
   updatedAt: Scalars['String'];
-  voteStatus: Scalars['Boolean'];
+  voteStatus?: Maybe<Scalars['Boolean']>;
 };
 
 export type Query = {
@@ -141,7 +141,7 @@ export type UserResponse = {
   user?: Maybe<User>;
 };
 
-export type PostSnippetFragment = { __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, points: number, creatorId: number, voteStatus: boolean, contentSnippets: string };
+export type PostSnippetFragment = { __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, points: number, creatorId: number, voteStatus?: boolean | null, contentSnippets: string };
 
 export type UserInfoFragment = { __typename?: 'User', id: number, username: string };
 
@@ -159,7 +159,7 @@ export type CreatePostMutationVariables = Exact<{
 }>;
 
 
-export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: number, title: string, contents: string, createdAt: string, updatedAt: string } };
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, creatorId: number, voteStatus?: boolean | null, contentSnippets: string, points: number } };
 
 export type DeletePostMutationVariables = Exact<{
   deletePostId: Scalars['Float'];
@@ -230,7 +230,7 @@ export type PostsQueryVariables = Exact<{
 }>;
 
 
-export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPosts', hasMore: boolean, posts: Array<{ __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, creatorId: number, voteStatus: boolean, contentSnippets: string, points: number }> } };
+export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPosts', hasMore: boolean, posts: Array<{ __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, creatorId: number, voteStatus?: boolean | null, contentSnippets: string, points: number }> } };
 
 export const PostSnippetFragmentDoc = gql`
     fragment PostSnippet on Post {
@@ -295,10 +295,13 @@ export const CreatePostDocument = gql`
     mutation CreatePost($contents: String!, $title: String!) {
   createPost(contents: $contents, title: $title) {
     id
-    title
-    contents
     createdAt
     updatedAt
+    title
+    creatorId
+    voteStatus
+    contentSnippets
+    points
   }
 }
     `;

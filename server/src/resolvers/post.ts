@@ -109,7 +109,7 @@ export class PostResolver {
       .returning("*")
       .execute();
 
-    return res.raw[0];
+    return res.raw[0] ? res.raw[0] : null;
   }
 
   @Mutation(() => Boolean)

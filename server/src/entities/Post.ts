@@ -8,7 +8,7 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { PrimaryGeneratedColumn } from "typeorm";
-import { ObjectType, Field, Int } from "type-graphql";
+import { ObjectType, Field, Int, ID } from "type-graphql";
 import { User } from "./User";
 import { Votes } from "./Votes";
 

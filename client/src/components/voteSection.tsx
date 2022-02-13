@@ -15,7 +15,11 @@ const voteSection: React.FC<voteSectionProps> = ({ post }) => {
           post.voteStatus === true ? "bg-info" : ""
         }`}
         onClick={async () => {
-          await vote({ variables: { postId: post.id, value: true } });
+          try {
+            await vote({ variables: { postId: post.id, value: true } });
+          } catch (err) {
+            console.log(err);
+          }
         }}
       />
       <div className="text-center">{post.points}</div>
