@@ -1,11 +1,5 @@
 query Post($postId: Int!) {
   Post(id: $postId) {
-    id
-    createdAt
-    updatedAt
-    title
-    contents
-    creatorId
-    points
+    ...PostSnippet
   }
 }

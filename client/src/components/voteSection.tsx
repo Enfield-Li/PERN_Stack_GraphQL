@@ -1,8 +1,12 @@
 import React from "react";
-import { PostSnippetFragment, useVoteMutation } from "../generated/graphql";
+import {
+  PostSnippetFragment,
+  PostsSnippetFragment,
+  useVoteMutation,
+} from "../generated/graphql";
 
 interface voteSectionProps {
-  post: PostSnippetFragment;
+  post: PostSnippetFragment | PostsSnippetFragment;
 }
 
 const voteSection: React.FC<voteSectionProps> = ({ post }) => {

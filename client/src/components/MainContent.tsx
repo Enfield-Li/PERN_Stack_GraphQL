@@ -7,22 +7,22 @@ import {
 import Spinner from "./Spinner";
 import NextLink from "next/link";
 import VoteSection from "../components/voteSection";
+import EditSection from "./editSection";
 
 interface MainContentProps {}
 
 const MainContent: React.FC<MainContentProps> = ({}) => {
-  const { data, loading } = usePostsQuery();
-  const [deletePost] = useDeletePostMutation();
+  const { data: postData, loading } = usePostsQuery();
   const { data: meData } = useMeQuery();
 
   return (
     <div className="mt-3">
-      {!data && loading ? (
+      {!postData && loading ? (
         <div className="d-flex justify-content-center">
           <Spinner />
         </div>
       ) : (
-        data?.posts.posts.map((post) => (
+        postData?.posts.posts.map((post) => (
           <div className="card my-3" key={post.id}>
             <div className="card-body">
               <div className="d-flex justify-content-between">
@@ -39,22 +39,7 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
                     </p>
                   </div>
                 </div>
-                {meData?.me?.id === post.creatorId ? (
-                  <div>
-                    <NextLink
-                      href={"/post/edit/[id]"}
-                      as={`/post/edit/${post.id}`}
-                    >
-                      <i className="bi bi-pencil-square btn" />
-                    </NextLink>
-                    <i
-                      className="btn bi bi-trash-fill"
-                      onClick={() => {
-                        deletePost({ variables: { deletePostId: post.id } });
-                      }}
-                    />
-                  </div>
-                ) : null}
+                <EditSection meData={meData} post={post} />
               </div>
             </div>
           </div>

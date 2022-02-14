@@ -141,7 +141,9 @@ export type UserResponse = {
   user?: Maybe<User>;
 };
 
-export type PostSnippetFragment = { __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, points: number, creatorId: number, voteStatus?: boolean | null, contentSnippets: string };
+export type PostSnippetFragment = { __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, points: number, creatorId: number, voteStatus?: boolean | null, contents: string };
+
+export type PostsSnippetFragment = { __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, points: number, creatorId: number, voteStatus?: boolean | null, contentSnippets: string };
 
 export type UserInfoFragment = { __typename?: 'User', id: number, username: string };
 
@@ -222,7 +224,7 @@ export type PostQueryVariables = Exact<{
 }>;
 
 
-export type PostQuery = { __typename?: 'Query', Post?: { __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, contents: string, creatorId: number, points: number } | null };
+export type PostQuery = { __typename?: 'Query', Post?: { __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, points: number, creatorId: number, voteStatus?: boolean | null, contents: string } | null };
 
 export type PostsQueryVariables = Exact<{
   cursor?: InputMaybe<Scalars['String']>;
@@ -230,7 +232,7 @@ export type PostsQueryVariables = Exact<{
 }>;
 
 
-export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPosts', hasMore: boolean, posts: Array<{ __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, creatorId: number, voteStatus?: boolean | null, contentSnippets: string, points: number }> } };
+export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPosts', hasMore: boolean, posts: Array<{ __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, points: number, creatorId: number, voteStatus?: boolean | null, contentSnippets: string }> } };
 
 export const PostSnippetFragmentDoc = gql`
     fragment PostSnippet on Post {
@@ -241,6 +243,20 @@ export const PostSnippetFragmentDoc = gql`
   points
   creatorId
   voteStatus
+  points
+  contents
+}
+    `;
+export const PostsSnippetFragmentDoc = gql`
+    fragment PostsSnippet on Post {
+  id
+  createdAt
+  updatedAt
+  title
+  points
+  creatorId
+  voteStatus
+  points
   contentSnippets
 }
     `;
@@ -611,16 +627,10 @@ export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const PostDocument = gql`
     query Post($postId: Int!) {
   Post(id: $postId) {
-    id
-    createdAt
-    updatedAt
-    title
-    contents
-    creatorId
-    points
+    ...PostSnippet
   }
 }
-    `;
+    ${PostSnippetFragmentDoc}`;
 
 /**
  * __usePostQuery__
@@ -654,18 +664,11 @@ export const PostsDocument = gql`
   posts(cursor: $cursor, limit: $limit) {
     hasMore
     posts {
-      id
-      createdAt
-      updatedAt
-      title
-      creatorId
-      voteStatus
-      contentSnippets
-      points
+      ...PostsSnippet
     }
   }
 }
-    `;
+    ${PostsSnippetFragmentDoc}`;
 
 /**
  * __usePostsQuery__

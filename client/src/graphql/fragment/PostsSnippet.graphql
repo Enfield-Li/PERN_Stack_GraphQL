@@ -1,4 +1,4 @@
-fragment PostSnippet on Post {
+fragment PostsSnippet on Post {
   id
   createdAt
   updatedAt
@@ -7,5 +7,5 @@ fragment PostSnippet on Post {
   creatorId
   voteStatus
   points
-  contents
+  contentSnippets
 }
