@@ -6,6 +6,8 @@ import LayoutSpinner from "../../../components/LayoutSpinner";
 import LayoutWrapper from "../../../components/LayoutWrapper";
 import {
   CreatePostMutationVariables,
+  PostsDocument,
+  PostsQuery,
   usePostQuery,
   useUpdatePostMutation,
 } from "../../../generated/graphql";
@@ -36,6 +38,33 @@ const EditPost: React.FC<EditPostProps> = ({}) => {
               title: values.title,
               contents: values.contents,
               updatePostId: postId,
+            },
+
+            update: (cache, { data }) => {
+              const cachedPost = cache.readQuery<PostsQuery>({
+                query: PostsDocument,
+              });
+              if (!cachedPost) return;
+
+              const newPostContentSnippet = data?.updatePost?.contents.slice(
+                0,
+                50
+              );
+              if (!newPostContentSnippet) return;
+
+              cache.writeQuery<PostsQuery>({
+                query: PostsDocument,
+                data: {
+                  posts: {
+                    hasMore: cachedPost.posts.hasMore,
+                    posts: cachedPost.posts.posts.map((post) =>
+                      post.id === postId
+                        ? { ...post, contentSnippets: newPostContentSnippet }
+                        : post
+                    ),
+                  },
+                },
+              });
             },
           });
           // router.push(`/post/${postId}`);

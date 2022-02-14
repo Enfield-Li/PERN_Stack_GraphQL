@@ -1,11 +1,9 @@
-fragment PostSnippet on Post {
-  id
+fragment PostContents on Post {
+  ...VoteStatusAndPoints
   createdAt
   updatedAt
   title
   points
   creatorId
-  voteStatus
-  points
   contents
 }

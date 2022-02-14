@@ -1,5 +1,5 @@
 query Post($postId: Int!) {
   Post(id: $postId) {
-    ...PostSnippet
+    ...PostContents
   }
 }

@@ -1,20 +1,56 @@
+import {
+  ApolloCache,
+  DefaultContext,
+  MutationUpdaterFunction,
+} from "@apollo/client";
 import { useRouter } from "next/router";
 import React from "react";
 import {
-  PostSnippetFragment,
+  PostContentsFragment,
   PostsSnippetFragment,
   useVoteMutation,
-  VoteDocument,
   VoteMutation,
+  VoteStatusAndPointsFragment,
+  VoteStatusAndPointsFragmentDoc,
 } from "../generated/graphql";
 
 interface voteSectionProps {
-  post: PostSnippetFragment | PostsSnippetFragment;
+  post: PostContentsFragment | PostsSnippetFragment;
 }
 
 const voteSection: React.FC<voteSectionProps> = ({ post }) => {
   const router = useRouter();
   const [vote] = useVoteMutation();
+
+  const cacheUpdateAfterVote = (
+    id: number,
+    votings: boolean,
+    cache: ApolloCache<VoteMutation>
+  ) => {
+    const cachedData = cache.readFragment<VoteStatusAndPointsFragment>({
+      fragment: VoteStatusAndPointsFragmentDoc,
+      id: "Post:" + id,
+    });
+
+    if (cachedData) {
+      if (cachedData.voteStatus === votings) return;
+
+      const incOrDec = votings ? 1 : -1;
+
+      const newPoints =
+        cachedData.points + (cachedData.voteStatus === null ? 1 : 2) * incOrDec;
+
+      cache.writeFragment<VoteStatusAndPointsFragment>({
+        id: "Post:" + id,
+        fragment: VoteStatusAndPointsFragmentDoc,
+        data: {
+          id: id,
+          voteStatus: votings,
+          points: newPoints,
+        },
+      });
+    }
+  };
 
   let path = "/";
   if (router.pathname.includes("post")) {
@@ -29,19 +65,7 @@ const voteSection: React.FC<voteSectionProps> = ({ post }) => {
           try {
             await vote({
               variables: { postId: post.id, value: true },
-              // update: (cache, { data }) => {
-              //   const cachedVote = cache.readQuery<VoteMutation>({
-              //     query: VoteDocument,
-              //   });
-              //   if (!cachedVote) return;
-
-              //   cache.writeQuery({
-              //     query: VoteDocument,
-              //     data: {
-              //       value: data,
-              //     },
-              //   });
-              // },
+              update: (cache) => cacheUpdateAfterVote(post.id, true, cache),
             });
           } catch (err) {
             // console.log(err);
@@ -59,6 +83,7 @@ const voteSection: React.FC<voteSectionProps> = ({ post }) => {
           try {
             await vote({
               variables: { postId: post.id, value: false },
+              update: (cache) => cacheUpdateAfterVote(post.id, false, cache),
             });
           } catch (err) {
             // router.push("/login");

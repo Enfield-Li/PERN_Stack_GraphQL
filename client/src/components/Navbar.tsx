@@ -6,11 +6,13 @@ import {
   useLogoutMutation,
   useMeQuery,
 } from "../generated/graphql";
+import { useApolloClient } from "@apollo/client";
 
 interface NavbarProps {}
 
 const Navbar: React.FC<NavbarProps> = ({}) => {
   const [logout, { loading: logoutBtnLoading }] = useLogoutMutation();
+  const apolloClient = useApolloClient();
 
   const { data, loading } = useMeQuery();
 
@@ -31,15 +33,16 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
           disabled={logoutBtnLoading}
           onClick={async () => {
             await logout({
-              update: (cache) => {
-                cache.writeQuery<MeQuery>({
-                  query: MeDocument,
-                  data: {
-                    me: null,
-                  },
-                });
-              },
+              // update: (cache) => {
+              //   cache.writeQuery<MeQuery>({
+              //     query: MeDocument,
+              //     data: {
+              //       me: null,
+              //     },
+              //   });
+              // },
             });
+            await apolloClient.resetStore();
           }}
         >
           logout

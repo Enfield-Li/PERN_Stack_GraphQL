@@ -3,7 +3,14 @@ import { useRouter } from "next/router";
 import React from "react";
 import FormWrapper from "../components/FormWrapper";
 import InputWrapper from "../components/InputWrapper";
-import { MeDocument, MeQuery, useLoginMutation } from "../generated/graphql";
+import {
+  MeDocument,
+  MeQuery,
+  PostsDocument,
+  useLoginMutation,
+  usePostsQuery,
+  VoteStatusAndPointsFragment,
+} from "../generated/graphql";
 import { toError } from "../utils/toError";
 
 interface loginProps {}
@@ -14,9 +21,11 @@ interface initialValues {
 
 const login: React.FC<loginProps> = ({}) => {
   const router = useRouter();
-  const [login, { data }] = useLoginMutation();
+  const [login] = useLoginMutation();
   // behavior: data will return undefined at first and then actual data
   // console.log("data from mutation: ", data);
+
+  const { data: postData } = usePostsQuery();
 
   return (
     <Formik<initialValues>
@@ -39,7 +48,9 @@ const login: React.FC<loginProps> = ({}) => {
                 me: data?.login.user,
               },
             });
+            // cache.evict({ fieldName: "posts:{}" });
           },
+          refetchQueries: [{ query: PostsDocument }],
         });
 
         if (res.data?.login.errors) {

@@ -138,9 +138,6 @@ export class PostResolver {
 
     const userVotes = await Votes.findOne({ where: { postId, userId } });
 
-    console.log("userVotes: ", userVotes);
-    console.log("userVotes.value: ", userVotes?.value);
-
     if (!userVotes) {
       await getConnection().transaction(async (tem) => {
         // const res = tem.create(Votes, { postId, userId, value });
@@ -151,7 +148,6 @@ export class PostResolver {
           `,
           [userId, postId, value]
         );
-        console.log("res: ", res);
 
         await tem.query(
           `

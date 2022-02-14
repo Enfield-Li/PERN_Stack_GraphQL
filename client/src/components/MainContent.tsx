@@ -35,7 +35,9 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
                       </a>
                     </NextLink>
                     <p className="card-text mt-2 text-muted">
-                      {post.contentSnippets}...
+                      {post.contentSnippets.length === 50
+                        ? post.contentSnippets + "..."
+                        : post.contentSnippets}
                     </p>
                   </div>
                 </div>

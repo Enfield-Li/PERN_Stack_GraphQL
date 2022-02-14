@@ -1,0 +1,5 @@
+fragment VoteStatusAndPoints on Post {
+  id
+  voteStatus
+  points
+}

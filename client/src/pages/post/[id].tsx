@@ -41,7 +41,7 @@ const Post: React.FC<PostProps> = ({}) => {
           </div>
         </div>
       ) : (
-        <div>Something's gone wrong</div>
+        <div>Post no longer exist for some reason apparentlly...</div>
       )}
     </LayoutWrapper>
   );
