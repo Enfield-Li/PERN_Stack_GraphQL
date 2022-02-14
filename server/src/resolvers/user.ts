@@ -1,3 +1,4 @@
+import { Post } from "./../entities/Post";
 import { FORGET_PASSWORD_PREFIX } from "./../utils/constants";
 import { UserInputField } from "./../types/resolvertypes";
 import { registerUserToDB } from "./../actions/dbQuery";
@@ -9,14 +10,30 @@ import {
 } from "../actions/validateUserFromDB";
 import { MyContext } from "../types/contextType";
 import { User } from "../entities/User";
-import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  Ctx,
+  FieldResolver,
+  Mutation,
+  Query,
+  Resolver,
+  Root,
+} from "type-graphql";
 import argon2 from "argon2";
 import { UserResponse, UserInput } from "../types/resolvertypes";
 import { v4 } from "uuid";
 import sendEmail from "../utils/mailer";
 
-@Resolver()
+@Resolver(User)
 export class UserResolver {
+  @FieldResolver(() => [Post], { nullable: true })
+  async userPost(
+    @Root() user: User,
+    @Ctx() { req }: MyContext
+  ): Promise<Post[] | null> {
+    return await Post.find({ where: { creatorId: req.session.userId } });
+  }
+
   @Mutation(() => UserResponse)
   async register(
     @Arg("input") input: UserInput,

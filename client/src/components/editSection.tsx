@@ -6,6 +6,7 @@ import {
   useDeletePostMutation,
 } from "../generated/graphql";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 
 interface editSectionProps {
   post: PostSnippetFragment | PostsSnippetFragment;
@@ -14,6 +15,7 @@ interface editSectionProps {
 
 const EditSection: React.FC<editSectionProps> = ({ meData, post }) => {
   const [deletePost] = useDeletePostMutation();
+  const router = useRouter();
 
   return (
     <>
@@ -25,7 +27,14 @@ const EditSection: React.FC<editSectionProps> = ({ meData, post }) => {
           <i
             className="btn bi bi-trash-fill"
             onClick={() => {
-              deletePost({ variables: { deletePostId: post.id } });
+              deletePost({
+                variables: { deletePostId: post.id },
+                update: (cache) => {
+                  cache.evict({ id: "Post:" + post.id });
+                },
+              });
+
+              router.push("/");
             }}
           />
         </div>

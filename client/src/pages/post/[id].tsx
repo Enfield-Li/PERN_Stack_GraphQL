@@ -30,6 +30,7 @@ const Post: React.FC<PostProps> = ({}) => {
               <div className="d-flex">
                 <VoteSection post={data.Post} />
                 <div className="align-self-center">
+                  <h3>{data.Post.title}</h3>
                   <p className="card-text mt-2 text-muted">
                     {data.Post?.contents}
                   </p>

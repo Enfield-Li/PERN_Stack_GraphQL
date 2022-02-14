@@ -38,7 +38,8 @@ const EditPost: React.FC<EditPostProps> = ({}) => {
               updatePostId: postId,
             },
           });
-          router.push(`/post/${postId}`);
+          // router.push(`/post/${postId}`);
+          router.back();
         }}
       >
         {(props) => (

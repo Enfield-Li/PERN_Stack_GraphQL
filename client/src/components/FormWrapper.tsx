@@ -22,7 +22,12 @@ const FormWrapper = <Values,>({
   let addtionalAssist = null;
 
   if (formUsage === "Login")
-    addtionalAssist = <Link href={"/forgot-password"}>Forgot password?</Link>;
+    addtionalAssist = (
+      <div className="d-flex justify-content-between">
+        <Link href={"/forgot-password"}>Forgot password?</Link>
+        <Link href={"/register"}>Regester!</Link>
+      </div>
+    );
 
   if (formUsage === "Register")
     addtionalAssist = <Link href={"/login"}>Got an account?</Link>;

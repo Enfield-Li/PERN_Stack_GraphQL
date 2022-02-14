@@ -1,14 +1,17 @@
 import React from "react";
 import NextLink from "next/link";
-import { useLogoutMutation, useMeQuery } from "../generated/graphql";
-import { useApolloClient } from "@apollo/client";
+import {
+  MeDocument,
+  MeQuery,
+  useLogoutMutation,
+  useMeQuery,
+} from "../generated/graphql";
 
 interface NavbarProps {}
 
 const Navbar: React.FC<NavbarProps> = ({}) => {
   const [logout, { loading: logoutBtnLoading }] = useLogoutMutation();
 
-  const apolloClient = useApolloClient();
   const { data, loading } = useMeQuery();
 
   let userStatus = null;
@@ -18,11 +21,6 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
   } else if (data?.me) {
     userStatus = (
       <div className="d-flex align-items-center">
-        <NextLink href="/create-post">
-          <button className="btn btn-link text-dark text-decoration-none me-2">
-            Create post
-          </button>
-        </NextLink>
         <button className="btn btn-link text-dark text-decoration-none me-2">
           {data.me?.username}
         </button>
@@ -32,8 +30,16 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
           className="btn btn-link text-dark text-decoration-none"
           disabled={logoutBtnLoading}
           onClick={async () => {
-            await logout();
-            await apolloClient.resetStore();
+            await logout({
+              update: (cache) => {
+                cache.writeQuery<MeQuery>({
+                  query: MeDocument,
+                  data: {
+                    me: null,
+                  },
+                });
+              },
+            });
           }}
         >
           logout
@@ -75,7 +81,14 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
             </a>
           </NextLink>
         </li>
-        {userStatus}
+        <div className="d-flex align-items-center">
+          <NextLink href="/create-post">
+            <button className="btn btn-link text-dark text-decoration-none me-2">
+              Create post
+            </button>
+          </NextLink>
+          {userStatus}
+        </div>
       </ul>
     </div>
   );

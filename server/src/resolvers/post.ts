@@ -8,7 +8,6 @@ import { Post } from "../entities/Post";
 import {
   Arg,
   Ctx,
-  Field,
   FieldResolver,
   Int,
   Mutation,
@@ -38,7 +37,10 @@ export class PostResolver {
       [inputLimitPlus]
     );
 
-    return { posts: posts, hasMore: posts.length === inputLimitPlus };
+    return {
+      posts: posts.slice(0, 10),
+      hasMore: posts.length === inputLimitPlus,
+    };
   }
 
   @FieldResolver(() => String)
@@ -52,7 +54,6 @@ export class PostResolver {
   }
 
   @FieldResolver(() => Boolean, { nullable: true })
-  @UseMiddleware(isAuth)
   async voteStatus(
     @Root() post: Post,
     @Ctx() { req }: MyContext
@@ -126,6 +127,7 @@ export class PostResolver {
   }
 
   @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
   async vote(
     @Arg("postId", () => Int) postId: number,
     @Arg("value") value: boolean,

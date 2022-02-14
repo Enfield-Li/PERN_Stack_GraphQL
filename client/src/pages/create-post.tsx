@@ -10,12 +10,14 @@ import {
   PostsQuery,
   useCreatePostMutation,
 } from "../generated/graphql";
+import { useIsAuth } from "../utils/useIsAuth";
 
 interface CreatePostProps {}
 
 const CreatePost: React.FC<CreatePostProps> = ({}) => {
-  const [createPost, { data }] = useCreatePostMutation();
+  const [createPost] = useCreatePostMutation();
   const router = useRouter();
+  useIsAuth();
 
   return (
     <LayoutWrapper>
@@ -26,18 +28,18 @@ const CreatePost: React.FC<CreatePostProps> = ({}) => {
           const res = await createPost({
             variables: values,
             update: (cache, { data }) => {
-              const cachedData = cache.readQuery<PostsQuery>({
+              const cachedPost = cache.readQuery<PostsQuery>({
                 query: PostsDocument,
               });
-              if (!cachedData) return;
+              if (!cachedPost) return;
               if (!data) return;
 
               cache.writeQuery<PostsQuery>({
                 query: PostsDocument,
                 data: {
                   posts: {
-                    hasMore: cachedData.posts.hasMore,
-                    posts: [data.createPost, ...cachedData.posts.posts],
+                    hasMore: cachedPost.posts.hasMore,
+                    posts: [data.createPost, ...cachedPost.posts.posts],
                   },
                 },
               });
@@ -45,7 +47,6 @@ const CreatePost: React.FC<CreatePostProps> = ({}) => {
           });
 
           // router.push(`/`);
-
           router.push(`/post/${res.data?.createPost.id}`);
         }}
       >
