@@ -138,6 +138,7 @@ export class PostResolver {
 
     const userVotes = await Votes.findOne({ where: { postId, userId } });
 
+    // user hasn't voted before
     if (!userVotes) {
       await getConnection().transaction(async (tem) => {
         // const res = tem.create(Votes, { postId, userId, value });
@@ -158,7 +159,9 @@ export class PostResolver {
           [voteValue, postId]
         );
       });
-    } else if (userVotes && userVotes.value !== value) {
+    }
+    // user voted, but reset the vote to null
+    else if (userVotes && userVotes.value === null) {
       await getConnection().transaction(async (tem) => {
         await tem.query(
           `
@@ -173,9 +176,57 @@ export class PostResolver {
           `
             update post
             set points = points + $1
-            where id = $2
+            where id = $2;
+          `,
+          [voteValue, postId]
+        );
+      });
+    }
+    // user change up vote to down vote or vice versa
+    else if (
+      userVotes &&
+      userVotes.value !== value &&
+      userVotes.value !== null
+    ) {
+      await getConnection().transaction(async (tem) => {
+        await tem.query(
+          `
+            update votes
+            set value = $1
+            where "postId" = $2 and "userId" = $3;
+          `,
+          [value, postId, userId]
+        );
+
+        await tem.query(
+          `
+            update post
+            set points = points + $1
+            where id = $2;
           `,
           [voteValue * 2, postId]
+        );
+      });
+    }
+    // user unvote their vote ie. set vote.value = null
+    else if (userVotes && userVotes.value === value) {
+      await getConnection().transaction(async (tem) => {
+        await tem.query(
+          `
+            update votes
+            set value = $1
+            where "postId" = $2 and "userId" = $3;
+          `,
+          [null, postId, userId]
+        );
+
+        await tem.query(
+          `
+            update post
+            set points = points + ${value ? -1 : 1}
+            where id = $1;
+          `,
+          [postId]
         );
       });
     }

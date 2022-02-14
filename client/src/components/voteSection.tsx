@@ -33,22 +33,37 @@ const voteSection: React.FC<voteSectionProps> = ({ post }) => {
     });
 
     if (cachedData) {
-      if (cachedData.voteStatus === votings) return;
+      if (cachedData.voteStatus !== votings) {
+        const incOrDec = votings ? 1 : -1;
 
-      const incOrDec = votings ? 1 : -1;
+        const newPoints =
+          cachedData.points +
+          (cachedData.voteStatus === null ? 1 : 2) * incOrDec;
 
-      const newPoints =
-        cachedData.points + (cachedData.voteStatus === null ? 1 : 2) * incOrDec;
+        cache.writeFragment<VoteStatusAndPointsFragment>({
+          id: "Post:" + id,
+          fragment: VoteStatusAndPointsFragmentDoc,
+          data: {
+            id: id,
+            voteStatus: votings,
+            points: newPoints,
+          },
+        });
+      } else if (cachedData.voteStatus === votings) {
+        const resetValPoints = votings ? -1 : 1;
 
-      cache.writeFragment<VoteStatusAndPointsFragment>({
-        id: "Post:" + id,
-        fragment: VoteStatusAndPointsFragmentDoc,
-        data: {
-          id: id,
-          voteStatus: votings,
-          points: newPoints,
-        },
-      });
+        const newPoints = cachedData.points + resetValPoints;
+
+        cache.writeFragment<VoteStatusAndPointsFragment>({
+          id: "Post:" + id,
+          fragment: VoteStatusAndPointsFragmentDoc,
+          data: {
+            id: id,
+            voteStatus: null,
+            points: newPoints,
+          },
+        });
+      }
     }
   };
 

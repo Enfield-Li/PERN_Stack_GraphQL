@@ -4,7 +4,7 @@ import { User } from "./User";
 
 @Entity()
 export class Votes extends BaseEntity {
-  @Column()
+  @Column({ nullable: true })
   value: boolean;
 
   @PrimaryColumn()
