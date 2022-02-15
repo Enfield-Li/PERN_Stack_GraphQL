@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  PostsQuery,
-  useDeletePostMutation,
-  useMeQuery,
-  usePostsQuery,
-} from "../generated/graphql";
+import { useMeQuery, usePostsQuery } from "../generated/graphql";
 import NextLink from "next/link";
 import VoteSection from "../components/voteSection";
 import EditSection from "./editSection";

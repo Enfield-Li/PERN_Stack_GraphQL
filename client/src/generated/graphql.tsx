@@ -141,9 +141,9 @@ export type UserResponse = {
   user?: Maybe<User>;
 };
 
-export type PostContentsFragment = { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, points: number, creatorId: number, contents: string, id: number, voteStatus?: boolean | null };
+export type PostContentsFragment = { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contents: string, id: number, voteStatus?: boolean | null, points: number };
 
-export type PostsSnippetFragment = { __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, points: number, creatorId: number, voteStatus?: boolean | null, contentSnippets: string };
+export type PostsSnippetFragment = { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, voteStatus?: boolean | null, points: number };
 
 export type UserInfoFragment = { __typename?: 'User', id: number, username: string };
 
@@ -226,7 +226,7 @@ export type PostQueryVariables = Exact<{
 }>;
 
 
-export type PostQuery = { __typename?: 'Query', Post?: { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, points: number, creatorId: number, contents: string, id: number, voteStatus?: boolean | null } | null };
+export type PostQuery = { __typename?: 'Query', Post?: { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contents: string, id: number, voteStatus?: boolean | null, points: number } | null };
 
 export type PostsQueryVariables = Exact<{
   cursor?: InputMaybe<Scalars['String']>;
@@ -234,7 +234,7 @@ export type PostsQueryVariables = Exact<{
 }>;
 
 
-export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPosts', hasMore: boolean, posts: Array<{ __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, points: number, creatorId: number, voteStatus?: boolean | null, contentSnippets: string }> } };
+export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPosts', hasMore: boolean, posts: Array<{ __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, voteStatus?: boolean | null, points: number }> } };
 
 export const VoteStatusAndPointsFragmentDoc = gql`
     fragment VoteStatusAndPoints on Post {
@@ -249,24 +249,20 @@ export const PostContentsFragmentDoc = gql`
   createdAt
   updatedAt
   title
-  points
   creatorId
   contents
 }
     ${VoteStatusAndPointsFragmentDoc}`;
 export const PostsSnippetFragmentDoc = gql`
     fragment PostsSnippet on Post {
-  id
+  ...VoteStatusAndPoints
   createdAt
   updatedAt
   title
-  points
   creatorId
-  voteStatus
-  points
   contentSnippets
 }
-    `;
+    ${VoteStatusAndPointsFragmentDoc}`;
 export const UserInfoFragmentDoc = gql`
     fragment UserInfo on User {
   id

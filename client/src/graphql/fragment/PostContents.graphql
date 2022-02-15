@@ -3,7 +3,6 @@ fragment PostContents on Post {
   createdAt
   updatedAt
   title
-  points
   creatorId
   contents
 }

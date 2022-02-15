@@ -25,8 +25,6 @@ const login: React.FC<loginProps> = ({}) => {
   // behavior: data will return undefined at first and then actual data
   // console.log("data from mutation: ", data);
 
-  const { data: postData } = usePostsQuery();
-
   return (
     <Formik<initialValues>
       initialValues={{ usernameOrEmail: "", password: "" }}
@@ -48,6 +46,7 @@ const login: React.FC<loginProps> = ({}) => {
                 me: data?.login.user,
               },
             });
+
             cache.evict({ fieldName: "posts" });
           },
           // refetchQueries: [{ query: PostsDocument }],

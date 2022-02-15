@@ -1,0 +1,31 @@
+
+debugging:
+
+https://community.apollographql.com/t/reading-cached-data-failed-for-some-reason-i-cant-figure-out-help/2762
+
+ console.log("cache: ", cache);
+
+
+  const cachedData = cache.readFragment<VoteStatusAndPointsFragment>({
+    fragment: VoteStatusAndPointsFragmentDoc,
+    id: "Post:" + id,
+    fragmentName: "VoteStatusAndPoints",
+  });
+  console.log("cachedVotes: ", cachedData);
+
+  const cachedData1 = cache.readFragment<PostsSnippetFragment>({
+    fragment: PostsSnippetFragmentDoc,
+    id: "Post:" + id,
+    fragmentName: "PostsSnippet",
+  });
+  console.log("cachedDate: ", cachedData1);
+
+  const cachedPost = cache.readQuery<PostsQuery>({
+    query: PostsDocument,
+    variables: { limit: 15, cursor: null },
+  });
+  console.log("cachedPost: ", cachedPost);
+
+  cache.updateQuery<PostsQuery>({ query: PostsDocument }, (cachedPosts) => {
+    console.log("cachedPosts: ", cachedPosts);
+  });

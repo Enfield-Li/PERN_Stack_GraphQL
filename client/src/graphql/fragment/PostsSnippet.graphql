@@ -1,11 +1,8 @@
 fragment PostsSnippet on Post {
-  id
+  ...VoteStatusAndPoints
   createdAt
   updatedAt
   title
-  points
   creatorId
-  voteStatus
-  points
   contentSnippets
 }

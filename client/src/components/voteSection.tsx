@@ -1,8 +1,4 @@
-import {
-  ApolloCache,
-  DefaultContext,
-  MutationUpdaterFunction,
-} from "@apollo/client";
+import { ApolloCache } from "@apollo/client";
 import { useRouter } from "next/router";
 import React from "react";
 import {
@@ -34,41 +30,40 @@ const voteSection: React.FC<voteSectionProps> = ({ post }) => {
     // points: number;
     const cachedData = cache.readFragment<VoteStatusAndPointsFragment>({
       fragment: VoteStatusAndPointsFragmentDoc,
-      id: "Post:" + id,
+      fragmentName: "VoteStatusAndPoints",
+      id: `Post:${id}`,
     });
+    if (!cachedData) return;
 
-    if (cachedData) {
-      if (cachedData.voteStatus !== votings) {
-        const incOrDec = votings ? 1 : -1;
+    if (cachedData.voteStatus !== votings) {
+      const incOrDec = votings ? 1 : -1;
 
-        const newPoints =
-          cachedData.points +
-          (cachedData.voteStatus === null ? 1 : 2) * incOrDec;
+      const newPoints =
+        cachedData.points + (cachedData.voteStatus === null ? 1 : 2) * incOrDec;
 
-        cache.writeFragment<VoteStatusAndPointsFragment>({
-          id: "Post:" + id,
-          fragment: VoteStatusAndPointsFragmentDoc,
-          data: {
-            id: id,
-            voteStatus: votings,
-            points: newPoints,
-          },
-        });
-      } else if (cachedData.voteStatus === votings) {
-        const resetValPoints = votings ? -1 : 1;
+      cache.writeFragment<VoteStatusAndPointsFragment>({
+        id: "Post:" + id,
+        fragment: VoteStatusAndPointsFragmentDoc,
+        data: {
+          id: id,
+          voteStatus: votings,
+          points: newPoints,
+        },
+      });
+    } else if (cachedData.voteStatus === votings) {
+      const resetValPoints = votings ? -1 : 1;
 
-        const newPoints = cachedData.points + resetValPoints;
+      const newPoints = cachedData.points + resetValPoints;
 
-        cache.writeFragment<VoteStatusAndPointsFragment>({
-          id: "Post:" + id,
-          fragment: VoteStatusAndPointsFragmentDoc,
-          data: {
-            id: id,
-            voteStatus: null,
-            points: newPoints,
-          },
-        });
-      }
+      cache.writeFragment<VoteStatusAndPointsFragment>({
+        id: "Post:" + id,
+        fragment: VoteStatusAndPointsFragmentDoc,
+        data: {
+          id: id,
+          voteStatus: null,
+          points: newPoints,
+        },
+      });
     }
   };
 

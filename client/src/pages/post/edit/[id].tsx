@@ -43,16 +43,37 @@ const EditPost: React.FC<EditPostProps> = ({}) => {
               updatePostId: postId,
             },
 
-            update: (cache, { data }) => {
+            update: (cache, { data: updatedPostData }) => {
+              // if (!updatedPostData) return;
+
+              // const newPostContentSnippet =
+              //   updatedPostData?.updatePost?.contents.slice(0, 50);
+              // if (!newPostContentSnippet) return;
+
+              // cache.updateQuery<PostsQuery>(
+              //   {
+              //     query: PostsDocument,
+              //     variables: { limit: 15, cursor: null },
+              //   },
+              //   (cachedPosts) => {
+              //     if (!cachedPosts) return;
+
+              //     cachedPosts.posts.posts.map((post) =>
+              //       post.id === postId
+              //         ? { ...post, contentSnippets: newPostContentSnippet }
+              //         : post
+              //     );
+              //   }
+              // );
+
               const cachedPost = cache.readQuery<PostsQuery>({
                 query: PostsDocument,
+                variables: { limit: 15, cursor: null },
               });
               if (!cachedPost) return;
 
-              const newPostContentSnippet = data?.updatePost?.contents.slice(
-                0,
-                50
-              );
+              const newPostContentSnippet =
+                updatedPostData?.updatePost?.contents.slice(0, 50);
               if (!newPostContentSnippet) return;
 
               cache.writeQuery<PostsQuery>({

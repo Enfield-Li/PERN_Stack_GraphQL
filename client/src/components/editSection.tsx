@@ -1,7 +1,7 @@
 import React from "react";
 import {
   MeQuery,
-  PostSnippetFragment,
+  PostContentsFragment,
   PostsSnippetFragment,
   useDeletePostMutation,
 } from "../generated/graphql";
@@ -9,7 +9,7 @@ import NextLink from "next/link";
 import { useRouter } from "next/router";
 
 interface editSectionProps {
-  post: PostSnippetFragment | PostsSnippetFragment;
+  post: PostContentsFragment | PostsSnippetFragment;
   meData: MeQuery | undefined;
 }
 
