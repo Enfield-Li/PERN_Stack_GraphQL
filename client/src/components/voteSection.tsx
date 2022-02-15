@@ -8,6 +8,7 @@ import React from "react";
 import {
   PostContentsFragment,
   PostsSnippetFragment,
+  useMeQuery,
   useVoteMutation,
   VoteMutation,
   VoteStatusAndPointsFragment,
@@ -21,12 +22,16 @@ interface voteSectionProps {
 const voteSection: React.FC<voteSectionProps> = ({ post }) => {
   const router = useRouter();
   const [vote] = useVoteMutation();
+  const { data } = useMeQuery();
 
   const cacheUpdateAfterVote = (
     id: number,
     votings: boolean,
     cache: ApolloCache<VoteMutation>
   ) => {
+    // id: number;
+    // voteStatus?: boolean | null | undefined;
+    // points: number;
     const cachedData = cache.readFragment<VoteStatusAndPointsFragment>({
       fragment: VoteStatusAndPointsFragmentDoc,
       id: "Post:" + id,
@@ -67,9 +72,9 @@ const voteSection: React.FC<voteSectionProps> = ({ post }) => {
     }
   };
 
-  let path = "/";
+  let path = "";
   if (router.pathname.includes("post")) {
-    path = `/post/${post.id}`;
+    path = `post/${post.id}`;
   }
 
   return (
@@ -77,15 +82,18 @@ const voteSection: React.FC<voteSectionProps> = ({ post }) => {
       <i
         className={`bi bi-caret-up btn ${post.voteStatus ? "bg-info" : ""}`}
         onClick={async () => {
+          if (data?.me === null) {
+            // router.replace(`/login?next=${path}`);
+            router.push("/login");
+            return;
+          }
           try {
             await vote({
               variables: { postId: post.id, value: true },
               update: (cache) => cacheUpdateAfterVote(post.id, true, cache),
             });
           } catch (err) {
-            // console.log(err);
-            // router.push("/login");
-            // router.replace(`/login?next=${path}`);
+            console.log(err);
           }
         }}
       />

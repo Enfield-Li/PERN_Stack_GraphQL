@@ -1,8 +1,7 @@
 import React from "react";
 import NextLink from "next/link";
 import {
-  MeDocument,
-  MeQuery,
+  PostsDocument,
   useLogoutMutation,
   useMeQuery,
 } from "../generated/graphql";
@@ -78,7 +77,14 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
             <a
               className="nav-link active text-dark h2"
               aria-current="page"
-              href="#"
+              onClick={async () => {
+                await apolloClient.refetchQueries({
+                  include: [PostsDocument],
+                  updateCache(cache) {
+                    cache.evict({ fieldName: "posts" });
+                  },
+                });
+              }}
             >
               Home
             </a>

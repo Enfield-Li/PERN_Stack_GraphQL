@@ -4,10 +4,10 @@ import {
   useMeQuery,
   usePostsQuery,
 } from "../generated/graphql";
-import Spinner from "./Spinner";
 import NextLink from "next/link";
 import VoteSection from "../components/voteSection";
 import EditSection from "./editSection";
+import PlaceHolder from "./PlaceHolder";
 
 interface MainContentProps {}
 
@@ -18,8 +18,9 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
   return (
     <div className="mt-3">
       {!postData && loading ? (
-        <div className="d-flex justify-content-center">
-          <Spinner />
+        <div>
+          <PlaceHolder />
+          <PlaceHolder />
         </div>
       ) : (
         postData?.posts.posts.map((post) => (

@@ -48,9 +48,9 @@ const login: React.FC<loginProps> = ({}) => {
                 me: data?.login.user,
               },
             });
-            // cache.evict({ fieldName: "posts:{}" });
+            cache.evict({ fieldName: "posts" });
           },
-          refetchQueries: [{ query: PostsDocument }],
+          // refetchQueries: [{ query: PostsDocument }],
         });
 
         if (res.data?.login.errors) {

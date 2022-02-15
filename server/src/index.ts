@@ -26,6 +26,7 @@ const main = async () => {
       res,
       redis,
     }),
+    // plugins: [ApolloServerPluginLandingPageDisabled()], // from apollo server core
   });
   await apolloServer.start();
   apolloServer.applyMiddleware({
