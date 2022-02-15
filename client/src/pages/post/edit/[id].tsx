@@ -15,11 +15,14 @@ import {
 interface EditPostProps {}
 
 const EditPost: React.FC<EditPostProps> = ({}) => {
-  const [updatePost, { data: updateData }] = useUpdatePostMutation();
   const router = useRouter();
   const postId =
     typeof router.query.id === "string" ? parseInt(router.query.id) : -1;
-  const { data, loading } = usePostQuery({ variables: { postId } });
+  const { data, loading } = usePostQuery({
+    variables: { postId },
+    skip: postId === -1,
+  });
+  const [updatePost, { data: updateData }] = useUpdatePostMutation();
 
   if (loading) return <LayoutSpinner />;
 

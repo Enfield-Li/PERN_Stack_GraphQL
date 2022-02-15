@@ -28,17 +28,22 @@ export class PostResolver {
     const inputLimit = Math.min(50, limit);
     const inputLimitPlus = inputLimit + 1;
 
+    const replacement: any[] = [inputLimitPlus];
+
+    if (cursor) replacement.push(new Date(parseInt(cursor)));
+
     const posts = await getConnection().query(
       `
         select * from post
+        ${cursor ? 'where "createdAt" < $2' : ""}
         order by "createdAt" desc
         limit $1
       `,
-      [inputLimitPlus]
+      replacement
     );
 
     return {
-      posts: posts.slice(0, 10),
+      posts: posts.slice(0, limit),
       hasMore: posts.length === inputLimitPlus,
     };
   }
