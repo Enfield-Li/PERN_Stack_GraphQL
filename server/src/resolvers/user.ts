@@ -34,6 +34,14 @@ export class UserResolver {
     return await Post.find({ where: { creatorId: req.session.userId } });
   }
 
+  @FieldResolver(() => String)
+  async email(@Root() user: User, @Ctx() { req }: MyContext) {
+    if (req.session.userId === user.id) {
+      return user.email;
+    }
+    return "";
+  }
+
   @Mutation(() => UserResponse)
   async register(
     @Arg("input") input: UserInput,

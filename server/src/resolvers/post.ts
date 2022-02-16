@@ -54,20 +54,32 @@ export class PostResolver {
   }
 
   @FieldResolver(() => User)
-  async creator(@Root() post: Post): Promise<User | undefined> {
-    return await User.findOne(post.creatorId);
+  async creator(@Root() post: Post, @Ctx() { userLoader }: MyContext) {
+    console.log("post.creatorId: ", post.creatorId);
+    const res = await userLoader.load(post.creatorId);
+    console.log("res: ", res);
+    return res;
   }
 
   @FieldResolver(() => Boolean, { nullable: true })
   async voteStatus(
     @Root() post: Post,
-    @Ctx() { req }: MyContext
-  ): Promise<boolean | undefined> {
-    const vote = await Votes.findOne({
-      where: { postId: post.id, userId: req.session.userId },
-    });
+    @Ctx() { voteLoader, req }: MyContext
+  ): Promise<boolean | null> {
+    // const res = await Votes.findOne({
+    //   where: { postId: post.id, userId: req.session.userId },
+    // });
+    // console.log("res: ", res);
+    // return res ? res.values : null;
+    if (!req.session.userId) return null;
 
-    return vote?.value;
+    const res = await voteLoader.load({
+      postId: post.id,
+      userId: req.session.userId,
+    });
+    console.log("res: ", res);
+
+    return res ? res.value : null;
   }
 
   @Query(() => Post, { nullable: true })

@@ -1,3 +1,4 @@
+import { createVoteLoader } from "./utils/createVoteLoader";
 import "reflect-metadata";
 import express from "express";
 import { sessionConfig, redis } from "./utils/sessionConfig";
@@ -6,9 +7,10 @@ import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { MyContext } from "./types/contextType";
 import { resolvers } from "./utils/resolvers";
+import { createUserLoader } from "./utils/createUserLoader";
 
 const main = async () => {
-  const conn = await connectDB;
+  const conn = await connectDB();
   await conn.runMigrations();
   // await Post.delete({});
 
@@ -25,6 +27,8 @@ const main = async () => {
       req,
       res,
       redis,
+      userLoader: createUserLoader(),
+      voteLoader: createVoteLoader(),
     }),
     // plugins: [ApolloServerPluginLandingPageDisabled()], // from apollo server core
   });
