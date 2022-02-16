@@ -10,7 +10,7 @@ import withApollo from "../utils/withApollo";
 
 interface registerProps {}
 
-const register: NextPage<registerProps> = ({}) => {
+const Register: NextPage<registerProps> = ({}) => {
   const [register] = useRegisterMutation();
   const router = useRouter();
 
@@ -41,7 +41,7 @@ const register: NextPage<registerProps> = ({}) => {
   );
 };
 // export default register;
-export default withApollo({ ssr: false })(register);
+export default withApollo({ ssr: false })(Register);
 
 // $1
 

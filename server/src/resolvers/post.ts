@@ -55,9 +55,7 @@ export class PostResolver {
 
   @FieldResolver(() => User)
   async creator(@Root() post: Post, @Ctx() { userLoader }: MyContext) {
-    console.log("post.creatorId: ", post.creatorId);
     const res = await userLoader.load(post.creatorId);
-    console.log("res: ", res);
     return res;
   }
 

@@ -20,7 +20,7 @@ interface initialValues {
   password: string;
 }
 
-const login: React.FC<loginProps> = ({}) => {
+const Login: React.FC<loginProps> = ({}) => {
   const router = useRouter();
   const [login] = useLoginMutation();
   // behavior: data will return undefined at first and then actual data
@@ -74,4 +74,4 @@ const login: React.FC<loginProps> = ({}) => {
     </Formik>
   );
 };
-export default withApollo({ ssr: false })(login);
+export default withApollo({ ssr: false })(Login);

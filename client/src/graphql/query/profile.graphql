@@ -1,0 +1,17 @@
+query Profile {
+  me {
+    id
+    username
+    createdAt
+    email
+    userPost {
+      id
+      title
+      points
+      contentSnippets
+      createdAt
+      updatedAt
+      voteStatus
+    }
+  }
+}
