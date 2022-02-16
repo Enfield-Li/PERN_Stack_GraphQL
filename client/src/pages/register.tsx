@@ -6,6 +6,7 @@ import { toError } from "../utils/toError";
 import InputWrapper from "../components/InputWrapper";
 import { useRouter } from "next/router";
 import FormWrapper from "../components/FormWrapper";
+import withApollo from "../utils/withApollo";
 
 interface registerProps {}
 
@@ -39,7 +40,8 @@ const register: NextPage<registerProps> = ({}) => {
     </Formik>
   );
 };
-export default register;
+// export default register;
+export default withApollo({ ssr: false })(register);
 
 // $1
 

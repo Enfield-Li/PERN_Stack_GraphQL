@@ -12,6 +12,7 @@ import {
   VoteStatusAndPointsFragment,
 } from "../generated/graphql";
 import { toError } from "../utils/toError";
+import withApollo from "../utils/withApollo";
 
 interface loginProps {}
 interface initialValues {
@@ -73,4 +74,4 @@ const login: React.FC<loginProps> = ({}) => {
     </Formik>
   );
 };
-export default login;
+export default withApollo({ ssr: false })(login);

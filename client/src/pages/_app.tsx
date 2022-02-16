@@ -3,31 +3,31 @@ import Head from "next/head";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import { PaginatedPosts, PostsQuery } from "../generated/graphql";
 
-const client = new ApolloClient({
-  uri: "http://localhost:3999/graphql",
-  cache: new InMemoryCache({
-    typePolicies: {
-      Query: {
-        fields: {
-          posts: {
-            keyArgs: [],
-            merge(
-              existing: PaginatedPosts | undefined,
-              incoming: PaginatedPosts
-            ): PaginatedPosts {
-              console.log(existing, incoming);
-              return {
-                ...incoming,
-                posts: [...(existing?.posts || []), ...incoming.posts],
-              };
-            },
-          },
-        },
-      },
-    },
-  }),
-  credentials: "include",
-});
+// const client = new ApolloClient({
+//   uri: "http://localhost:3999/graphql",
+//   cache: new InMemoryCache({
+//     typePolicies: {
+//       Query: {
+//         fields: {
+//           posts: {
+//             keyArgs: [],
+//             merge(
+//               existing: PaginatedPosts | undefined,
+//               incoming: PaginatedPosts
+//             ): PaginatedPosts {
+//               console.log(existing, incoming);
+//               return {
+//                 ...incoming,
+//                 posts: [...(existing?.posts || []), ...incoming.posts],
+//               };
+//             },
+//           },
+//         },
+//       },
+//     },
+//   }),
+//   credentials: "include",
+// });
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -49,9 +49,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         <title>Myapp</title>
       </Head>
 
-      <ApolloProvider client={client}>
+      {/* <ApolloProvider client={client}> */}
         <Component {...pageProps} />
-      </ApolloProvider>
+      {/* </ApolloProvider> */}
 
       {/* bootstrap script */}
       <script

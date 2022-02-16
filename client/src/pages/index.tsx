@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import LayoutWrapper from "../components/LayoutWrapper";
 import MainContent from "../components/MainContent";
-import PlaceHolder from "../components/PlaceHolder";
+import withApollo from "../utils/withApollo";
 
 const Home: NextPage = () => {
   return (
@@ -11,4 +11,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default withApollo({ ssr: true })(Home);

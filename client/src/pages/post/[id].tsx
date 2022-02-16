@@ -5,6 +5,7 @@ import LayoutSpinner from "../../components/LayoutSpinner";
 import LayoutWrapper from "../../components/LayoutWrapper";
 import VoteSection from "../../components/voteSection";
 import { useMeQuery, usePostQuery } from "../../generated/graphql";
+import withApollo from "../../utils/withApollo";
 
 interface PostProps {}
 
@@ -47,4 +48,4 @@ const Post: React.FC<PostProps> = ({}) => {
   );
 };
 
-export default Post;
+export default withApollo({ ssr: true })(Post);

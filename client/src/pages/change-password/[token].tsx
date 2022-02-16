@@ -5,6 +5,7 @@ import FormWrapper from "../../components/FormWrapper";
 import InputWrapper from "../../components/InputWrapper";
 import { useChangePasswordMutation } from "../../generated/graphql";
 import { toError } from "../../utils/toError";
+import withApollo from "../../utils/withApollo";
 
 interface ChangePasswordProps {}
 
@@ -33,7 +34,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({}) => {
       }}
     >
       {(props) => (
-        <FormWrapper props={props} formUsage="changePassword">
+        <FormWrapper props={props} formUsage="Change password">
           <InputWrapper
             label="New Password"
             name="password"
@@ -44,4 +45,4 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({}) => {
     </Formik>
   );
 };
-export default ChangePassword;
+export default withApollo({ ssr: false })(ChangePassword);
