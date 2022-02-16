@@ -13,6 +13,7 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
       limit: 15,
       cursor: null,
     },
+    notifyOnNetworkStatusChange: true,
   });
   const { data: meData } = useMeQuery();
 
@@ -63,23 +64,34 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
                     data?.posts.posts[data.posts.posts.length - 1].createdAt,
                 },
 
-                updateQuery: (previousValue, { fetchMoreResult }) => {
-                  if (!fetchMoreResult) return previousValue;
+                // updateQuery: (previousValue, { fetchMoreResult }) => {
+                //   if (!fetchMoreResult) return previousValue;
 
-                  return {
-                    posts: {
-                      hasMore: fetchMoreResult.posts.hasMore,
-                      posts: [
-                        ...previousValue.posts.posts,
-                        ...fetchMoreResult.posts.posts,
-                      ],
-                    },
-                  };
-                },
+                //   return {
+                //     posts: {
+                //       hasMore: fetchMoreResult.posts.hasMore,
+                //       posts: [
+                //         ...previousValue.posts.posts,
+                //         ...fetchMoreResult.posts.posts,
+                //       ],
+                //     },
+                //   };
+                // },
               });
             }}
           >
-            load more
+            {loading ? (
+              <>
+                <span
+                  className="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
+                <span className="visually-hidden">Loading...</span>
+              </>
+            ) : (
+              "Load more"
+            )}
           </button>
         </div>
       ) : null}

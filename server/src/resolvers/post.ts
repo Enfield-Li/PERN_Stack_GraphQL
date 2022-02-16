@@ -66,18 +66,12 @@ export class PostResolver {
     @Root() post: Post,
     @Ctx() { voteLoader, req }: MyContext
   ): Promise<boolean | null> {
-    // const res = await Votes.findOne({
-    //   where: { postId: post.id, userId: req.session.userId },
-    // });
-    // console.log("res: ", res);
-    // return res ? res.values : null;
     if (!req.session.userId) return null;
 
     const res = await voteLoader.load({
       postId: post.id,
       userId: req.session.userId,
     });
-    console.log("res: ", res);
 
     return res ? res.value : null;
   }
@@ -107,15 +101,6 @@ export class PostResolver {
     @Arg("contents") contents: string,
     @Ctx() { req }: MyContext
   ): Promise<Post | null> {
-    // const post = await Post.findOne(id);
-    // if (!post) return undefined;
-
-    // if (title) post.title = title;
-    // if (contents) post.contents = contents;
-
-    // await Post.update(id, post);
-
-    // return post;
     const res = await getConnection()
       .createQueryBuilder()
       .update(Post)
