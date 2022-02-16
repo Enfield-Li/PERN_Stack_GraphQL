@@ -5,13 +5,7 @@ query Profile {
     createdAt
     email
     userPost {
-      id
-      title
-      points
-      contentSnippets
-      createdAt
-      updatedAt
-      voteStatus
+      ...PostsSnippet
     }
   }
 }

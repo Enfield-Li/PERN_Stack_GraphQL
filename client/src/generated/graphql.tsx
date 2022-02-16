@@ -239,7 +239,7 @@ export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'Paginate
 export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProfileQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: number, username: string, createdAt: string, email: string, userPost?: Array<{ __typename?: 'Post', id: number, title: string, points: number, contentSnippets: string, createdAt: string, updatedAt: string, voteStatus?: boolean | null }> | null } | null };
+export type ProfileQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: number, username: string, createdAt: string, email: string, userPost?: Array<{ __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, voteStatus?: boolean | null, points: number }> | null } | null };
 
 export const VoteStatusAndPointsFragmentDoc = gql`
     fragment VoteStatusAndPoints on Post {
@@ -714,17 +714,11 @@ export const ProfileDocument = gql`
     createdAt
     email
     userPost {
-      id
-      title
-      points
-      contentSnippets
-      createdAt
-      updatedAt
-      voteStatus
+      ...PostsSnippet
     }
   }
 }
-    `;
+    ${PostsSnippetFragmentDoc}`;
 
 /**
  * __useProfileQuery__
