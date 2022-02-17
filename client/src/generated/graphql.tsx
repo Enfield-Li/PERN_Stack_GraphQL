@@ -106,6 +106,7 @@ export type Query = {
   hello: Scalars['String'];
   me?: Maybe<User>;
   posts: PaginatedPosts;
+  user?: Maybe<User>;
 };
 
 
@@ -119,11 +120,16 @@ export type QueryPostsArgs = {
   limit?: InputMaybe<Scalars['Int']>;
 };
 
+
+export type QueryUserArgs = {
+  userId: Scalars['Float'];
+};
+
 export type User = {
   __typename?: 'User';
   createdAt: Scalars['String'];
   email: Scalars['String'];
-  id: Scalars['Float'];
+  id: Scalars['Int'];
   updatedAt: Scalars['String'];
   userPost?: Maybe<Array<Post>>;
   username: Scalars['String'];
@@ -145,7 +151,7 @@ export type PostContentsFragment = { __typename?: 'Post', createdAt: string, upd
 
 export type PostsSnippetFragment = { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, voteStatus?: boolean | null, points: number };
 
-export type UserInfoFragment = { __typename?: 'User', id: number, username: string };
+export type UserInfoFragment = { __typename?: 'User', id: number, username: string, createdAt: string };
 
 export type VoteStatusAndPointsFragment = { __typename?: 'Post', id: number, voteStatus?: boolean | null, points: number };
 
@@ -185,7 +191,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', user?: { __typename?: 'User', id: number, username: string } | null, errors?: { __typename?: 'FieldError', field: string, message: string } | null } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', user?: { __typename?: 'User', id: number, username: string, createdAt: string } | null, errors?: { __typename?: 'FieldError', field: string, message: string } | null } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -197,7 +203,7 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', user?: { __typename?: 'User', id: number, username: string } | null, errors?: { __typename?: 'FieldError', field: string, message: string } | null } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', user?: { __typename?: 'User', id: number, username: string, createdAt: string } | null, errors?: { __typename?: 'FieldError', field: string, message: string } | null } };
 
 export type UpdatePostMutationVariables = Exact<{
   contents: Scalars['String'];
@@ -219,7 +225,7 @@ export type VoteMutation = { __typename?: 'Mutation', vote: boolean };
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: number, username: string } | null };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: number, username: string, createdAt: string } | null };
 
 export type PostQueryVariables = Exact<{
   postId: Scalars['Int'];
@@ -234,12 +240,14 @@ export type PostsQueryVariables = Exact<{
 }>;
 
 
-export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPosts', hasMore: boolean, posts: Array<{ __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, voteStatus?: boolean | null, points: number }> } };
+export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPosts', hasMore: boolean, posts: Array<{ __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, voteStatus?: boolean | null, points: number, creator: { __typename?: 'User', id: number, username: string, createdAt: string } }> } };
 
-export type ProfileQueryVariables = Exact<{ [key: string]: never; }>;
+export type UserQueryVariables = Exact<{
+  userId: Scalars['Float'];
+}>;
 
 
-export type ProfileQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: number, username: string, createdAt: string, email: string, userPost?: Array<{ __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, voteStatus?: boolean | null, points: number }> | null } | null };
+export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: number, username: string, createdAt: string, userPost?: Array<{ __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, voteStatus?: boolean | null, points: number }> | null } | null };
 
 export const VoteStatusAndPointsFragmentDoc = gql`
     fragment VoteStatusAndPoints on Post {
@@ -272,6 +280,7 @@ export const UserInfoFragmentDoc = gql`
     fragment UserInfo on User {
   id
   username
+  createdAt
 }
     `;
 export const ChangePasswordDocument = gql`
@@ -673,10 +682,14 @@ export const PostsDocument = gql`
     hasMore
     posts {
       ...PostsSnippet
+      creator {
+        ...UserInfo
+      }
     }
   }
 }
-    ${PostsSnippetFragmentDoc}`;
+    ${PostsSnippetFragmentDoc}
+${UserInfoFragmentDoc}`;
 
 /**
  * __usePostsQuery__
@@ -706,43 +719,42 @@ export function usePostsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Post
 export type PostsQueryHookResult = ReturnType<typeof usePostsQuery>;
 export type PostsLazyQueryHookResult = ReturnType<typeof usePostsLazyQuery>;
 export type PostsQueryResult = Apollo.QueryResult<PostsQuery, PostsQueryVariables>;
-export const ProfileDocument = gql`
-    query Profile {
-  me {
-    id
-    username
-    createdAt
-    email
+export const UserDocument = gql`
+    query User($userId: Float!) {
+  user(userId: $userId) {
+    ...UserInfo
     userPost {
       ...PostsSnippet
     }
   }
 }
-    ${PostsSnippetFragmentDoc}`;
+    ${UserInfoFragmentDoc}
+${PostsSnippetFragmentDoc}`;
 
 /**
- * __useProfileQuery__
+ * __useUserQuery__
  *
- * To run a query within a React component, call `useProfileQuery` and pass it any options that fit your needs.
- * When your component renders, `useProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useProfileQuery({
+ * const { data, loading, error } = useUserQuery({
  *   variables: {
+ *      userId: // value for 'userId'
  *   },
  * });
  */
-export function useProfileQuery(baseOptions?: Apollo.QueryHookOptions<ProfileQuery, ProfileQueryVariables>) {
+export function useUserQuery(baseOptions: Apollo.QueryHookOptions<UserQuery, UserQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ProfileQuery, ProfileQueryVariables>(ProfileDocument, options);
+        return Apollo.useQuery<UserQuery, UserQueryVariables>(UserDocument, options);
       }
-export function useProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProfileQuery, ProfileQueryVariables>) {
+export function useUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserQuery, UserQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ProfileQuery, ProfileQueryVariables>(ProfileDocument, options);
+          return Apollo.useLazyQuery<UserQuery, UserQueryVariables>(UserDocument, options);
         }
-export type ProfileQueryHookResult = ReturnType<typeof useProfileQuery>;
-export type ProfileLazyQueryHookResult = ReturnType<typeof useProfileLazyQuery>;
-export type ProfileQueryResult = Apollo.QueryResult<ProfileQuery, ProfileQueryVariables>;
+export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
+export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
+export type UserQueryResult = Apollo.QueryResult<UserQuery, UserQueryVariables>;

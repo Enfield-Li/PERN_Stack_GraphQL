@@ -27,11 +27,8 @@ import sendEmail from "../utils/mailer";
 @Resolver(User)
 export class UserResolver {
   @FieldResolver(() => [Post], { nullable: true })
-  async userPost(
-    @Root() user: User,
-    @Ctx() { req }: MyContext
-  ): Promise<Post[] | null> {
-    return await Post.find({ where: { creatorId: req.session.userId } });
+  async userPost(@Root() user: User): Promise<Post[] | null> {
+    return await Post.find({ where: { creatorId: user.id } });
   }
 
   @FieldResolver(() => String)
@@ -40,6 +37,18 @@ export class UserResolver {
       return user.email;
     }
     return "";
+  }
+
+  // @Query(() => [User])
+  // async userWithMostPosts(): Promise<User[]> {
+  // }
+
+  @Query(() => User, { nullable: true })
+  async user(@Arg("userId") userId: number): Promise<User | undefined> {
+    const user = User.findOne({ where: { id: userId } });
+    if (!user) return undefined;
+
+    return user;
   }
 
   @Mutation(() => UserResponse)

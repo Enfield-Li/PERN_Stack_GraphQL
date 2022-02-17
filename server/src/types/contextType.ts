@@ -1,3 +1,4 @@
+import { createPostLoader } from "./../utils/createPostLoader";
 import { createVoteLoader } from "./../utils/createVoteLoader";
 import { createUserLoader } from "../utils/createUserLoader";
 import { Redis } from "ioredis";
@@ -11,4 +12,5 @@ export type MyContext = {
   redis: Redis;
   userLoader: ReturnType<typeof createUserLoader>;
   voteLoader: ReturnType<typeof createVoteLoader>;
+  postLoader: ReturnType<typeof createPostLoader>;
 };

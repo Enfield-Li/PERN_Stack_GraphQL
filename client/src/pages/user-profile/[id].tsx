@@ -4,24 +4,30 @@ import LayoutSpinner from "../../components/LayoutSpinner";
 import LayoutWrapper from "../../components/LayoutWrapper";
 import PlaceHolder from "../../components/PlaceHolder";
 import VoteSection from "../../components/voteSection";
-import { useProfileQuery } from "../../generated/graphql";
 import withApollo from "../../utils/withApollo";
 import NextLink from "next/link";
+import { useUserQuery } from "../../generated/graphql";
+import { useRouter } from "next/router";
+import { useGetIntId } from "../../utils/useGetIntId";
 
-const Profile: React.FC = ({}) => {
-  const { data, loading, error } = useProfileQuery();
+const UserProfile: React.FC = ({}) => {
+  const intId = useGetIntId();
+  console.log(intId);
+  const { data, error, loading } = useUserQuery({
+    variables: { userId: intId },
+  });
 
   if (error) return <LayoutWrapper>Something went wrong</LayoutWrapper>;
 
   return (
     <LayoutWrapper>
-      {!data?.me?.userPost && loading ? (
+      {!data?.user && loading ? (
         <div>
           <PlaceHolder />
           <PlaceHolder />
         </div>
-      ) : (
-        data?.me?.userPost!.map((post) => (
+      ) : data?.user?.userPost ? (
+        data?.user?.userPost.map((post) => (
           <div className="card my-3" key={post.id}>
             <div className="card-body">
               <div className="d-flex justify-content-between">
@@ -45,9 +51,11 @@ const Profile: React.FC = ({}) => {
             </div>
           </div>
         ))
+      ) : (
+        "User hasn't posted anything yet"
       )}
     </LayoutWrapper>
   );
 };
 
-export default withApollo({ ssr: false })(Profile);
+export default withApollo({ ssr: false })(UserProfile);

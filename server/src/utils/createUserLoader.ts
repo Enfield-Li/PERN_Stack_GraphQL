@@ -1,7 +1,7 @@
 import { User } from "../entities/User";
 import DataLoader from "dataloader";
 
-type userIdMapToUserType = {
+type usersIdMapToUserType = {
   [key: number]: User;
 };
 
@@ -9,13 +9,13 @@ export const createUserLoader = () =>
   new DataLoader<number, User>(async (userIds): Promise<User[]> => {
     const users = await User.findByIds(userIds as number[]);
 
-    const usersIdMapToUser: userIdMapToUserType = {};
+    const userdIdMapToUser: usersIdMapToUserType = {};
 
     users.forEach((user) => {
-      usersIdMapToUser[user.id] = user;
+      userdIdMapToUser[user.id] = user;
     });
 
-    return userIds.map((userId) => usersIdMapToUser[userId]);
+    return userIds.map((userId) => userdIdMapToUser[userId]);
   });
 // userIds: [85, 80, 83];
 

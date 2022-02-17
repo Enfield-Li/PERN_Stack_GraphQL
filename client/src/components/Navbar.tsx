@@ -22,7 +22,10 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
   } else if (data?.me) {
     userStatus = (
       <div className="d-flex align-items-center">
-        <NextLink href={"/my-profile/[id]"} as={`/my-profile/${data.me.id}`}>
+        <NextLink
+          href={"/user-profile/[id]"}
+          as={`/user-profile/${data.me.id}`}
+        >
           <a className="nav-link text-dark" href="#">
             {data.me?.username}
           </a>

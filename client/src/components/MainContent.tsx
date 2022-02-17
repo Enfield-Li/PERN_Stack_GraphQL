@@ -31,13 +31,24 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
               <div className="d-flex justify-content-between">
                 <div className="d-flex">
                   <VoteSection post={post} />
-                  <div className="align-self-center">
+                  <div className="">
+                    <div className="fs-6 fw-light">
+                      Posted by{" "}
+                      <NextLink
+                        href={"/user-profile/[id]"}
+                        as={`/user-profile/${post.creatorId}`}
+                      >
+                        <a className="fw-lighter text-decoration-none text-dark">
+                          {post.creator.username}
+                        </a>
+                      </NextLink>
+                    </div>
                     <NextLink href={"/post/[id]"} as={`/post/${post.id}`}>
                       <a className="card-title text-dark text-decoration-none h3">
                         {post.title}
                       </a>
                     </NextLink>
-                    <p className="card-text mt-2 text-muted">
+                    <p className="card-text mt-1 fs-5">
                       {post.contentSnippets.length === 50
                         ? post.contentSnippets + "..."
                         : post.contentSnippets}

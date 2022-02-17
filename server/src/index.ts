@@ -1,3 +1,4 @@
+import { createPostLoader } from "./utils/createPostLoader";
 import { createVoteLoader } from "./utils/createVoteLoader";
 import "reflect-metadata";
 import express from "express";
@@ -29,6 +30,7 @@ const main = async () => {
       redis,
       userLoader: createUserLoader(),
       voteLoader: createVoteLoader(),
+      postLoader: createPostLoader(),
     }),
     // plugins: [ApolloServerPluginLandingPageDisabled()], // from apollo server core
   });
