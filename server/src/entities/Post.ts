@@ -10,7 +10,7 @@ import {
 import { PrimaryGeneratedColumn } from "typeorm";
 import { ObjectType, Field, Int, ID } from "type-graphql";
 import { User } from "./User";
-import { Votes } from "./Votes";
+import { PostActivities } from "./PostActivities";
 
 @ObjectType()
 @Entity()
@@ -45,8 +45,16 @@ export class Post extends BaseEntity {
 
   @Field()
   @Column({ type: "int", default: 0 })
-  points: number;
+  votePoints: number;
 
-  @OneToMany(() => Votes, (votes) => votes.post)
-  votes: Votes[];
+  @Field()
+  @Column({ type: "int", default: 0 })
+  likePoints: number;
+
+  @Field()
+  @Column({ type: "int", default: 0 })
+  laughPoints: number;
+
+  @OneToMany(() => PostActivities, (votes) => votes.post)
+  votes: PostActivities[];
 }

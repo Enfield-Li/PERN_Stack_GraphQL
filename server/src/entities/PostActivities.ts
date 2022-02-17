@@ -1,12 +1,28 @@
 import { Field } from "type-graphql";
-import { BaseEntity, Column, CreateDateColumn, Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryColumn,
+} from "typeorm";
 import { Post } from "./Post";
 import { User } from "./User";
 
 @Entity()
-export class Votes extends BaseEntity {
+export class PostActivities extends BaseEntity {
+  @Field()
   @Column({ nullable: true })
-  value: boolean;
+  vote: boolean;
+
+  @Field()
+  @Column({ nullable: true })
+  like: boolean;
+
+  @Field()
+  @Column({ nullable: true })
+  laugh: boolean;
 
   @Field(() => String)
   @CreateDateColumn()

@@ -1,14 +1,14 @@
 import DataLoader from "dataloader";
-import { Votes } from "../entities/Votes";
+import { PostActivities } from "../entities/PostActivities";
 
 type votesMapToVoteType = {
-  [key: string]: Votes;
+  [key: string]: PostActivities;
 };
 
 export const createVoteLoader = () =>
-  new DataLoader<{ postId: number; userId: number }, Votes | null>(
-    async (keys): Promise<Votes[] | null[]> => {
-      const votes = await Votes.findByIds(keys as any[]);
+  new DataLoader<{ postId: number; userId: number }, PostActivities | null>(
+    async (keys): Promise<PostActivities[] | null[]> => {
+      const votes = await PostActivities.findByIds(keys as any[]);
 
       const votesMapToVotes: votesMapToVoteType = {};
 

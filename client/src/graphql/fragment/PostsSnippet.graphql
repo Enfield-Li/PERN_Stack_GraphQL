@@ -1,5 +1,5 @@
 fragment PostsSnippet on Post {
-  ...VoteStatusAndPoints
+  ...PostActivitiesStatusAndPoints
   createdAt
   updatedAt
   title

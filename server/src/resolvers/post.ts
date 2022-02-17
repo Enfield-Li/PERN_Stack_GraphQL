@@ -1,6 +1,11 @@
+import { fieldInteactionWithDB } from "./../actions/dbQuery";
 import { User } from "./../entities/User";
-import { PaginatedPosts } from "./../types/resolvertypes";
-import { Votes } from "./../entities/Votes";
+import {
+  InteractWithPostInput,
+  PaginatedPosts,
+  PostActivitiesStatusType,
+} from "./../types/resolvertypes";
+import { PostActivities } from "../entities/PostActivities";
 import { MyContext } from "./../types/contextType";
 import { isAuth } from "./../middleware/isAuth";
 import { getConnection, TransactionManager } from "typeorm";
@@ -19,6 +24,32 @@ import {
 
 @Resolver(() => Post)
 export class PostResolver {
+  @FieldResolver(() => String)
+  contentSnippets(@Root() post: Post) {
+    return post.contents.slice(0, 50);
+  }
+
+  @FieldResolver(() => User)
+  async creator(@Root() post: Post, @Ctx() { userLoader }: MyContext) {
+    const res = await userLoader.load(post.creatorId);
+    return res;
+  }
+
+  @FieldResolver(() => PostActivitiesStatusType, { nullable: true })
+  async postActivitiesStatus(
+    @Root() post: Post,
+    @Ctx() { voteLoader, req }: MyContext
+  ): Promise<PostActivities | null> {
+    if (!req.session.userId) return null;
+
+    const res = await voteLoader.load({
+      postId: post.id,
+      userId: req.session.userId,
+    });
+
+    return res ? res : null;
+  }
+
   @Query(() => PaginatedPosts)
   async posts(
     @Arg("limit", () => Int, { defaultValue: 10, nullable: true })
@@ -46,32 +77,6 @@ export class PostResolver {
       posts: posts.slice(0, limit),
       hasMore: posts.length === inputLimitPlus,
     };
-  }
-
-  @FieldResolver(() => String)
-  contentSnippets(@Root() post: Post) {
-    return post.contents.slice(0, 50);
-  }
-
-  @FieldResolver(() => User)
-  async creator(@Root() post: Post, @Ctx() { userLoader }: MyContext) {
-    const res = await userLoader.load(post.creatorId);
-    return res;
-  }
-
-  @FieldResolver(() => Boolean, { nullable: true })
-  async voteStatus(
-    @Root() post: Post,
-    @Ctx() { voteLoader, req }: MyContext
-  ): Promise<boolean | null> {
-    if (!req.session.userId) return null;
-
-    const res = await voteLoader.load({
-      postId: post.id,
-      userId: req.session.userId,
-    });
-
-    return res ? res.value : null;
   }
 
   @Query(() => Post, { nullable: true })
@@ -128,108 +133,51 @@ export class PostResolver {
 
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
-  async vote(
-    @Arg("postId", () => Int) postId: number,
-    @Arg("value") value: boolean,
+  async interactWithPost(
+    @Arg("interactInput") interactInput: InteractWithPostInput,
     @Ctx() { req }: MyContext
   ): Promise<boolean> {
-    const voteValue = value ? 1 : -1;
+    const { like, postId, laugh, vote } = interactInput;
+
     const userId = req.session.userId;
+    if (!userId) throw new Error("Not Authenticated");
 
-    const userVotes = await Votes.findOne({ where: { postId, userId } });
+    const userInteactions = await PostActivities.findOne({
+      where: { postId, userId },
+    });
 
-    // user hasn't voted before
-    if (!userVotes) {
-      await getConnection().transaction(async (tem) => {
-        // const res = tem.create(Votes, { postId, userId, value });
-        const res = await tem.query(
-          `
-            insert into votes ("userId", "postId", value)
-            values ($1, $2, $3)
-          `,
-          [userId, postId, value]
-        );
+    if (like === true || like === false)
+      await fieldInteactionWithDB(
+        userInteactions,
+        userInteactions?.like,
+        "like",
+        like,
+        "likePoints",
+        userId,
+        postId
+      );
 
-        await tem.query(
-          `
-            update post 
-            set points = points + $1
-            where id = $2 
-          `,
-          [voteValue, postId]
-        );
-      });
-    }
-    // user voted, but reset the vote to null
-    else if (userVotes && userVotes.value === null) {
-      await getConnection().transaction(async (tem) => {
-        await tem.query(
-          `
-            update votes
-            set value = $1
-            where "postId" = $2 and "userId" = $3;
-          `,
-          [value, postId, userId]
-        );
+    if (vote === true || vote === false)
+      fieldInteactionWithDB(
+        userInteactions,
+        userInteactions?.vote,
+        "vote",
+        vote,
+        "votePoints",
+        userId,
+        postId
+      );
 
-        await tem.query(
-          `
-            update post
-            set points = points + $1
-            where id = $2;
-          `,
-          [voteValue, postId]
-        );
-      });
-    }
-    // user change up vote to down vote or vice versa
-    else if (
-      userVotes &&
-      userVotes.value !== value &&
-      userVotes.value !== null
-    ) {
-      await getConnection().transaction(async (tem) => {
-        await tem.query(
-          `
-            update votes
-            set value = $1
-            where "postId" = $2 and "userId" = $3;
-          `,
-          [value, postId, userId]
-        );
-
-        await tem.query(
-          `
-            update post
-            set points = points + $1
-            where id = $2;
-          `,
-          [voteValue * 2, postId]
-        );
-      });
-    }
-    // user unvote their vote ie. set vote.value = null
-    else if (userVotes && userVotes.value === value) {
-      await getConnection().transaction(async (tem) => {
-        await tem.query(
-          `
-            update votes
-            set value = $1
-            where "postId" = $2 and "userId" = $3;
-          `,
-          [null, postId, userId]
-        );
-
-        await tem.query(
-          `
-            update post
-            set points = points + ${value ? -1 : 1}
-            where id = $1;
-          `,
-          [postId]
-        );
-      });
-    }
+    if (laugh === true || laugh === false)
+      fieldInteactionWithDB(
+        userInteactions,
+        userInteactions?.laugh,
+        "laugh",
+        laugh,
+        "laughPoints",
+        userId,
+        postId
+      );
 
     return true;
   }

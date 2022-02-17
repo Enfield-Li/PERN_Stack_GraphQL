@@ -95,9 +95,16 @@ export type Post = {
   creatorId: Scalars['Int'];
   id: Scalars['Int'];
   points: Scalars['Float'];
+  postActivitiesStatus: PostActivitiesStatusType;
   title: Scalars['String'];
   updatedAt: Scalars['String'];
-  voteStatus?: Maybe<Scalars['Boolean']>;
+};
+
+export type PostActivitiesStatusType = {
+  __typename?: 'PostActivitiesStatusType';
+  laugh?: Maybe<Scalars['Boolean']>;
+  like?: Maybe<Scalars['Boolean']>;
+  vote?: Maybe<Scalars['Boolean']>;
 };
 
 export type Query = {
@@ -147,13 +154,15 @@ export type UserResponse = {
   user?: Maybe<User>;
 };
 
-export type PostContentsFragment = { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contents: string, id: number, voteStatus?: boolean | null, points: number };
+export type PostActivitiesStatusFragment = { __typename?: 'Post', postActivitiesStatus: { __typename?: 'PostActivitiesStatusType', vote?: boolean | null, like?: boolean | null, laugh?: boolean | null } };
 
-export type PostsSnippetFragment = { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, voteStatus?: boolean | null, points: number };
+export type PostContentsFragment = { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contents: string, id: number, points: number, postActivitiesStatus: { __typename?: 'PostActivitiesStatusType', vote?: boolean | null, like?: boolean | null, laugh?: boolean | null } };
+
+export type PostsSnippetFragment = { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, points: number, postActivitiesStatus: { __typename?: 'PostActivitiesStatusType', vote?: boolean | null, like?: boolean | null, laugh?: boolean | null } };
 
 export type UserInfoFragment = { __typename?: 'User', id: number, username: string, createdAt: string };
 
-export type VoteStatusAndPointsFragment = { __typename?: 'Post', id: number, voteStatus?: boolean | null, points: number };
+export type PostActivitiesStatusAndPointsFragment = { __typename?: 'Post', id: number, points: number, postActivitiesStatus: { __typename?: 'PostActivitiesStatusType', vote?: boolean | null, like?: boolean | null, laugh?: boolean | null } };
 
 export type ChangePasswordMutationVariables = Exact<{
   newPassword: Scalars['String'];
@@ -169,7 +178,7 @@ export type CreatePostMutationVariables = Exact<{
 }>;
 
 
-export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, voteStatus?: boolean | null, points: number, creator: { __typename?: 'User', id: number, username: string, createdAt: string } } };
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, points: number, creator: { __typename?: 'User', id: number, username: string, createdAt: string }, postActivitiesStatus: { __typename?: 'PostActivitiesStatusType', vote?: boolean | null, like?: boolean | null, laugh?: boolean | null } } };
 
 export type DeletePostMutationVariables = Exact<{
   deletePostId: Scalars['Float'];
@@ -232,7 +241,7 @@ export type PostQueryVariables = Exact<{
 }>;
 
 
-export type PostQuery = { __typename?: 'Query', Post?: { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contents: string, id: number, voteStatus?: boolean | null, points: number } | null };
+export type PostQuery = { __typename?: 'Query', Post?: { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contents: string, id: number, points: number, postActivitiesStatus: { __typename?: 'PostActivitiesStatusType', vote?: boolean | null, like?: boolean | null, laugh?: boolean | null } } | null };
 
 export type PostsQueryVariables = Exact<{
   cursor?: InputMaybe<Scalars['String']>;
@@ -240,42 +249,51 @@ export type PostsQueryVariables = Exact<{
 }>;
 
 
-export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPosts', hasMore: boolean, posts: Array<{ __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, voteStatus?: boolean | null, points: number, creator: { __typename?: 'User', id: number, username: string, createdAt: string } }> } };
+export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPosts', hasMore: boolean, posts: Array<{ __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, points: number, creator: { __typename?: 'User', id: number, username: string, createdAt: string }, postActivitiesStatus: { __typename?: 'PostActivitiesStatusType', vote?: boolean | null, like?: boolean | null, laugh?: boolean | null } }> } };
 
 export type UserQueryVariables = Exact<{
   userId: Scalars['Float'];
 }>;
 
 
-export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: number, username: string, createdAt: string, userPost?: Array<{ __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, voteStatus?: boolean | null, points: number }> | null } | null };
+export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: number, username: string, createdAt: string, userPost?: Array<{ __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, points: number, postActivitiesStatus: { __typename?: 'PostActivitiesStatusType', vote?: boolean | null, like?: boolean | null, laugh?: boolean | null } }> | null } | null };
 
-export const VoteStatusAndPointsFragmentDoc = gql`
-    fragment VoteStatusAndPoints on Post {
-  id
-  voteStatus
-  points
+export const PostActivitiesStatusFragmentDoc = gql`
+    fragment PostActivitiesStatus on Post {
+  postActivitiesStatus {
+    vote
+    like
+    laugh
+  }
 }
     `;
+export const PostActivitiesStatusAndPointsFragmentDoc = gql`
+    fragment PostActivitiesStatusAndPoints on Post {
+  id
+  points
+  ...PostActivitiesStatus
+}
+    ${PostActivitiesStatusFragmentDoc}`;
 export const PostContentsFragmentDoc = gql`
     fragment PostContents on Post {
-  ...VoteStatusAndPoints
+  ...PostActivitiesStatusAndPoints
   createdAt
   updatedAt
   title
   creatorId
   contents
 }
-    ${VoteStatusAndPointsFragmentDoc}`;
+    ${PostActivitiesStatusAndPointsFragmentDoc}`;
 export const PostsSnippetFragmentDoc = gql`
     fragment PostsSnippet on Post {
-  ...VoteStatusAndPoints
+  ...PostActivitiesStatusAndPoints
   createdAt
   updatedAt
   title
   creatorId
   contentSnippets
 }
-    ${VoteStatusAndPointsFragmentDoc}`;
+    ${PostActivitiesStatusAndPointsFragmentDoc}`;
 export const UserInfoFragmentDoc = gql`
     fragment UserInfo on User {
   id

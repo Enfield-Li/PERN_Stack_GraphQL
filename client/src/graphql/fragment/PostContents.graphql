@@ -1,5 +1,5 @@
 fragment PostContents on Post {
-  ...VoteStatusAndPoints
+  ...PostActivitiesStatusAndPoints
   createdAt
   updatedAt
   title

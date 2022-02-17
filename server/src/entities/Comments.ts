@@ -5,7 +5,6 @@ import { Field, ObjectType } from "type-graphql";
 @ObjectType()
 @Entity()
 export class Comments extends BaseEntity {
-  @Field(() => String)
   @CreateDateColumn()
   createdAt: Date;
 
@@ -15,7 +14,9 @@ export class Comments extends BaseEntity {
   @PrimaryColumn()
   postId: number;
 
-  @Field()
   @Column()
   text: string;
+
+  @Column()
+  parentId: number;
 }

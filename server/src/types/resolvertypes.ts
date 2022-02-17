@@ -1,6 +1,6 @@
 import { Post } from "./../entities/Post";
 import { User } from "../entities/User";
-import { ObjectType, Field, InputType } from "type-graphql";
+import { ObjectType, Field, InputType, Int } from "type-graphql";
 
 @ObjectType()
 export class FieldError {
@@ -8,6 +8,28 @@ export class FieldError {
   field: string;
   @Field()
   message: string;
+}
+
+@ObjectType()
+export class PostActivitiesStatusType {
+  @Field({ nullable: true })
+  vote: boolean;
+  @Field({ nullable: true })
+  like: boolean;
+  @Field({ nullable: true })
+  laugh: boolean;
+}
+
+@InputType()
+export class InteractWithPostInput {
+  @Field(() => Int)
+  postId: number;
+  @Field({ nullable: true })
+  vote: boolean;
+  @Field({ nullable: true })
+  like: boolean;
+  @Field({ nullable: true })
+  laugh: boolean;
 }
 
 @ObjectType()

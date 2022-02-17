@@ -1,5 +1,5 @@
-fragment VoteStatusAndPoints on Post {
+fragment PostActivitiesStatusAndPoints on Post {
   id
-  voteStatus
   points
+  ...PostActivitiesStatus
 }
