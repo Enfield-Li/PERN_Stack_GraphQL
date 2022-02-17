@@ -8,12 +8,12 @@ import {
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 
-interface editSectionProps {
+interface EditSectionProps {
   post: PostContentsFragment | PostsSnippetFragment;
   meData: MeQuery | undefined;
 }
 
-const EditSection: React.FC<editSectionProps> = ({ meData, post }) => {
+const EditSection: React.FC<EditSectionProps> = ({ meData, post }) => {
   const [deletePost] = useDeletePostMutation();
   const router = useRouter();
 

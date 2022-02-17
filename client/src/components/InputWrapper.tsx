@@ -26,7 +26,6 @@ const InputWrapper: React.FC<InputWrapperProps> = ({
         className="form-control"
         id={field.name}
         {...field}
-        {...props}
         aria-describedby="textHelp"
       />
       {error && (

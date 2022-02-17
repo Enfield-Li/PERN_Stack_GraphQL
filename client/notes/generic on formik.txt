@@ -15,7 +15,7 @@ const FormWrapper = <Values,>({
 }: FormWrapperProps<Values>) => {
   // Note that because the generic is still not concrete at this point (is it the placeholder `Values`), 
   // you cannot use `props.values.username` or otherwise know the shape of `props.values`.
-  return <Form className="container mt-3 w-50">
+  return <Form className="container mt-2 w-50">
     <div className="d-grid">
       {children}
   

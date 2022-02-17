@@ -1,12 +1,8 @@
 mutation CreatePost($contents: String!, $title: String!) {
   createPost(contents: $contents, title: $title) {
-    id
-    createdAt
-    updatedAt
-    title
-    creatorId
-    voteStatus
-    contentSnippets
-    points
+    ...PostsSnippet
+    creator {
+      ...UserInfo
+    }
   }
 }

@@ -19,6 +19,13 @@ const FormWrapper = <Values,>({
   props,
   formUsage,
 }: FormWrapperProps<Values>) => {
+  // interface FormWrapperProps {
+  //   children: React.ReactNode;
+  //   props: FormikProps<unknown>;
+  //   formUsage?: FormUsage;
+  // }
+
+  // const FormWrapper = ({ children, props, formUsage }: FormWrapperProps) => {
   let addtionalAssist = null;
 
   if (formUsage === "Login")
@@ -36,7 +43,7 @@ const FormWrapper = <Values,>({
     addtionalAssist = <Link href={"/login"}>Or you can login!</Link>;
 
   return (
-    <Form className="container mt-3 w-50">
+    <Form className="container mt-2 w-50">
       <div className="d-grid">
         {children}
 

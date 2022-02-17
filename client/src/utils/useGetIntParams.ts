@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 
-export const useGetIntId = () => {
+export const useGetIntParams = () => {
   const router = useRouter();
   const intId =
     typeof router.query.id === "string" ? parseInt(router.query.id) : -1;

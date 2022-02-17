@@ -93,7 +93,7 @@ export type Post = {
   createdAt: Scalars['String'];
   creator: User;
   creatorId: Scalars['Int'];
-  id: Scalars['Float'];
+  id: Scalars['Int'];
   points: Scalars['Float'];
   title: Scalars['String'];
   updatedAt: Scalars['String'];
@@ -169,7 +169,7 @@ export type CreatePostMutationVariables = Exact<{
 }>;
 
 
-export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, creatorId: number, voteStatus?: boolean | null, contentSnippets: string, points: number } };
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, voteStatus?: boolean | null, points: number, creator: { __typename?: 'User', id: number, username: string, createdAt: string } } };
 
 export type DeletePostMutationVariables = Exact<{
   deletePostId: Scalars['Float'];
@@ -327,17 +327,14 @@ export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<ChangePas
 export const CreatePostDocument = gql`
     mutation CreatePost($contents: String!, $title: String!) {
   createPost(contents: $contents, title: $title) {
-    id
-    createdAt
-    updatedAt
-    title
-    creatorId
-    voteStatus
-    contentSnippets
-    points
+    ...PostsSnippet
+    creator {
+      ...UserInfo
+    }
   }
 }
-    `;
+    ${PostsSnippetFragmentDoc}
+${UserInfoFragmentDoc}`;
 export type CreatePostMutationFn = Apollo.MutationFunction<CreatePostMutation, CreatePostMutationVariables>;
 
 /**

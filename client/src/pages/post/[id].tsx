@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import React from "react";
-import EditSection from "../../components/editSection";
+import EditSection from "../../components/EditSection";
 import LayoutSpinner from "../../components/LayoutSpinner";
 import LayoutWrapper from "../../components/LayoutWrapper";
 import VoteSection from "../../components/voteSection";
@@ -25,7 +25,7 @@ const Post: React.FC<PostProps> = ({}) => {
   return (
     <LayoutWrapper>
       {data?.Post ? (
-        <div className="card my-3">
+        <div className="card my-2">
           <div className="card-body">
             <div className="d-flex justify-content-between">
               <div className="d-flex">

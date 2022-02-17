@@ -2,8 +2,8 @@ import React from "react";
 import { useMeQuery, usePostsQuery } from "../generated/graphql";
 import NextLink from "next/link";
 import VoteSection from "../components/voteSection";
-import EditSection from "./editSection";
-import PlaceHolder from "./PlaceHolder";
+import EditSection from "./EditSection";
+import ContentPlaceholder from "./ContentPlaceholder";
 
 interface MainContentProps {}
 
@@ -18,15 +18,15 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
   const { data: meData } = useMeQuery();
 
   return (
-    <div className="mt-3">
+    <div className="mt-2">
       {!data && loading ? (
         <div>
-          <PlaceHolder />
-          <PlaceHolder />
+          <ContentPlaceholder />
+          <ContentPlaceholder />
         </div>
       ) : (
         data?.posts.posts.map((post) => (
-          <div className="card my-3" key={post.id}>
+          <div className="card my-2" key={post.id}>
             <div className="card-body">
               <div className="d-flex justify-content-between">
                 <div className="d-flex">
