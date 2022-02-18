@@ -13,11 +13,25 @@ export class FieldError {
 @ObjectType()
 export class PostActivitiesStatusType {
   @Field({ nullable: true })
-  vote: boolean;
+  voteStatus: boolean;
   @Field({ nullable: true })
-  like: boolean;
+  likeStatus: boolean;
   @Field({ nullable: true })
-  laugh: boolean;
+  laughStatus: boolean;
+  @Field({ nullable: true })
+  confusedStatus: boolean;
+}
+
+@ObjectType()
+export class PostPointsType {
+  @Field(() => Int)
+  votePoints: number;
+  @Field(() => Int)
+  likePoints: number;
+  @Field(() => Int)
+  laughPoints: number;
+  @Field(() => Int)
+  confusedPoints: number;
 }
 
 @InputType()
@@ -30,6 +44,8 @@ export class InteractWithPostInput {
   like: boolean;
   @Field({ nullable: true })
   laugh: boolean;
+  @Field({ nullable: true })
+  confused: boolean;
 }
 
 @ObjectType()

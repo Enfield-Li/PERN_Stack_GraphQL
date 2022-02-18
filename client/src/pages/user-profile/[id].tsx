@@ -1,14 +1,14 @@
+import NextLink from "next/link";
 import React from "react";
+import ContentPlaceholder from "../../components/ContentPlaceholder";
 import EditSection from "../../components/EditSection";
 import LayoutWrapper from "../../components/LayoutWrapper";
-import ContentPlaceholder from "../../components/ContentPlaceholder";
-import VoteSection from "../../components/voteSection";
-import withApollo from "../../utils/withApollo";
-import NextLink from "next/link";
-import { useUserQuery } from "../../generated/graphql";
-import { useGetIntParams } from "../../utils/useGetIntParams";
 import ProfileCard from "../../components/ProfileCard";
 import ProfileCardPlaceholder from "../../components/ProfileCardPlaceholder";
+import VoteSection from "../../components/voteSection";
+import { useUserQuery } from "../../generated/graphql";
+import { useGetIntParams } from "../../utils/useGetIntParams";
+import withApollo from "../../utils/withApollo";
 
 const UserProfile: React.FC = ({}) => {
   const intId = useGetIntParams();

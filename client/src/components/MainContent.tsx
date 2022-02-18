@@ -31,6 +31,7 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
               <div className="d-flex justify-content-between">
                 <div className="d-flex">
                   <VoteSection post={post} />
+
                   <div className="">
                     <div className="fs-6 fw-light">
                       Posted by{" "}
@@ -53,8 +54,14 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
                         ? post.contentSnippets + "..."
                         : post.contentSnippets}
                     </p>
+                    <div className="d-flex">
+                      <div>&#128516;</div>
+                      <div>&#x1F615;</div>
+                      <div>&#10084;</div>
+                    </div>
                   </div>
                 </div>
+
                 <EditSection meData={meData} post={post} />
               </div>
             </div>

@@ -21,17 +21,25 @@ export type FieldError = {
   message: Scalars['String'];
 };
 
+export type InteractWithPostInput = {
+  confused?: InputMaybe<Scalars['Boolean']>;
+  laugh?: InputMaybe<Scalars['Boolean']>;
+  like?: InputMaybe<Scalars['Boolean']>;
+  postId: Scalars['Int'];
+  vote?: InputMaybe<Scalars['Boolean']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   changePassword: UserResponse;
   createPost: Post;
   deletePost: Scalars['Boolean'];
   forgotPassword: Scalars['Boolean'];
+  interactWithPost: Scalars['Boolean'];
   login: UserResponse;
   logout: Scalars['Boolean'];
   register: UserResponse;
   updatePost?: Maybe<Post>;
-  vote: Scalars['Boolean'];
 };
 
 
@@ -57,6 +65,11 @@ export type MutationForgotPasswordArgs = {
 };
 
 
+export type MutationInteractWithPostArgs = {
+  interactInput: InteractWithPostInput;
+};
+
+
 export type MutationLoginArgs = {
   password: Scalars['String'];
   usernameOrEmail: Scalars['String'];
@@ -74,12 +87,6 @@ export type MutationUpdatePostArgs = {
   title: Scalars['String'];
 };
 
-
-export type MutationVoteArgs = {
-  postId: Scalars['Int'];
-  value: Scalars['Boolean'];
-};
-
 export type PaginatedPosts = {
   __typename?: 'PaginatedPosts';
   hasMore: Scalars['Boolean'];
@@ -94,17 +101,26 @@ export type Post = {
   creator: User;
   creatorId: Scalars['Int'];
   id: Scalars['Int'];
-  points: Scalars['Float'];
-  postActivitiesStatus: PostActivitiesStatusType;
+  postActivitiesStatus?: Maybe<PostActivitiesStatusType>;
+  postPoints?: Maybe<PostPointsType>;
   title: Scalars['String'];
   updatedAt: Scalars['String'];
 };
 
 export type PostActivitiesStatusType = {
   __typename?: 'PostActivitiesStatusType';
-  laugh?: Maybe<Scalars['Boolean']>;
-  like?: Maybe<Scalars['Boolean']>;
-  vote?: Maybe<Scalars['Boolean']>;
+  confusedStatus?: Maybe<Scalars['Boolean']>;
+  laughStatus?: Maybe<Scalars['Boolean']>;
+  likeStatus?: Maybe<Scalars['Boolean']>;
+  voteStatus?: Maybe<Scalars['Boolean']>;
+};
+
+export type PostPointsType = {
+  __typename?: 'PostPointsType';
+  confusedPoints: Scalars['Int'];
+  laughPoints: Scalars['Int'];
+  likePoints: Scalars['Int'];
+  votePoints: Scalars['Int'];
 };
 
 export type Query = {
@@ -154,15 +170,15 @@ export type UserResponse = {
   user?: Maybe<User>;
 };
 
-export type PostActivitiesStatusFragment = { __typename?: 'Post', postActivitiesStatus: { __typename?: 'PostActivitiesStatusType', vote?: boolean | null, like?: boolean | null, laugh?: boolean | null } };
+export type PostActivitiesStatusFragment = { __typename?: 'Post', postActivitiesStatus?: { __typename?: 'PostActivitiesStatusType', voteStatus?: boolean | null, likeStatus?: boolean | null, laughStatus?: boolean | null, confusedStatus?: boolean | null } | null };
 
-export type PostContentsFragment = { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contents: string, id: number, points: number, postActivitiesStatus: { __typename?: 'PostActivitiesStatusType', vote?: boolean | null, like?: boolean | null, laugh?: boolean | null } };
+export type PostActivitiesStatusAndPointsFragment = { __typename?: 'Post', id: number, postPoints?: { __typename?: 'PostPointsType', votePoints: number, likePoints: number, laughPoints: number, confusedPoints: number } | null, postActivitiesStatus?: { __typename?: 'PostActivitiesStatusType', voteStatus?: boolean | null, likeStatus?: boolean | null, laughStatus?: boolean | null, confusedStatus?: boolean | null } | null };
 
-export type PostsSnippetFragment = { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, points: number, postActivitiesStatus: { __typename?: 'PostActivitiesStatusType', vote?: boolean | null, like?: boolean | null, laugh?: boolean | null } };
+export type PostContentsFragment = { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contents: string, id: number, postPoints?: { __typename?: 'PostPointsType', votePoints: number, likePoints: number, laughPoints: number, confusedPoints: number } | null, postActivitiesStatus?: { __typename?: 'PostActivitiesStatusType', voteStatus?: boolean | null, likeStatus?: boolean | null, laughStatus?: boolean | null, confusedStatus?: boolean | null } | null };
+
+export type PostsSnippetFragment = { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, postPoints?: { __typename?: 'PostPointsType', votePoints: number, likePoints: number, laughPoints: number, confusedPoints: number } | null, postActivitiesStatus?: { __typename?: 'PostActivitiesStatusType', voteStatus?: boolean | null, likeStatus?: boolean | null, laughStatus?: boolean | null, confusedStatus?: boolean | null } | null };
 
 export type UserInfoFragment = { __typename?: 'User', id: number, username: string, createdAt: string };
-
-export type PostActivitiesStatusAndPointsFragment = { __typename?: 'Post', id: number, points: number, postActivitiesStatus: { __typename?: 'PostActivitiesStatusType', vote?: boolean | null, like?: boolean | null, laugh?: boolean | null } };
 
 export type ChangePasswordMutationVariables = Exact<{
   newPassword: Scalars['String'];
@@ -178,7 +194,7 @@ export type CreatePostMutationVariables = Exact<{
 }>;
 
 
-export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, points: number, creator: { __typename?: 'User', id: number, username: string, createdAt: string }, postActivitiesStatus: { __typename?: 'PostActivitiesStatusType', vote?: boolean | null, like?: boolean | null, laugh?: boolean | null } } };
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, creator: { __typename?: 'User', id: number, username: string, createdAt: string }, postPoints?: { __typename?: 'PostPointsType', votePoints: number, likePoints: number, laughPoints: number, confusedPoints: number } | null, postActivitiesStatus?: { __typename?: 'PostActivitiesStatusType', voteStatus?: boolean | null, likeStatus?: boolean | null, laughStatus?: boolean | null, confusedStatus?: boolean | null } | null } };
 
 export type DeletePostMutationVariables = Exact<{
   deletePostId: Scalars['Float'];
@@ -193,6 +209,13 @@ export type ForgotPasswordMutationVariables = Exact<{
 
 
 export type ForgotPasswordMutation = { __typename?: 'Mutation', forgotPassword: boolean };
+
+export type InteractWithPostMutationVariables = Exact<{
+  interactInput: InteractWithPostInput;
+}>;
+
+
+export type InteractWithPostMutation = { __typename?: 'Mutation', interactWithPost: boolean };
 
 export type LoginMutationVariables = Exact<{
   password: Scalars['String'];
@@ -223,14 +246,6 @@ export type UpdatePostMutationVariables = Exact<{
 
 export type UpdatePostMutation = { __typename?: 'Mutation', updatePost?: { __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, contents: string } | null };
 
-export type VoteMutationVariables = Exact<{
-  value: Scalars['Boolean'];
-  postId: Scalars['Int'];
-}>;
-
-
-export type VoteMutation = { __typename?: 'Mutation', vote: boolean };
-
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -241,7 +256,7 @@ export type PostQueryVariables = Exact<{
 }>;
 
 
-export type PostQuery = { __typename?: 'Query', Post?: { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contents: string, id: number, points: number, postActivitiesStatus: { __typename?: 'PostActivitiesStatusType', vote?: boolean | null, like?: boolean | null, laugh?: boolean | null } } | null };
+export type PostQuery = { __typename?: 'Query', Post?: { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contents: string, id: number, postPoints?: { __typename?: 'PostPointsType', votePoints: number, likePoints: number, laughPoints: number, confusedPoints: number } | null, postActivitiesStatus?: { __typename?: 'PostActivitiesStatusType', voteStatus?: boolean | null, likeStatus?: boolean | null, laughStatus?: boolean | null, confusedStatus?: boolean | null } | null } | null };
 
 export type PostsQueryVariables = Exact<{
   cursor?: InputMaybe<Scalars['String']>;
@@ -249,28 +264,34 @@ export type PostsQueryVariables = Exact<{
 }>;
 
 
-export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPosts', hasMore: boolean, posts: Array<{ __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, points: number, creator: { __typename?: 'User', id: number, username: string, createdAt: string }, postActivitiesStatus: { __typename?: 'PostActivitiesStatusType', vote?: boolean | null, like?: boolean | null, laugh?: boolean | null } }> } };
+export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPosts', hasMore: boolean, posts: Array<{ __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, creator: { __typename?: 'User', id: number, username: string, createdAt: string }, postPoints?: { __typename?: 'PostPointsType', votePoints: number, likePoints: number, laughPoints: number, confusedPoints: number } | null, postActivitiesStatus?: { __typename?: 'PostActivitiesStatusType', voteStatus?: boolean | null, likeStatus?: boolean | null, laughStatus?: boolean | null, confusedStatus?: boolean | null } | null }> } };
 
 export type UserQueryVariables = Exact<{
   userId: Scalars['Float'];
 }>;
 
 
-export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: number, username: string, createdAt: string, userPost?: Array<{ __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, points: number, postActivitiesStatus: { __typename?: 'PostActivitiesStatusType', vote?: boolean | null, like?: boolean | null, laugh?: boolean | null } }> | null } | null };
+export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: number, username: string, createdAt: string, userPost?: Array<{ __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, postPoints?: { __typename?: 'PostPointsType', votePoints: number, likePoints: number, laughPoints: number, confusedPoints: number } | null, postActivitiesStatus?: { __typename?: 'PostActivitiesStatusType', voteStatus?: boolean | null, likeStatus?: boolean | null, laughStatus?: boolean | null, confusedStatus?: boolean | null } | null }> | null } | null };
 
 export const PostActivitiesStatusFragmentDoc = gql`
     fragment PostActivitiesStatus on Post {
   postActivitiesStatus {
-    vote
-    like
-    laugh
+    voteStatus
+    likeStatus
+    laughStatus
+    confusedStatus
   }
 }
     `;
 export const PostActivitiesStatusAndPointsFragmentDoc = gql`
     fragment PostActivitiesStatusAndPoints on Post {
   id
-  points
+  postPoints {
+    votePoints
+    likePoints
+    laughPoints
+    confusedPoints
+  }
   ...PostActivitiesStatus
 }
     ${PostActivitiesStatusFragmentDoc}`;
@@ -442,6 +463,37 @@ export function useForgotPasswordMutation(baseOptions?: Apollo.MutationHookOptio
 export type ForgotPasswordMutationHookResult = ReturnType<typeof useForgotPasswordMutation>;
 export type ForgotPasswordMutationResult = Apollo.MutationResult<ForgotPasswordMutation>;
 export type ForgotPasswordMutationOptions = Apollo.BaseMutationOptions<ForgotPasswordMutation, ForgotPasswordMutationVariables>;
+export const InteractWithPostDocument = gql`
+    mutation InteractWithPost($interactInput: InteractWithPostInput!) {
+  interactWithPost(interactInput: $interactInput)
+}
+    `;
+export type InteractWithPostMutationFn = Apollo.MutationFunction<InteractWithPostMutation, InteractWithPostMutationVariables>;
+
+/**
+ * __useInteractWithPostMutation__
+ *
+ * To run a mutation, you first call `useInteractWithPostMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInteractWithPostMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [interactWithPostMutation, { data, loading, error }] = useInteractWithPostMutation({
+ *   variables: {
+ *      interactInput: // value for 'interactInput'
+ *   },
+ * });
+ */
+export function useInteractWithPostMutation(baseOptions?: Apollo.MutationHookOptions<InteractWithPostMutation, InteractWithPostMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<InteractWithPostMutation, InteractWithPostMutationVariables>(InteractWithPostDocument, options);
+      }
+export type InteractWithPostMutationHookResult = ReturnType<typeof useInteractWithPostMutation>;
+export type InteractWithPostMutationResult = Apollo.MutationResult<InteractWithPostMutation>;
+export type InteractWithPostMutationOptions = Apollo.BaseMutationOptions<InteractWithPostMutation, InteractWithPostMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($password: String!, $usernameOrEmail: String!) {
   login(password: $password, usernameOrEmail: $usernameOrEmail) {
@@ -590,38 +642,6 @@ export function useUpdatePostMutation(baseOptions?: Apollo.MutationHookOptions<U
 export type UpdatePostMutationHookResult = ReturnType<typeof useUpdatePostMutation>;
 export type UpdatePostMutationResult = Apollo.MutationResult<UpdatePostMutation>;
 export type UpdatePostMutationOptions = Apollo.BaseMutationOptions<UpdatePostMutation, UpdatePostMutationVariables>;
-export const VoteDocument = gql`
-    mutation Vote($value: Boolean!, $postId: Int!) {
-  vote(value: $value, postId: $postId)
-}
-    `;
-export type VoteMutationFn = Apollo.MutationFunction<VoteMutation, VoteMutationVariables>;
-
-/**
- * __useVoteMutation__
- *
- * To run a mutation, you first call `useVoteMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useVoteMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [voteMutation, { data, loading, error }] = useVoteMutation({
- *   variables: {
- *      value: // value for 'value'
- *      postId: // value for 'postId'
- *   },
- * });
- */
-export function useVoteMutation(baseOptions?: Apollo.MutationHookOptions<VoteMutation, VoteMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<VoteMutation, VoteMutationVariables>(VoteDocument, options);
-      }
-export type VoteMutationHookResult = ReturnType<typeof useVoteMutation>;
-export type VoteMutationResult = Apollo.MutationResult<VoteMutation>;
-export type VoteMutationOptions = Apollo.BaseMutationOptions<VoteMutation, VoteMutationVariables>;
 export const MeDocument = gql`
     query Me {
   me {

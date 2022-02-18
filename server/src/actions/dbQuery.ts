@@ -3,8 +3,12 @@ import { UserInput } from "../types/resolvertypes";
 import { User } from "../entities/User";
 import { getConnection, SimpleConsoleLogger } from "typeorm";
 
-type FieldType = "like" | "vote" | "laugh";
-type FieldPointType = "likePoints" | "votePoints" | "laughPoints";
+type FieldType = "likeStatus" | "voteStatus" | "laughStatus" | "confusedStatus";
+type FieldPointType =
+  | "likePoints"
+  | "votePoints"
+  | "laughPoints"
+  | "confusedPoints";
 
 export const fieldInteactionWithDB = async (
   interactions: PostActivities | undefined, // userVotes
@@ -15,9 +19,7 @@ export const fieldInteactionWithDB = async (
   userId: number,
   postId: number
 ) => {
-  const fieldValue = fieldName ? 1 : -1; // voteValue
-
-  console.log("Field: ", fieldName);
+  const fieldValue = fieldBooleanValue ? 1 : -1; // voteValue
 
   // user hasn't voted before
   if (!interactions) {
@@ -25,7 +27,7 @@ export const fieldInteactionWithDB = async (
       // const res = tem.create(Votes, { postId, userId, value });
       const res = await tem.query(
         `
-          insert into post_activities ("userId", "postId", ${fieldName})
+          insert into post_activities ("userId", "postId", "${fieldName}")
           values ($1, $2, $3)
         `,
         [userId, postId, fieldBooleanValue]

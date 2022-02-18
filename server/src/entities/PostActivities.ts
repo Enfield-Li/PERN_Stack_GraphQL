@@ -14,15 +14,19 @@ import { User } from "./User";
 export class PostActivities extends BaseEntity {
   @Field()
   @Column({ nullable: true })
-  vote: boolean;
+  voteStatus: boolean;
 
   @Field()
   @Column({ nullable: true })
-  like: boolean;
+  likeStatus: boolean;
 
   @Field()
   @Column({ nullable: true })
-  laugh: boolean;
+  laughStatus: boolean;
+
+  @Field()
+  @Column({ nullable: true })
+  confusedStatus: boolean;
 
   @Field(() => String)
   @CreateDateColumn()
@@ -36,6 +40,7 @@ export class PostActivities extends BaseEntity {
 
   @ManyToOne(() => User, (user) => user.votes, { onDelete: "CASCADE" })
   user: User;
+  
 
   @ManyToOne(() => Post, (post) => post.votes, { onDelete: "CASCADE" })
   post: Post;

@@ -9,7 +9,7 @@ import {
   PostsDocument,
   PostsQuery,
   usePostQuery,
-  useUpdatePostMutation,
+  useUpdatePostMutation
 } from "../../../generated/graphql";
 import withApollo from "../../../utils/withApollo";
 

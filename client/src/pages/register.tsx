@@ -1,11 +1,10 @@
-import React from "react";
+import { Formik } from "formik";
 import type { NextPage } from "next";
-import { Formik, Form } from "formik";
-import { useRegisterMutation } from "../generated/graphql";
-import { toError } from "../utils/toError";
-import InputWrapper from "../components/InputWrapper";
 import { useRouter } from "next/router";
 import FormWrapper from "../components/FormWrapper";
+import InputWrapper from "../components/InputWrapper";
+import { useRegisterMutation } from "../generated/graphql";
+import { toError } from "../utils/toError";
 import withApollo from "../utils/withApollo";
 
 interface registerProps {}

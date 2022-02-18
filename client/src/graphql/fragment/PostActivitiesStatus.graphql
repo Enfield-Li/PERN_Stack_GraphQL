@@ -1,7 +1,8 @@
 fragment PostActivitiesStatus on Post {
   postActivitiesStatus {
-    vote
-    like
-    laugh
+    voteStatus
+    likeStatus
+    laughStatus
+    confusedStatus
   }
 }

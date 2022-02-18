@@ -1,5 +1,0 @@
-fragment PostActivitiesStatusAndPoints on Post {
-  id
-  points
-  ...PostActivitiesStatus
-}

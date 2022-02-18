@@ -3,14 +3,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import FormWrapper from "../components/FormWrapper";
 import InputWrapper from "../components/InputWrapper";
-import {
-  MeDocument,
-  MeQuery,
-  PostsDocument,
-  useLoginMutation,
-  usePostsQuery,
-  VoteStatusAndPointsFragment,
-} from "../generated/graphql";
+import { MeDocument, MeQuery, useLoginMutation } from "../generated/graphql";
 import { toError } from "../utils/toError";
 import withApollo from "../utils/withApollo";
 

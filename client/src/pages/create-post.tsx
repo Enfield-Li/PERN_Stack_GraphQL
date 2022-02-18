@@ -8,7 +8,7 @@ import {
   CreatePostMutationVariables,
   PostsDocument,
   PostsQuery,
-  useCreatePostMutation,
+  useCreatePostMutation
 } from "../generated/graphql";
 import { useIsAuth } from "../utils/useIsAuth";
 import withApollo from "../utils/withApollo";

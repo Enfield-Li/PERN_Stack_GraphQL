@@ -1,0 +1,10 @@
+fragment PostActivitiesStatusAndPoints on Post {
+  id
+  ...PostActivitiesStatus
+  postPoints {
+    votePoints
+    likePoints
+    laughPoints
+    confusedPoints
+  }
+}

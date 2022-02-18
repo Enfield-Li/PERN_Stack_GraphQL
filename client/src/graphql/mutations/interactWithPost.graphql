@@ -1,0 +1,3 @@
+mutation InteractWithPost($interactInput: InteractWithPostInput!) {
+  interactWithPost(interactInput: $interactInput)
+}

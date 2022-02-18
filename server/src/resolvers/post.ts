@@ -4,6 +4,7 @@ import {
   InteractWithPostInput,
   PaginatedPosts,
   PostActivitiesStatusType,
+  PostPointsType,
 } from "./../types/resolvertypes";
 import { PostActivities } from "../entities/PostActivities";
 import { MyContext } from "./../types/contextType";
@@ -27,6 +28,23 @@ export class PostResolver {
   @FieldResolver(() => String)
   contentSnippets(@Root() post: Post) {
     return post.contents.slice(0, 50);
+  }
+
+  @FieldResolver(() => PostPointsType, { nullable: true })
+  async postPoints(@Root() post: Post): Promise<PostPointsType> {
+    const allPoints: PostPointsType = {
+      votePoints: 0,
+      laughPoints: 0,
+      confusedPoints: 0,
+      likePoints: 0,
+    };
+
+    if (post.votePoints > 0) allPoints.votePoints = post.votePoints;
+    if (post.laughPoints > 0) allPoints.laughPoints = post.laughPoints;
+    if (post.confusedPoints > 0) allPoints.confusedPoints = post.confusedPoints;
+    if (post.likePoints > 0) allPoints.likePoints = post.likePoints;
+
+    return allPoints;
   }
 
   @FieldResolver(() => User)
@@ -137,7 +155,7 @@ export class PostResolver {
     @Arg("interactInput") interactInput: InteractWithPostInput,
     @Ctx() { req }: MyContext
   ): Promise<boolean> {
-    const { like, postId, laugh, vote } = interactInput;
+    const { like, postId, laugh, vote, confused } = interactInput;
 
     const userId = req.session.userId;
     if (!userId) throw new Error("Not Authenticated");
@@ -149,10 +167,21 @@ export class PostResolver {
     if (like === true || like === false)
       await fieldInteactionWithDB(
         userInteactions,
-        userInteactions?.like,
-        "like",
+        userInteactions?.likeStatus,
+        "likeStatus",
         like,
         "likePoints",
+        userId,
+        postId
+      );
+
+    if (confused === true || confused === false)
+      await fieldInteactionWithDB(
+        userInteactions,
+        userInteactions?.confusedStatus,
+        "confusedStatus",
+        confused,
+        "confusedPoints",
         userId,
         postId
       );
@@ -160,8 +189,8 @@ export class PostResolver {
     if (vote === true || vote === false)
       fieldInteactionWithDB(
         userInteactions,
-        userInteactions?.vote,
-        "vote",
+        userInteactions?.voteStatus,
+        "voteStatus",
         vote,
         "votePoints",
         userId,
@@ -171,8 +200,8 @@ export class PostResolver {
     if (laugh === true || laugh === false)
       fieldInteactionWithDB(
         userInteactions,
-        userInteactions?.laugh,
-        "laugh",
+        userInteactions?.laughStatus,
+        "laughStatus",
         laugh,
         "laughPoints",
         userId,
