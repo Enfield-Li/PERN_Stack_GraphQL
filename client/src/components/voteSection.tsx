@@ -46,11 +46,7 @@ const voteSection: React.FC<VoteSectionProps> = ({ post }) => {
           }
         }}
       />
-      <div className="text-center">
-        {!post.postPoints?.votePoints
-          ? "vote"
-          : post.postPoints?.votePoints}
-      </div>
+      <div className="text-center">{post.postPoints?.votePoints}</div>
       <button
         className={`bi bi-caret-down btn ${
           post.postActivitiesStatus?.voteStatus === false ? "bg-danger" : ""

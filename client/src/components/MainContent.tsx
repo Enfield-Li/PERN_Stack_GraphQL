@@ -54,11 +54,6 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
                         ? post.contentSnippets + "..."
                         : post.contentSnippets}
                     </p>
-                    <div className="d-flex">
-                      <div>&#128516;</div>
-                      <div>&#x1F615;</div>
-                      <div>&#10084;</div>
-                    </div>
                   </div>
                 </div>
 

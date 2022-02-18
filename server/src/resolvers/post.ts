@@ -39,10 +39,15 @@ export class PostResolver {
       likePoints: 0,
     };
 
-    if (post.votePoints > 0) allPoints.votePoints = post.votePoints;
-    if (post.laughPoints > 0) allPoints.laughPoints = post.laughPoints;
-    if (post.confusedPoints > 0) allPoints.confusedPoints = post.confusedPoints;
-    if (post.likePoints > 0) allPoints.likePoints = post.likePoints;
+    // if (post.votePoints > 0) allPoints.votePoints = post.votePoints;
+    // if (post.laughPoints > 0) allPoints.laughPoints = post.laughPoints;
+    // if (post.confusedPoints > 0) allPoints.confusedPoints = post.confusedPoints;
+    // if (post.likePoints > 0) allPoints.likePoints = post.likePoints;
+
+    allPoints.votePoints = post.votePoints;
+    allPoints.laughPoints = post.laughPoints;
+    allPoints.confusedPoints = post.confusedPoints;
+    allPoints.likePoints = post.likePoints;
 
     return allPoints;
   }

@@ -16,7 +16,8 @@
     "next": "12.0.10",
     "next-apollo": "^5.0.8",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-dom": "17.0.2",
+    "react-popper-tooltip": "^4.3.1"
   },
   "devDependencies": {
     "@types/graphql": "^14.5.0",

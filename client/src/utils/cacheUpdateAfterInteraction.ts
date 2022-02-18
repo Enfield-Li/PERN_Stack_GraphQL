@@ -9,7 +9,7 @@ type interactionField = "vote" | "like" | "laugh" | "confused";
 
 export const cacheUpdateAfterInteraction = (
   id: number,
-  value: boolean,
+  upOrDownValue: boolean,
   voteField: interactionField,
   cache: ApolloCache<InteractWithPostMutation>
 ) => {
@@ -21,61 +21,57 @@ export const cacheUpdateAfterInteraction = (
 
   if (!cachedData || !cachedData.postPoints) return;
   let newPoints!: number;
-  let newValue!: boolean | null;
+  let newUpOrDownValue!: boolean | null;
   let newData: PostActivitiesStatusAndPointsFragment;
+
   newData = {
     id: cachedData.id,
     postPoints: {
       ...cachedData.postPoints,
-      // votePoints: cachedData.postPoints?.votePoints,
-      // laughPoints: cachedData.postPoints?.laughPoints,
-      // likePoints: cachedData.postPoints?.likePoints,
-      // confusedPoints: cachedData.postPoints?.confusedPoints,
     },
     postActivitiesStatus: {
       ...cachedData.postActivitiesStatus,
     },
   };
-
   if (!newData.postPoints) return;
 
-  // if (cachedData.postActivitiesStatus?.voteStatus !== value) {
-  //   // user change vote
-  //   newValue = value;
-  //   const incOrDec = value ? 1 : -1;
-  //   newPoints =
-  //     cachedData.postPoints.votePoints +
-  //     (cachedData.postActivitiesStatus?.voteStatus === null ? 1 : 2) * incOrDec;
+  // new vote and switch to opposite vote
+  if (cachedData.postActivitiesStatus?.voteStatus !== upOrDownValue) {
+    newUpOrDownValue = upOrDownValue;
+    const incOrDec = upOrDownValue ? 1 : -1;
 
-  //   // user never voted before
-  // } else if (cachedData.postActivitiesStatus?.voteStatus === value) {
-  //   newValue = !value;
-  //   const resetValPoints = value ? -1 : 1;
-  //   newPoints = cachedData.postPoints.votePoints + resetValPoints;
-  // }
+    newPoints =
+      cachedData.postPoints.votePoints +
+      // check if user voted before
+      (cachedData.postActivitiesStatus?.voteStatus === null ? 1 : 2) * incOrDec;
+  }
 
-  if (
-    value === cachedData.postActivitiesStatus?.confusedStatus ||
-    value === cachedData.postActivitiesStatus?.likeStatus ||
-    value === cachedData.postActivitiesStatus?.laughStatus ||
-    value === cachedData.postActivitiesStatus?.voteStatus
+  // user cancel vote
+  else if (
+    upOrDownValue === cachedData.postActivitiesStatus?.confusedStatus ||
+    upOrDownValue === cachedData.postActivitiesStatus?.likeStatus ||
+    upOrDownValue === cachedData.postActivitiesStatus?.laughStatus ||
+    upOrDownValue === cachedData.postActivitiesStatus?.voteStatus
   ) {
-    newValue = null;
+    newUpOrDownValue = null;
+    const resetValPoints = upOrDownValue ? -1 : 1;
+    newPoints = cachedData.postPoints.votePoints + resetValPoints;
   }
 
   if (voteField === "vote") {
     newData.postPoints.votePoints = newPoints;
-    newData.postActivitiesStatus!.voteStatus = newValue;
+    newData.postActivitiesStatus!.voteStatus = newUpOrDownValue;
   } else if (voteField === "confused") {
     newData.postPoints.confusedPoints = newPoints;
-    newData.postActivitiesStatus!.confusedStatus = newValue;
+    newData.postActivitiesStatus!.confusedStatus = newUpOrDownValue;
   } else if (voteField === "laugh") {
     newData.postPoints.laughPoints = newPoints;
-    newData.postActivitiesStatus!.laughStatus = newValue;
+    newData.postActivitiesStatus!.laughStatus = newUpOrDownValue;
   } else if (voteField === "like") {
     newData.postPoints.likePoints = newPoints;
-    newData.postActivitiesStatus!.likeStatus = newValue;
+    newData.postActivitiesStatus!.likeStatus = newUpOrDownValue;
   }
+
   cache.writeFragment<PostActivitiesStatusAndPointsFragment>({
     fragment: PostActivitiesStatusAndPointsFragmentDoc,
     fragmentName: "PostActivitiesStatusAndPoints",
