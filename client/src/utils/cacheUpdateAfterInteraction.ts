@@ -35,10 +35,15 @@ export const cacheUpdateAfterInteraction = (
   };
   if (!newData.postPoints) return;
 
+  // votes
   // new vote and switch to opposite vote
-  if (cachedData.postActivitiesStatus?.voteStatus !== upOrDownValue) {
+  if (
+    cachedData.postActivitiesStatus?.voteStatus !== upOrDownValue &&
+    voteField === "vote"
+  ) {
     newUpOrDownValue = upOrDownValue;
     const incOrDec = upOrDownValue ? 1 : -1;
+    console.log("switch");
 
     newPoints =
       cachedData.postPoints.votePoints +
@@ -48,15 +53,36 @@ export const cacheUpdateAfterInteraction = (
 
   // user cancel vote
   else if (
-    upOrDownValue === cachedData.postActivitiesStatus?.confusedStatus ||
-    upOrDownValue === cachedData.postActivitiesStatus?.likeStatus ||
-    upOrDownValue === cachedData.postActivitiesStatus?.laughStatus ||
-    upOrDownValue === cachedData.postActivitiesStatus?.voteStatus
+    cachedData.postActivitiesStatus?.voteStatus === upOrDownValue &&
+    voteField === "vote"
   ) {
+    console.log("cancel");
     newUpOrDownValue = null;
     const resetValPoints = upOrDownValue ? -1 : 1;
     newPoints = cachedData.postPoints.votePoints + resetValPoints;
   }
+
+  // interactions
+
+  if (
+    (cachedData.postActivitiesStatus?.confusedStatus !== upOrDownValue &&
+      voteField === "confused") ||
+    (cachedData.postActivitiesStatus?.likeStatus !== upOrDownValue &&
+      voteField === "like") ||
+    (cachedData.postActivitiesStatus?.laughStatus !== upOrDownValue &&
+      voteField === "laugh")
+  )
+    newPoints = 0;
+
+  if (
+    (cachedData.postActivitiesStatus?.confusedStatus === upOrDownValue &&
+      voteField === "confused") ||
+    (cachedData.postActivitiesStatus?.likeStatus === upOrDownValue &&
+      voteField === "like") ||
+    (cachedData.postActivitiesStatus?.laughStatus === upOrDownValue &&
+      voteField === "laugh")
+  )
+    newUpOrDownValue = !upOrDownValue;
 
   if (voteField === "vote") {
     newData.postPoints.votePoints = newPoints;

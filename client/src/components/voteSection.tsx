@@ -14,7 +14,7 @@ interface VoteSectionProps {
 
 const voteSection: React.FC<VoteSectionProps> = ({ post }) => {
   const router = useRouter();
-  const [interactWithField, { loading }] = useInteractWithPostMutation();
+  const [interact, { loading }] = useInteractWithPostMutation();
   const { data } = useMeQuery();
 
   let path = "";
@@ -35,15 +35,13 @@ const voteSection: React.FC<VoteSectionProps> = ({ post }) => {
             router.push("/login");
             return;
           }
-          try {
-            await interactWithField({
-              variables: { interactInput: { vote: true, postId: post.id } },
-              update: (cache) =>
-                cacheUpdateAfterInteraction(post.id, true, "vote", cache),
-            });
-          } catch (err) {
-            console.error(err);
-          }
+
+          const res = await interact({
+            variables: { interactInput: { vote: true, postId: post.id } },
+            update: (cache) =>
+              cacheUpdateAfterInteraction(post.id, true, "vote", cache),
+          });
+          if (!res) console.error(res);
         }}
       />
       <div className="text-center">{post.postPoints?.votePoints}</div>
@@ -53,15 +51,12 @@ const voteSection: React.FC<VoteSectionProps> = ({ post }) => {
         }`}
         disabled={loading}
         onClick={async () => {
-          try {
-            await interactWithField({
-              variables: { interactInput: { vote: false, postId: post.id } },
-              update: (cache) =>
-                cacheUpdateAfterInteraction(post.id, false, "vote", cache),
-            });
-          } catch (err) {
-            // router.push("/login");
-          }
+          const res = await interact({
+            variables: { interactInput: { vote: false, postId: post.id } },
+            update: (cache) =>
+              cacheUpdateAfterInteraction(post.id, false, "vote", cache),
+          });
+          if (!res) console.error(res);
         }}
       />
     </div>
