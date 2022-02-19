@@ -8,7 +8,7 @@ import {
   CreatePostMutationVariables,
   PostsDocument,
   PostsQuery,
-  useCreatePostMutation
+  useCreatePostMutation,
 } from "../generated/graphql";
 import { useIsAuth } from "../utils/useIsAuth";
 import withApollo from "../utils/withApollo";
@@ -16,7 +16,8 @@ import withApollo from "../utils/withApollo";
 interface CreatePostProps {}
 
 const CreatePost: React.FC<CreatePostProps> = ({}) => {
-  const [createPost] = useCreatePostMutation();
+  const [createPost, { data }] = useCreatePostMutation();
+  console.log(data);
   const router = useRouter();
   useIsAuth();
 
@@ -38,7 +39,6 @@ const CreatePost: React.FC<CreatePostProps> = ({}) => {
               //   },
               //   (cachedPosts) => {
               //     if (!cachedPosts) return;
-
               //     cachedPosts.posts.posts = [
               //       createdPosts?.createPost,
               //       ...cachedPosts.posts.posts,
@@ -53,16 +53,16 @@ const CreatePost: React.FC<CreatePostProps> = ({}) => {
 
               if (!cachedPost) return;
 
-              cache.writeQuery<PostsQuery>({
-                query: PostsDocument,
-                data: {
-                  posts: {
-                    hasMore: cachedPost.posts.hasMore,
-                    posts: [createdPosts.createPost, ...cachedPost.posts.posts],
-                  },
-                },
-                variables: { limit: 15, cursor: null },
-              });
+              // cache.writeQuery<PostsQuery>({
+              //   query: PostsDocument,
+              //   data: {
+              //     posts: {
+              //       hasMore: cachedPost.posts.hasMore,
+              //       posts: [createdPosts.createPost, ...cachedPost.posts.posts],
+              //     },
+              //   },
+              //   variables: { limit: 15, cursor: null },
+              // });
             },
           });
 

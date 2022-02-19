@@ -1,5 +1,6 @@
 import type { AppProps } from "next/app";
 import Head from "next/head";
+import GlobalProvider from "../context/GlobalState";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -33,9 +34,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         <title>Myapp</title>
       </Head>
 
-      {/* <ApolloProvider client={client}> */}
-      <Component {...pageProps} />
-      {/* </ApolloProvider> */}
+      <GlobalProvider>
+        <Component {...pageProps} />
+      </GlobalProvider>
 
       {/* bootstrap script */}
       <script

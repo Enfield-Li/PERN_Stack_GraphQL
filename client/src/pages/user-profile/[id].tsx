@@ -62,6 +62,7 @@ const UserProfile: React.FC = ({}) => {
                       </div>
                     </div>
                     <EditSection meData={data} post={post} />
+                    {/* <EditSection meData={data} post={post} /> */}
                   </div>
                 </div>
               </div>

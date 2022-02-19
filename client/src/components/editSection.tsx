@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   MeQuery,
-  PostActivitiesStatusAndPointsFragment,
-  PostActivitiesStatusAndPointsFragmentDoc,
   PostContentsFragment,
+  PostsDocument,
   PostsSnippetFragment,
   useDeletePostMutation,
   useInteractWithPostMutation,
@@ -11,9 +10,9 @@ import {
 import NextLink from "next/link";
 import { usePopperTooltip } from "react-popper-tooltip";
 import { useRouter } from "next/router";
-import { interactWithPost } from "../utils/interactWithPost";
-import { useApolloClient } from "@apollo/client";
 import { cacheUpdateAfterInteraction } from "../utils/cacheUpdateAfterInteraction";
+import { GlobalContext } from "../context/GlobalContext";
+import { useApolloClient } from "@apollo/client";
 
 interface EditSectionProps {
   post: PostContentsFragment | PostsSnippetFragment;
@@ -21,6 +20,16 @@ interface EditSectionProps {
 }
 
 const EditSection: React.FC<EditSectionProps> = ({ meData, post }) => {
+  const { state } = useContext(GlobalContext);
+  const {
+    laughState,
+    confusedState,
+    likeState,
+    setLaughState,
+    setLikeState,
+    setConfusedState,
+  } = state;
+
   const [controlledVisible, setControlledVisible] = React.useState(false);
   const [interact] = useInteractWithPostMutation();
   const [deletePost] = useDeletePostMutation();
@@ -56,40 +65,24 @@ const EditSection: React.FC<EditSectionProps> = ({ meData, post }) => {
                 href="#"
                 className="me-2 text-decoration-none"
                 onClick={() => {
-                  setControlledVisible(!controlledVisible);
-                  const cachedData =
-                    apolloClient.readFragment<PostActivitiesStatusAndPointsFragment>(
-                      {
-                        fragment: PostActivitiesStatusAndPointsFragmentDoc,
-                        fragmentName: "PostActivitiesStatusAndPoints",
-                        id: `Post:${post.id}`,
-                      }
-                    );
-
-                  if (!cachedData || !cachedData.postActivitiesStatus) return;
-
-                  let cacheValue = false;
-                  let submitValue = true;
-                  if (cachedData.postActivitiesStatus.likeStatus === true) {
-                    cacheValue = true;
-                    submitValue = false;
-                  }
-
+                  console.log("like: ", likeState);
                   interact({
                     variables: {
                       interactInput: {
                         postId: post.id,
-                        like: submitValue,
+                        like: true,
                       },
                     },
                     update: (cache) =>
                       cacheUpdateAfterInteraction(
                         post.id,
-                        cacheValue,
+                        likeState,
                         "like",
                         cache
                       ),
                   });
+                  setLikeState(!likeState);
+                  setControlledVisible(!controlledVisible);
                 }}
               >
                 &#10084;
@@ -100,40 +93,23 @@ const EditSection: React.FC<EditSectionProps> = ({ meData, post }) => {
                 href="#"
                 className="me-2 text-decoration-none"
                 onClick={() => {
-                  setControlledVisible(!controlledVisible);
-                  const cachedData =
-                    apolloClient.readFragment<PostActivitiesStatusAndPointsFragment>(
-                      {
-                        fragment: PostActivitiesStatusAndPointsFragmentDoc,
-                        fragmentName: "PostActivitiesStatusAndPoints",
-                        id: `Post:${post.id}`,
-                      }
-                    );
-
-                  if (!cachedData || !cachedData.postActivitiesStatus) return;
-
-                  let cacheValue = false;
-                  let submitValue = true;
-                  if (cachedData.postActivitiesStatus.laughStatus === true) {
-                    cacheValue = true;
-                    submitValue = false;
-                  }
-
                   interact({
                     variables: {
                       interactInput: {
                         postId: post.id,
-                        laugh: submitValue,
+                        laugh: true,
                       },
                     },
                     update: (cache) =>
                       cacheUpdateAfterInteraction(
                         post.id,
-                        cacheValue,
+                        laughState,
                         "laugh",
                         cache
                       ),
                   });
+                  setLaughState(!laughState);
+                  setControlledVisible(!controlledVisible);
                 }}
               >
                 &#128516;
@@ -144,40 +120,23 @@ const EditSection: React.FC<EditSectionProps> = ({ meData, post }) => {
                 href="#"
                 className="me-2 text-decoration-none"
                 onClick={() => {
-                  setControlledVisible(!controlledVisible);
-                  const cachedData =
-                    apolloClient.readFragment<PostActivitiesStatusAndPointsFragment>(
-                      {
-                        fragment: PostActivitiesStatusAndPointsFragmentDoc,
-                        fragmentName: "PostActivitiesStatusAndPoints",
-                        id: `Post:${post.id}`,
-                      }
-                    );
-
-                  if (!cachedData || !cachedData.postActivitiesStatus) return;
-
-                  let cacheValue = false;
-                  let submitValue = true;
-                  if (cachedData.postActivitiesStatus.confusedStatus === true) {
-                    cacheValue = true;
-                    submitValue = false;
-                  }
-
                   interact({
                     variables: {
                       interactInput: {
                         postId: post.id,
-                        confused: submitValue,
+                        confused: true,
                       },
                     },
                     update: (cache) =>
                       cacheUpdateAfterInteraction(
                         post.id,
-                        cacheValue,
+                        confusedState,
                         "confused",
                         cache
                       ),
                   });
+                  setConfusedState(!confusedState);
+                  setControlledVisible(!controlledVisible);
                 }}
               >
                 &#x1F615;
@@ -200,16 +159,23 @@ const EditSection: React.FC<EditSectionProps> = ({ meData, post }) => {
                 <a
                   href="#"
                   className="me-2 ms-1 text-decoration-none"
-                  onClick={() => {
+                  onClick={async () => {
                     setControlledVisible(!controlledVisible);
                     deletePost({
                       variables: { deletePostId: post.id },
-                      update: (cache) => {
-                        cache.evict({ id: "Post:" + post.id });
-                      },
+                      // update: (cache) => {
+                      //   cache.evict({ id: "Post:" + post.id });
+                      // },
                     });
 
-                    router.push("/");
+                    await apolloClient.refetchQueries({
+                      include: [PostsDocument],
+                      updateCache(cache) {
+                        cache.evict({ fieldName: "posts" });
+                      },
+                    });
+                    // router.push("/");
+                    // router.reload();
                   }}
                 >
                   &#x1F6BD;

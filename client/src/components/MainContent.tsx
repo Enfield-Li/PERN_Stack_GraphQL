@@ -1,23 +1,28 @@
-import { useApolloClient } from "@apollo/client";
 import NextLink from "next/link";
-import React from "react";
+import React, { useContext, useState } from "react";
+import { GlobalContext } from "../context/GlobalContext";
 import VoteSection from "../components/voteSection";
 import {
-  PostActivitiesStatusAndPointsFragment,
-  PostActivitiesStatusAndPointsFragmentDoc,
   useInteractWithPostMutation,
   useMeQuery,
   usePostsQuery,
 } from "../generated/graphql";
 import { cacheUpdateAfterInteraction } from "../utils/cacheUpdateAfterInteraction";
-import { interactWithPost } from "../utils/interactWithPost";
 import ContentPlaceholder from "./ContentPlaceholder";
 import EditSection from "./EditSection";
 
 interface MainContentProps {}
 
 const MainContent: React.FC<MainContentProps> = ({}) => {
-  const apolloClient = useApolloClient();
+  const { state } = useContext(GlobalContext);
+  const {
+    laughState,
+    confusedState,
+    likeState,
+    setLaughState,
+    setLikeState,
+    setConfusedState,
+  } = state;
 
   const [interact] = useInteractWithPostMutation();
   const { data, loading, fetchMore, variables } = usePostsQuery({
@@ -28,6 +33,8 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
     notifyOnNetworkStatusChange: true,
   });
   const { data: meData } = useMeQuery();
+
+  let contentPlaceHoder;
 
   return (
     <div className="mt-2">
@@ -73,46 +80,24 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
                         <a
                           className="border border-1 border-secondary rounded-pill me-2 d-flex text-decoration-none"
                           href="#"
-                          // onClick={() => {
-                          //   const cachedData =
-                          //     apolloClient.readFragment<PostActivitiesStatusAndPointsFragment>(
-                          //       {
-                          //         fragment:
-                          //           PostActivitiesStatusAndPointsFragmentDoc,
-                          //         fragmentName: "PostActivitiesStatusAndPoints",
-                          //         id: `Post:${post.id}`,
-                          //       }
-                          //     );
-
-                          //   if (!cachedData || !cachedData.postActivitiesStatus)
-                          //     return;
-
-                          //   let cacheValue = false;
-                          //   let submitValue = true;
-                          //   if (
-                          //     cachedData.postActivitiesStatus.likeStatus ===
-                          //     true
-                          //   ) {
-                          //     cacheValue = true;
-                          //     submitValue = false;
-                          //   }
-
-                          //   interact({
-                          //     variables: {
-                          //       interactInput: {
-                          //         postId: post.id,
-                          //         like: submitValue,
-                          //       },
-                          //     },
-                          //     update: (cache) =>
-                          //       cacheUpdateAfterInteraction(
-                          //         post.id,
-                          //         cacheValue,
-                          //         "like",
-                          //         cache
-                          //       ),
-                          //   });
-                          // }}
+                          onClick={() => {
+                            interact({
+                              variables: {
+                                interactInput: {
+                                  postId: post.id,
+                                  like: true,
+                                },
+                              },
+                              update: (cache) =>
+                                cacheUpdateAfterInteraction(
+                                  post.id,
+                                  likeState,
+                                  "like",
+                                  cache
+                                ),
+                            });
+                            setLikeState(!likeState);
+                          }}
                         >
                           <div className="mx-1">&#10084;</div>
                           <div className="mx-1 me-2 text-dark">
@@ -122,102 +107,58 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
                       ) : null}
 
                       {/* laugh */}
-                      {/* {post.postPoints!.laughPoints > 0 ? (
+                      {post.postPoints!.laughPoints > 0 ? (
                         <a
                           className="border border-1 border-secondary rounded-pill me-2 d-flex text-decoration-none"
                           href="#"
                           onClick={() => {
-                            const cachedData =
-                              apolloClient.readFragment<PostActivitiesStatusAndPointsFragment>(
-                                {
-                                  fragment:
-                                    PostActivitiesStatusAndPointsFragmentDoc,
-                                  fragmentName: "PostActivitiesStatusAndPoints",
-                                  id: `Post:${post.id}`,
-                                }
-                              );
-
-                            if (!cachedData || !cachedData.postActivitiesStatus)
-                              return;
-
-                            let cacheValue = false;
-                            let submitValue = true;
-                            if (
-                              cachedData.postActivitiesStatus.laughStatus ===
-                              true
-                            ) {
-                              cacheValue = true;
-                              submitValue = false;
-                            }
-
                             interact({
                               variables: {
                                 interactInput: {
                                   postId: post.id,
-                                  laugh: submitValue,
+                                  laugh: true,
                                 },
                               },
                               update: (cache) =>
                                 cacheUpdateAfterInteraction(
                                   post.id,
-                                  cacheValue,
+                                  laughState,
                                   "laugh",
                                   cache
                                 ),
                             });
+                            setLaughState(!laughState);
                           }}
                         >
-                          <div className="mx-1"> &#128516;</div>
+                          <div className="mx-1">&#x1F604;</div>
                           <div className="mx-1 me-2 text-dark">
                             {post.postPoints?.laughPoints}
                           </div>
                         </a>
-                      ) : null} */}
+                      ) : null}
 
                       {/* confused */}
-                      {/* {post.postPoints!.confusedPoints > 0 ? (
+                      {post.postPoints!.confusedPoints > 0 ? (
                         <a
                           className="border border-1 border-secondary rounded-pill me-2 d-flex text-decoration-none"
                           href="#"
                           onClick={() => {
-                            const cachedData =
-                              apolloClient.readFragment<PostActivitiesStatusAndPointsFragment>(
-                                {
-                                  fragment:
-                                    PostActivitiesStatusAndPointsFragmentDoc,
-                                  fragmentName: "PostActivitiesStatusAndPoints",
-                                  id: `Post:${post.id}`,
-                                }
-                              );
-
-                            if (!cachedData || !cachedData.postActivitiesStatus)
-                              return;
-
-                            let cacheValue = false;
-                            let submitValue = true;
-                            if (
-                              cachedData.postActivitiesStatus.confusedStatus ===
-                              true
-                            ) {
-                              cacheValue = true;
-                              submitValue = false;
-                            }
-
                             interact({
                               variables: {
                                 interactInput: {
                                   postId: post.id,
-                                  confused: submitValue,
+                                  confused: true,
                                 },
                               },
                               update: (cache) =>
                                 cacheUpdateAfterInteraction(
                                   post.id,
-                                  cacheValue,
+                                  confusedState,
                                   "confused",
                                   cache
                                 ),
                             });
+                            setConfusedState(!confusedState);
                           }}
                         >
                           <div className="mx-1">&#x1F615;</div>
@@ -225,7 +166,7 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
                             {post.postPoints?.confusedPoints}
                           </div>
                         </a>
-                      ) : null} */}
+                      ) : null}
                     </div>
                   </div>
                 </div>

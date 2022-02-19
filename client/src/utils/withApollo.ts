@@ -24,7 +24,7 @@ const createClient = (ctx?: NextPageContext) =>
                 existing: PaginatedPosts | undefined,
                 incoming: PaginatedPosts
               ): PaginatedPosts {
-                // console.log(existing, incoming);
+                console.log(existing, incoming);
                 return {
                   ...incoming,
                   posts: [...(existing?.posts || []), ...incoming.posts],
