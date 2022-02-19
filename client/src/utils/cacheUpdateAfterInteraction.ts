@@ -43,7 +43,6 @@ export const cacheUpdateAfterInteraction = (
   ) {
     newUpOrDownValue = upOrDownValue;
     const incOrDec = upOrDownValue ? 1 : -1;
-    console.log("switch");
 
     newPoints =
       cachedData.postPoints.votePoints +
@@ -84,19 +83,17 @@ export const cacheUpdateAfterInteraction = (
   )
     newUpOrDownValue = !upOrDownValue;
 
-  if (voteField === "vote") {
-    newData.postPoints.votePoints = newPoints;
-    newData.postActivitiesStatus!.voteStatus = newUpOrDownValue;
-  } else if (voteField === "confused") {
-    newData.postPoints.confusedPoints = newPoints;
-    newData.postActivitiesStatus!.confusedStatus = newUpOrDownValue;
-  } else if (voteField === "laugh") {
-    newData.postPoints.laughPoints = newPoints;
-    newData.postActivitiesStatus!.laughStatus = newUpOrDownValue;
-  } else if (voteField === "like") {
-    newData.postPoints.likePoints = newPoints;
-    newData.postActivitiesStatus!.likeStatus = newUpOrDownValue;
-  }
+  newData.postPoints.votePoints = newPoints;
+  newData.postActivitiesStatus!.voteStatus = newUpOrDownValue;
+
+  newData.postPoints.confusedPoints = newPoints;
+  newData.postActivitiesStatus!.confusedStatus = newUpOrDownValue;
+
+  newData.postPoints.laughPoints = newPoints;
+  newData.postActivitiesStatus!.laughStatus = newUpOrDownValue;
+
+  newData.postPoints.likePoints = newPoints;
+  newData.postActivitiesStatus!.likeStatus = newUpOrDownValue;
 
   cache.writeFragment<PostActivitiesStatusAndPointsFragment>({
     fragment: PostActivitiesStatusAndPointsFragmentDoc,

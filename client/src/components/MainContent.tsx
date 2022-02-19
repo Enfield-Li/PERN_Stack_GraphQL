@@ -73,46 +73,46 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
                         <a
                           className="border border-1 border-secondary rounded-pill me-2 d-flex text-decoration-none"
                           href="#"
-                          onClick={() => {
-                            const cachedData =
-                              apolloClient.readFragment<PostActivitiesStatusAndPointsFragment>(
-                                {
-                                  fragment:
-                                    PostActivitiesStatusAndPointsFragmentDoc,
-                                  fragmentName: "PostActivitiesStatusAndPoints",
-                                  id: `Post:${post.id}`,
-                                }
-                              );
+                          // onClick={() => {
+                          //   const cachedData =
+                          //     apolloClient.readFragment<PostActivitiesStatusAndPointsFragment>(
+                          //       {
+                          //         fragment:
+                          //           PostActivitiesStatusAndPointsFragmentDoc,
+                          //         fragmentName: "PostActivitiesStatusAndPoints",
+                          //         id: `Post:${post.id}`,
+                          //       }
+                          //     );
 
-                            if (!cachedData || !cachedData.postActivitiesStatus)
-                              return;
+                          //   if (!cachedData || !cachedData.postActivitiesStatus)
+                          //     return;
 
-                            let cacheValue = false;
-                            let submitValue = true;
-                            if (
-                              cachedData.postActivitiesStatus.likeStatus ===
-                              true
-                            ) {
-                              cacheValue = true;
-                              submitValue = false;
-                            }
+                          //   let cacheValue = false;
+                          //   let submitValue = true;
+                          //   if (
+                          //     cachedData.postActivitiesStatus.likeStatus ===
+                          //     true
+                          //   ) {
+                          //     cacheValue = true;
+                          //     submitValue = false;
+                          //   }
 
-                            interact({
-                              variables: {
-                                interactInput: {
-                                  postId: post.id,
-                                  like: submitValue,
-                                },
-                              },
-                              update: (cache) =>
-                                cacheUpdateAfterInteraction(
-                                  post.id,
-                                  cacheValue,
-                                  "like",
-                                  cache
-                                ),
-                            });
-                          }}
+                          //   interact({
+                          //     variables: {
+                          //       interactInput: {
+                          //         postId: post.id,
+                          //         like: submitValue,
+                          //       },
+                          //     },
+                          //     update: (cache) =>
+                          //       cacheUpdateAfterInteraction(
+                          //         post.id,
+                          //         cacheValue,
+                          //         "like",
+                          //         cache
+                          //       ),
+                          //   });
+                          // }}
                         >
                           <div className="mx-1">&#10084;</div>
                           <div className="mx-1 me-2 text-dark">
@@ -122,7 +122,7 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
                       ) : null}
 
                       {/* laugh */}
-                      {post.postPoints!.laughPoints > 0 ? (
+                      {/* {post.postPoints!.laughPoints > 0 ? (
                         <a
                           className="border border-1 border-secondary rounded-pill me-2 d-flex text-decoration-none"
                           href="#"
@@ -172,10 +172,10 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
                             {post.postPoints?.laughPoints}
                           </div>
                         </a>
-                      ) : null}
+                      ) : null} */}
 
                       {/* confused */}
-                      {post.postPoints!.confusedPoints > 0 ? (
+                      {/* {post.postPoints!.confusedPoints > 0 ? (
                         <a
                           className="border border-1 border-secondary rounded-pill me-2 d-flex text-decoration-none"
                           href="#"
@@ -225,7 +225,7 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
                             {post.postPoints?.confusedPoints}
                           </div>
                         </a>
-                      ) : null}
+                      ) : null} */}
                     </div>
                   </div>
                 </div>
