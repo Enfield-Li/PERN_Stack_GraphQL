@@ -1,17 +1,17 @@
 import { Formik } from "formik";
 import { useRouter } from "next/router";
-import FormWrapper from "../../../components/FormWrapper";
+import FormWrapper from "../../../components/layout/FormWrapper";
 import InputWrapper from "../../../components/InputWrapper";
-import LayoutSpinner from "../../../components/LayoutSpinner";
-import LayoutWrapper from "../../../components/LayoutWrapper";
+import LayoutSpinner from "../../../components/layout/LayoutSpinner";
 import {
   CreatePostMutationVariables,
   PostsDocument,
   PostsQuery,
   usePostQuery,
-  useUpdatePostMutation
+  useUpdatePostMutation,
 } from "../../../generated/graphql";
 import withApollo from "../../../utils/withApollo";
+import LayoutWrapper from "../../../components/LayoutWrapper";
 
 interface EditPostProps {}
 

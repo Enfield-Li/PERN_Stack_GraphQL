@@ -1,14 +1,14 @@
 import NextLink from "next/link";
 import React from "react";
-import ContentPlaceholder from "../../components/ContentPlaceholder";
+import ContentPlaceholder from "../../components/layout/ContentPlaceholder";
 import EditSection from "../../components/editSection";
-import LayoutWrapper from "../../components/LayoutWrapper";
-import ProfileCard from "../../components/ProfileCard";
-import ProfileCardPlaceholder from "../../components/ProfileCardPlaceholder";
+import ProfileCard from "../../components/layout/ProfileCard";
+import ProfileCardPlaceholder from "../../components/layout/ProfileCardPlaceholder";
 import VoteSection from "../../components/voteSection";
 import { useUserQuery } from "../../generated/graphql";
 import { useGetIntParams } from "../../utils/useGetIntParams";
 import withApollo from "../../utils/withApollo";
+import LayoutWrapper from "../../components/LayoutWrapper";
 
 const UserProfile: React.FC = ({}) => {
   const intId = useGetIntParams();
@@ -50,7 +50,10 @@ const UserProfile: React.FC = ({}) => {
                       <VoteSection post={post} />
                       <div className="align-self-center">
                         <NextLink href={"/post/[id]"} as={`/post/${post.id}`}>
-                          <div role="button" className="card-title text-dark text-decoration-none h3">
+                          <div
+                            role="button"
+                            className="card-title text-dark text-decoration-none h3"
+                          >
                             {post.title}
                           </div>
                         </NextLink>

@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React from "react";
 import EditSection from "../../components/editSection";
-import LayoutSpinner from "../../components/LayoutSpinner";
+import LayoutSpinner from "../../components/layout/LayoutSpinner";
 import LayoutWrapper from "../../components/LayoutWrapper";
 import VoteSection from "../../components/voteSection";
 import { useMeQuery, usePostQuery } from "../../generated/graphql";

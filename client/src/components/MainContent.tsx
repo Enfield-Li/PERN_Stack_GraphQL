@@ -9,7 +9,7 @@ import {
   usePostsQuery,
 } from "../generated/graphql";
 import { interactWithPost } from "../utils/interactWithPost";
-import ContentPlaceholder from "./ContentPlaceholder";
+import ContentPlaceholder from "./layout/ContentPlaceholder";
 import EditSection from "./editSection";
 import LayoutWrapper from "./LayoutWrapper";
 

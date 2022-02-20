@@ -1,7 +1,7 @@
 import { Formik } from "formik";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import FormWrapper from "../components/FormWrapper";
+import FormWrapper from "../components/layout/FormWrapper";
 import InputWrapper from "../components/InputWrapper";
 import { useRegisterMutation } from "../generated/graphql";
 import { toError } from "../utils/toError";

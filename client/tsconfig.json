@@ -15,6 +15,6 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "../server/src/utils/mailer.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "../server/src/utils/mailer.ts", "src/pages/_document.js", "src/pages/_document.js"],
   "exclude": ["node_modules"]
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { UserInfoFragment, UserQuery } from "../generated/graphql";
+import { UserInfoFragment, UserQuery } from "../../generated/graphql";
 
 interface ProfileCardProps {
   user: UserInfoFragment;
