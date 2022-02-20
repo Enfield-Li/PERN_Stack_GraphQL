@@ -10,6 +10,7 @@ import {
 import { cacheUpdateAfterInteraction } from "../utils/cacheUpdateAfterInteraction";
 import ContentPlaceholder from "./ContentPlaceholder";
 import EditSection from "./EditSection";
+import { interactWithPost } from "../utils/interactWithPost";
 
 interface MainContentProps {}
 
@@ -81,22 +82,14 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
                           className="border border-1 border-secondary rounded-pill me-2 d-flex text-decoration-none"
                           href="#"
                           onClick={() => {
-                            interact({
-                              variables: {
-                                interactInput: {
-                                  postId: post.id,
-                                  like: true,
-                                },
-                              },
-                              update: (cache) =>
-                                cacheUpdateAfterInteraction(
-                                  post.id,
-                                  likeState,
-                                  "like",
-                                  cache
-                                ),
-                            });
-                            setLikeState(!likeState);
+                            interactWithPost(
+                              post.id,
+                              "like",
+                              interact,
+                              state,
+                              likeState,
+                              setLikeState
+                            );
                           }}
                         >
                           <div className="mx-1">&#10084;</div>

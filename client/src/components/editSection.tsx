@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   MeQuery,
   PostContentsFragment,
@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import { cacheUpdateAfterInteraction } from "../utils/cacheUpdateAfterInteraction";
 import { GlobalContext } from "../context/GlobalContext";
 import { useApolloClient } from "@apollo/client";
+import { interactWithPost } from "../utils/interactWithPost";
 
 interface EditSectionProps {
   post: PostContentsFragment | PostsSnippetFragment;
@@ -20,6 +21,9 @@ interface EditSectionProps {
 }
 
 const EditSection: React.FC<EditSectionProps> = ({ meData, post }) => {
+  const [interactedBefore, setInteractedBefore] = useState(false);
+
+  const router = useRouter();
   const { state } = useContext(GlobalContext);
   const {
     laughState,
@@ -29,11 +33,18 @@ const EditSection: React.FC<EditSectionProps> = ({ meData, post }) => {
     setLikeState,
     setConfusedState,
   } = state;
+  console.log(likeState);
+
+  useEffect(() => {
+    post.postActivitiesStatus?.likeStatus
+      ? setLikeState(true)
+      : setLikeState(false);
+    post.postActivitiesStatus?.likeStatus ? setInteractedBefore(true) : null;
+  }, []);
 
   const [controlledVisible, setControlledVisible] = React.useState(false);
   const [interact] = useInteractWithPostMutation();
   const [deletePost] = useDeletePostMutation();
-  const router = useRouter();
   const apolloClient = useApolloClient();
 
   const {
@@ -65,24 +76,31 @@ const EditSection: React.FC<EditSectionProps> = ({ meData, post }) => {
                 href="#"
                 className="me-2 text-decoration-none"
                 onClick={() => {
-                  console.log("like: ", likeState);
-                  interact({
-                    variables: {
-                      interactInput: {
-                        postId: post.id,
-                        like: true,
-                      },
-                    },
-                    update: (cache) =>
-                      cacheUpdateAfterInteraction(
-                        post.id,
-                        likeState,
-                        "like",
-                        cache
-                      ),
-                  });
-                  setLikeState(!likeState);
-                  setControlledVisible(!controlledVisible);
+                  interactWithPost(
+                    post.id,
+                    "like",
+                    interact,
+                    state,
+                    likeState,
+                    setLikeState
+                  );
+                  // interact({
+                  //   variables: {
+                  //     interactInput: {
+                  //       postId: post.id,
+                  //       like: true,
+                  //     },
+                  //   },
+                  //   update: (cache) =>
+                  //     cacheUpdateAfterInteraction(
+                  //       post.id,
+                  //       likeState,
+                  //       "like",
+                  //       cache
+                  //     ),
+                  // });
+                  // setLikeState(!likeState);
+                  // setControlledVisible(!controlledVisible);
                 }}
               >
                 &#10084;

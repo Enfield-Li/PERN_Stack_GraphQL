@@ -58,21 +58,33 @@ export const cacheUpdateAfterInteraction = (
   }
 
   if (fieldToInteract === "like") {
-    newData.postActivitiesStatus!.likeStatus = upOrDownValue;
+    newData.postActivitiesStatus!.likeStatus = !cachedData.postActivitiesStatus
+      ?.likeStatus
+      ? true
+      : false;
     newData.postPoints!.likePoints =
-      cachedData.postPoints.likePoints + (upOrDownValue ? -1 : 1);
+      cachedData.postPoints.likePoints +
+      (cachedData.postActivitiesStatus?.likeStatus ? -1 : 1);
   }
 
   if (fieldToInteract === "laugh") {
-    newData.postActivitiesStatus!.laughStatus = upOrDownValue;
+    newData.postActivitiesStatus!.laughStatus = !cachedData.postActivitiesStatus
+      ?.laughStatus
+      ? true
+      : false;
     newData.postPoints!.laughPoints =
-      cachedData.postPoints.laughPoints + (upOrDownValue ? -1 : 1);
+      cachedData.postPoints.laughPoints +
+      (cachedData.postActivitiesStatus?.laughStatus ? -1 : 1);
   }
 
   if (fieldToInteract === "confused") {
-    newData.postActivitiesStatus!.confusedStatus = upOrDownValue;
+    newData.postActivitiesStatus!.confusedStatus = !cachedData
+      .postActivitiesStatus?.confusedStatus
+      ? true
+      : false;
     newData.postPoints!.confusedPoints =
-      cachedData.postPoints.confusedPoints + (upOrDownValue ? -1 : 1);
+      cachedData.postPoints.confusedPoints +
+      (cachedData.postActivitiesStatus?.confusedStatus ? -1 : 1);
   }
 
   cache.writeFragment<PostActivitiesStatusAndPointsFragment>({
