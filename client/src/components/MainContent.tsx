@@ -1,24 +1,19 @@
 import NextLink from "next/link";
-import Router, { useRouter } from "next/router";
-import React, { useContext } from "react";
+import React from "react";
 import VoteSection from "../components/voteSection";
-import { GlobalContext } from "../context/GlobalContext";
 import {
   useInteractWithPostMutation,
   useMeQuery,
   usePostsQuery,
 } from "../generated/graphql";
-import { interactWithPost } from "../utils/interactWithPost";
-import ContentPlaceholder from "./layout/ContentPlaceholder";
 import EditSection from "./editSection";
-import LayoutWrapper from "./LayoutWrapper";
+import ContentPlaceholder from "./layout/ContentPlaceholder";
+import LayoutWrapper from "./layout/LayoutWrapper";
+import PostCardSection from "./nestedComponents/PostCardSection";
 
 interface MainContentProps {}
 
 const MainContent: React.FC<MainContentProps> = ({}) => {
-  const router = useRouter();
-  const { state } = useContext(GlobalContext);
-
   const [interact, { error }] = useInteractWithPostMutation();
 
   const { data, loading, fetchMore, variables } = usePostsQuery({
@@ -33,8 +28,6 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
   if (error) {
     return <LayoutWrapper>Something went wrong..</LayoutWrapper>;
   }
-
-  let contentPlaceHoder;
 
   return (
     <div className="mt-2">
@@ -66,131 +59,16 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
                         </span>
                       </NextLink>
                     </div>
-                    <NextLink href={"/post/[id]"} as={`/post/${post.id}`}>
-                      <div
-                        role="button"
-                        className="card-title text-dark text-decoration-none h3"
-                      >
-                        {post.title}
-                      </div>
-                    </NextLink>
-                    <p className="card-text mt-1 fs-5">
-                      {post.contentSnippets.length === 50
-                        ? post.contentSnippets + "..."
-                        : post.contentSnippets}
-                    </p>
-
-                    <div className="d-flex">
-                      {/* like */}
-                      {post.postPoints!.likePoints > 0 ? (
-                        <div
-                          role="button"
-                          className={`border border-1 rounded-pill me-2 d-flex text-decoration-none ${
-                            post.postActivitiesStatus?.likeStatus
-                              ? "border-info"
-                              : "border-dark"
-                          }`}
-                          onClick={async () => {
-                            if (meData?.me === null) {
-                              // router.replace(`/login?next=${path}`);
-                              router.push("/login");
-                              return;
-                            }
-
-                            await interactWithPost(
-                              post.id,
-                              "like",
-                              interact,
-                              state
-                            );
-                          }}
-                        >
-                          <div className="mx-1">&#10084;</div>
-                          <div
-                            className={`mx-1 me-2 ${
-                              post.postActivitiesStatus?.likeStatus
-                                ? "text-info"
-                                : "text-dark"
-                            }`}
-                          >
-                            {post.postPoints?.likePoints}
-                          </div>
-                        </div>
-                      ) : null}
-
-                      {/* laugh */}
-                      {post.postPoints!.laughPoints > 0 ? (
-                        <div
-                          role="button"
-                          className={`border border-1 rounded-pill me-2 d-flex text-decoration-none ${
-                            post.postActivitiesStatus?.laughStatus
-                              ? "border-info"
-                              : "border-dark"
-                          }`}
-                          onClick={() => {
-                            if (meData?.me === null) {
-                              // router.replace(`/login?next=${path}`);
-                              router.push("/login");
-                              return;
-                            }
-
-                            interactWithPost(post.id, "laugh", interact, state);
-                          }}
-                        >
-                          <div className="mx-1">&#x1F604;</div>
-                          <div
-                            className={`mx-1 me-2 ${
-                              post.postActivitiesStatus?.laughStatus
-                                ? "text-info"
-                                : "text-dark"
-                            }`}
-                          >
-                            {post.postPoints?.laughPoints}
-                          </div>
-                        </div>
-                      ) : null}
-
-                      {/* confused */}
-                      {post.postPoints!.confusedPoints > 0 ? (
-                        <div
-                          role="button"
-                          className={`border border-1 rounded-pill me-2 d-flex text-decoration-none ${
-                            post.postActivitiesStatus?.confusedStatus
-                              ? "border-info"
-                              : "border-dark"
-                          }`}
-                          onClick={() => {
-                            if (meData?.me === null) {
-                              // router.replace(`/login?next=${path}`);
-                              router.push("/login");
-                              return;
-                            }
-
-                            interactWithPost(
-                              post.id,
-                              "confused",
-                              interact,
-                              state
-                            );
-                          }}
-                        >
-                          <div className="mx-1">&#x1F615;</div>
-                          <div
-                            className={`mx-1 me-2 ${
-                              post.postActivitiesStatus?.confusedStatus
-                                ? "text-info"
-                                : "text-dark"
-                            }`}
-                          >
-                            {post.postPoints?.confusedPoints}
-                          </div>
-                        </div>
-                      ) : null}
-                    </div>
+                    <PostCardSection
+                      interact={interact}
+                      meData={meData}
+                      // @ts-ignore
+                      post={post}
+                    />
                   </div>
                 </div>
 
-                <EditSection meData={meData} post={post} />
+                <EditSection post={post} />
               </div>
             </div>
           </div>

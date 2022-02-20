@@ -4,7 +4,7 @@ import {
   PostsDocument,
   useLogoutMutation,
   useMeQuery,
-} from "../../generated/graphql";
+} from "../generated/graphql";
 import { useApolloClient } from "@apollo/client";
 
 interface NavbarProps {}

@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import EditSection from "../../components/editSection";
 import LayoutSpinner from "../../components/layout/LayoutSpinner";
-import LayoutWrapper from "../../components/LayoutWrapper";
+import LayoutWrapper from "../../components/layout/LayoutWrapper";
 import VoteSection from "../../components/voteSection";
 import { useMeQuery, usePostQuery } from "../../generated/graphql";
 import withApollo from "../../utils/withApollo";

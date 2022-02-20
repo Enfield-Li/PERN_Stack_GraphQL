@@ -1,23 +1,28 @@
-import NextLink from "next/link";
 import React from "react";
-import ContentPlaceholder from "../../components/layout/ContentPlaceholder";
 import EditSection from "../../components/editSection";
-import ProfileCard from "../../components/layout/ProfileCard";
+import ContentPlaceholder from "../../components/layout/ContentPlaceholder";
+import LayoutWrapper from "../../components/layout/LayoutWrapper";
 import ProfileCardPlaceholder from "../../components/layout/ProfileCardPlaceholder";
+import PostCardSection from "../../components/nestedComponents/PostCardSection";
+import ProfileCard from "../../components/nestedComponents/ProfileCard";
 import VoteSection from "../../components/voteSection";
-import { useUserQuery } from "../../generated/graphql";
+import {
+  useInteractWithPostMutation,
+  useUserQuery,
+} from "../../generated/graphql";
 import { useGetIntParams } from "../../utils/useGetIntParams";
 import withApollo from "../../utils/withApollo";
-import LayoutWrapper from "../../components/LayoutWrapper";
 
 const UserProfile: React.FC = ({}) => {
   const intId = useGetIntParams();
-  const { data, error, loading } = useUserQuery({
+  const { data: meData, error: userError } = useUserQuery({
     variables: { userId: intId },
   });
 
-  if (error) return <LayoutWrapper>Something went wrong</LayoutWrapper>;
-  if (!data?.user)
+  const [interact] = useInteractWithPostMutation();
+
+  if (userError) return <LayoutWrapper>Something went wrong</LayoutWrapper>;
+  if (!meData?.user)
     return (
       <LayoutWrapper>
         <div className="row">
@@ -36,35 +41,30 @@ const UserProfile: React.FC = ({}) => {
     <LayoutWrapper>
       <div className="row">
         <div className="col-10">
-          {!data?.user?.userPost ? (
+          {!meData?.user?.userPost ? (
             <div>
               <ContentPlaceholder />
               <ContentPlaceholder />
             </div>
-          ) : data?.user?.userPost ? (
-            data?.user?.userPost.map((post) => (
+          ) : meData?.user?.userPost ? (
+            meData?.user?.userPost.map((post) => (
               <div className="card my-2" key={post.id}>
                 <div className="card-body">
                   <div className="d-flex justify-content-between">
                     <div className="d-flex">
                       <VoteSection post={post} />
-                      <div className="align-self-center">
-                        <NextLink href={"/post/[id]"} as={`/post/${post.id}`}>
-                          <div
-                            role="button"
-                            className="card-title text-dark text-decoration-none h3"
-                          >
-                            {post.title}
-                          </div>
-                        </NextLink>
-                        <p className="card-text mt-2 text-muted">
-                          {post.contentSnippets.length === 50
-                            ? post.contentSnippets + "..."
-                            : post.contentSnippets}
-                        </p>
+
+                      <div className="align-items-center mt-2">
+                        <PostCardSection
+                          interact={interact}
+                          meData={meData}
+                          // @ts-ignore
+                          post={post}
+                        />
                       </div>
                     </div>
-                    <EditSection meData={data} post={post} />
+
+                    <EditSection post={post} />
                     {/* <EditSection meData={data} post={post} /> */}
                   </div>
                 </div>
@@ -75,7 +75,7 @@ const UserProfile: React.FC = ({}) => {
           )}
         </div>
         <div className="col-2">
-          <ProfileCard user={data?.user} />
+          <ProfileCard user={meData?.user} />
         </div>
       </div>
     </LayoutWrapper>

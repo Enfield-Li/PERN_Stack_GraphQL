@@ -1,9 +1,9 @@
 import { Formik } from "formik";
 import { useRouter } from "next/router";
 import React from "react";
-import FormWrapper from "../components/layout/FormWrapper";
-import InputWrapper from "../components/InputWrapper";
-import LayoutWrapper from "../components/LayoutWrapper";
+import FormWrapper from "../components/nestedComponents/FormWrapper";
+import InputWrapper from "../components/nestedComponents/InputWrapper";
+import LayoutWrapper from "../components/layout/LayoutWrapper";
 import {
   CreatePostMutationVariables,
   PostsDocument,

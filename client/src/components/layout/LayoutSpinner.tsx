@@ -1,5 +1,5 @@
 import React from "react";
-import LayoutWrapper from "../LayoutWrapper";
+import LayoutWrapper from "./LayoutWrapper";
 import Spinner from "./Spinner";
 
 interface LayoutSpinnerProps {}

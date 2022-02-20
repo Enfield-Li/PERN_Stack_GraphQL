@@ -1,7 +1,7 @@
 import { Formik } from "formik";
 import React, { useState } from "react";
-import FormWrapper from "../components/layout/FormWrapper";
-import InputWrapper from "../components/InputWrapper";
+import FormWrapper from "../components/nestedComponents/FormWrapper";
+import InputWrapper from "../components/nestedComponents/InputWrapper";
 import { useForgotPasswordMutation } from "../generated/graphql";
 import withApollo from "../utils/withApollo";
 

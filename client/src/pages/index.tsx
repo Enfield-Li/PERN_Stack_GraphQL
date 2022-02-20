@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import LayoutWrapper from "../components/LayoutWrapper";
+import LayoutWrapper from "../components/layout/LayoutWrapper";
 import MainContent from "../components/MainContent";
 import withApollo from "../utils/withApollo";
 

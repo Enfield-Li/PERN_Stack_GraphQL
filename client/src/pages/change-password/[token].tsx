@@ -1,8 +1,8 @@
 import { Formik } from "formik";
 import { useRouter } from "next/router";
 import React from "react";
-import FormWrapper from "../../components/layout/FormWrapper";
-import InputWrapper from "../../components/InputWrapper";
+import FormWrapper from "../../components/nestedComponents/FormWrapper";
+import InputWrapper from "../../components/nestedComponents/InputWrapper";
 import { useChangePasswordMutation } from "../../generated/graphql";
 import { toError } from "../../utils/toError";
 import withApollo from "../../utils/withApollo";

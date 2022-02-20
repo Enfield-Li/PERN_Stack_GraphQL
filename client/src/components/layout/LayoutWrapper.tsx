@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "./layout/Navbar";
+import Navbar from "../Navbar";
 
 interface LayoutWrapperProps {}
 
@@ -11,4 +11,5 @@ const LayoutWrapper: React.FC<LayoutWrapperProps> = ({ children }) => {
     </div>
   );
 };
+
 export default LayoutWrapper;

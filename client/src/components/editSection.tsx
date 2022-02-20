@@ -1,28 +1,26 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useApolloClient } from "@apollo/client";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
+import React, { useContext, useState } from "react";
+import { usePopperTooltip } from "react-popper-tooltip";
+import { GlobalContext } from "../context/GlobalContext";
 import {
-  MeQuery,
-  PostContentsFragment,
-  PostsDocument,
-  PostsSnippetFragment,
+  PostContentsFragment, PostsSnippetFragment,
   useDeletePostMutation,
   useInteractWithPostMutation,
+  useMeQuery
 } from "../generated/graphql";
-import NextLink from "next/link";
-import { usePopperTooltip } from "react-popper-tooltip";
-import { useRouter } from "next/router";
-import { cacheUpdateAfterInteraction } from "../utils/cacheUpdateAfterInteraction";
-import { GlobalContext } from "../context/GlobalContext";
-import { useApolloClient } from "@apollo/client";
 import { interactWithPost } from "../utils/interactWithPost";
 
 interface EditSectionProps {
   post: PostContentsFragment | PostsSnippetFragment;
-  meData: MeQuery | undefined;
+  // meData: MeQuery | undefined;
 }
 
-const EditSection: React.FC<EditSectionProps> = ({ meData, post }) => {
+const EditSection: React.FC<EditSectionProps> = ({ post }) => {
   const router = useRouter();
   const { state } = useContext(GlobalContext);
+  const { data: meData } = useMeQuery();
 
   const [interact] = useInteractWithPostMutation();
   const [deletePost] = useDeletePostMutation();
@@ -43,8 +41,10 @@ const EditSection: React.FC<EditSectionProps> = ({ meData, post }) => {
     onVisibleChange: setControlledVisible,
   });
 
+  console.log("meID: ", meData?.me?.id);
+  console.log("creatorId: ", post.creatorId);
   return (
-    <div>
+    <div className="d-flex flex-column">
       <div
         role="button"
         className="bi bi-three-dots text-success"
@@ -69,7 +69,6 @@ const EditSection: React.FC<EditSectionProps> = ({ meData, post }) => {
                 }`}
                 onClick={() => {
                   if (meData?.me === null) {
-                    // router.replace(`/login?next=${path}`);
                     router.push("/login");
                     return;
                   }
@@ -90,7 +89,6 @@ const EditSection: React.FC<EditSectionProps> = ({ meData, post }) => {
                 }`}
                 onClick={() => {
                   if (meData?.me === null) {
-                    // router.replace(`/login?next=${path}`);
                     router.push("/login");
                     return;
                   }
@@ -111,7 +109,6 @@ const EditSection: React.FC<EditSectionProps> = ({ meData, post }) => {
                 }`}
                 onClick={() => {
                   if (meData?.me === null) {
-                    // router.replace(`/login?next=${path}`);
                     router.push("/login");
                     return;
                   }
@@ -122,52 +119,51 @@ const EditSection: React.FC<EditSectionProps> = ({ meData, post }) => {
                 &#x1F615;
               </span>
             </span>
-
-            {/* show edit/delete button or not */}
-            {meData?.me?.id === post.creatorId ? (
-              <div className="mt-1 d-flex justify-content-center">
-                {/* edit */}
-                <NextLink href={"/post/edit/[id]"} as={`/post/edit/${post.id}`}>
-                  <span
-                    role="button"
-                    className="me-2 text-decoration-none"
-                    onClick={() => setControlledVisible(!controlledVisible)}
-                  >
-                    &#x1F4DD;
-                  </span>
-                </NextLink>
-
-                {/* delete */}
-                <span
-                  role="button"
-                  className="me-2 text-decoration-none"
-                  onClick={async () => {
-                    setControlledVisible(!controlledVisible);
-                    deletePost({
-                      variables: { deletePostId: post.id },
-
-                      update: (cache) => {
-                        cache.evict({ id: "Post:" + post.id });
-                      },
-                    });
-
-                    // await apolloClient.refetchQueries({
-                    //   include: [PostsDocument],
-                    //   updateCache(cache) {
-                    //     cache.evict({ fieldName: "posts" });
-                    //   },
-                    // });
-                    // router.push("/");
-                    // router.reload();
-                  }}
-                >
-                  &#x1F6BD;
-                </span>
-              </div>
-            ) : null}
           </div>
         </div>
       )}
+      {/* show edit/delete button or not */}
+      {meData?.me?.id === post.creatorId ? (
+        <div className="mt-1 d-flex flex-column">
+          {/* edit */}
+          <NextLink href={"/post/edit/[id]"} as={`/post/edit/${post.id}`}>
+            <span
+              role="button"
+              className="me-2 text-decoration-none"
+              onClick={() => setControlledVisible(!controlledVisible)}
+            >
+              &#x1F4DD;
+            </span>
+          </NextLink>
+
+          {/* delete */}
+          <span
+            role="button"
+            className="me-2 mt-2 text-decoration-none"
+            onClick={async () => {
+              setControlledVisible(!controlledVisible);
+              deletePost({
+                variables: { deletePostId: post.id },
+
+                update: (cache) => {
+                  cache.evict({ id: "Post:" + post.id });
+                },
+              });
+
+              // await apolloClient.refetchQueries({
+              //   include: [PostsDocument],
+              //   updateCache(cache) {
+              //     cache.evict({ fieldName: "posts" });
+              //   },
+              // });
+              // router.push("/");
+              // router.reload();
+            }}
+          >
+            &#128465;
+          </span>
+        </div>
+      ) : null}
     </div>
   );
 };
