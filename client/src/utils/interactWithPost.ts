@@ -1,3 +1,4 @@
+import { useIsAuth } from "./useIsAuth";
 import {
   ApolloCache,
   DefaultContext,
@@ -14,7 +15,7 @@ import { cacheUpdateAfterInteraction } from "./cacheUpdateAfterInteraction";
 
 type FieldType = "like" | "laugh" | "confused";
 
-export const interactWithPost = (
+export const interactWithPost = async (
   postId: number,
   field: FieldType,
   interact: {
@@ -29,9 +30,7 @@ export const interactWithPost = (
         | undefined
     ): Promise<FetchResult<InteractWithPostMutation>>;
   },
-  state: InitialStateTypes,
-  controlledVisible?: boolean,
-  setControlledVisible?: React.Dispatch<React.SetStateAction<boolean>>
+  state: InitialStateTypes
 ) => {
   const {
     laughState,
@@ -54,7 +53,6 @@ export const interactWithPost = (
         cacheUpdateAfterInteraction(postId, likeState, "like", cache),
     });
     setLikeState(!likeState);
-    setControlledVisible && setControlledVisible(!controlledVisible);
   }
 
   if (field === "laugh") {
@@ -69,7 +67,6 @@ export const interactWithPost = (
         cacheUpdateAfterInteraction(postId, laughState, "laugh", cache),
     });
     setLaughState(!laughState);
-    setControlledVisible && setControlledVisible(!controlledVisible);
   }
 
   if (field === "confused") {
@@ -84,6 +81,5 @@ export const interactWithPost = (
         cacheUpdateAfterInteraction(postId, confusedState, "confused", cache),
     });
     setConfusedState(!confusedState);
-    setControlledVisible && setControlledVisible(!controlledVisible);
   }
 };

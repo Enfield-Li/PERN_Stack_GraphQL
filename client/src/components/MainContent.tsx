@@ -9,23 +9,18 @@ import {
 } from "../generated/graphql";
 import { cacheUpdateAfterInteraction } from "../utils/cacheUpdateAfterInteraction";
 import ContentPlaceholder from "./ContentPlaceholder";
-import EditSection from "./EditSection";
+import EditSection from "./editSection";
 import { interactWithPost } from "../utils/interactWithPost";
+import Router, { useRouter } from "next/router";
 
 interface MainContentProps {}
 
 const MainContent: React.FC<MainContentProps> = ({}) => {
+  const router = useRouter();
   const { state } = useContext(GlobalContext);
-  const {
-    laughState,
-    confusedState,
-    likeState,
-    setLaughState,
-    setLikeState,
-    setConfusedState,
-  } = state;
 
-  const [interact] = useInteractWithPostMutation();
+  const [interact, { error }] = useInteractWithPostMutation();
+
   const { data, loading, fetchMore, variables } = usePostsQuery({
     variables: {
       limit: 15,
@@ -34,6 +29,10 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
     notifyOnNetworkStatusChange: true,
   });
   const { data: meData } = useMeQuery();
+
+  if (error) {
+    Router.replace("/login");
+  }
 
   let contentPlaceHoder;
 
@@ -79,21 +78,35 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
                       {/* like */}
                       {post.postPoints!.likePoints > 0 ? (
                         <a
-                          className="border border-1 border-secondary rounded-pill me-2 d-flex text-decoration-none"
+                          className={`border border-1 rounded-pill me-2 d-flex text-decoration-none ${
+                            post.postActivitiesStatus?.likeStatus
+                              ? "border-info"
+                              : "border-dark"
+                          }`}
                           href="#"
-                          onClick={() => {
-                            interactWithPost(
+                          onClick={async () => {
+                            if (meData?.me === null) {
+                              // router.replace(`/login?next=${path}`);
+                              router.push("/login");
+                              return;
+                            }
+
+                            await interactWithPost(
                               post.id,
                               "like",
                               interact,
-                              state,
-                              likeState,
-                              setLikeState
+                              state
                             );
                           }}
                         >
                           <div className="mx-1">&#10084;</div>
-                          <div className="mx-1 me-2 text-dark">
+                          <div
+                            className={`mx-1 me-2 ${
+                              post.postActivitiesStatus?.likeStatus
+                                ? "text-info"
+                                : "text-dark"
+                            }`}
+                          >
                             {post.postPoints?.likePoints}
                           </div>
                         </a>
@@ -102,29 +115,30 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
                       {/* laugh */}
                       {post.postPoints!.laughPoints > 0 ? (
                         <a
-                          className="border border-1 border-secondary rounded-pill me-2 d-flex text-decoration-none"
+                          className={`border border-1 rounded-pill me-2 d-flex text-decoration-none ${
+                            post.postActivitiesStatus?.laughStatus
+                              ? "border-info"
+                              : "border-dark"
+                          }`}
                           href="#"
                           onClick={() => {
-                            interact({
-                              variables: {
-                                interactInput: {
-                                  postId: post.id,
-                                  laugh: true,
-                                },
-                              },
-                              update: (cache) =>
-                                cacheUpdateAfterInteraction(
-                                  post.id,
-                                  laughState,
-                                  "laugh",
-                                  cache
-                                ),
-                            });
-                            setLaughState(!laughState);
+                            if (meData?.me === null) {
+                              // router.replace(`/login?next=${path}`);
+                              router.push("/login");
+                              return;
+                            }
+
+                            interactWithPost(post.id, "laugh", interact, state);
                           }}
                         >
                           <div className="mx-1">&#x1F604;</div>
-                          <div className="mx-1 me-2 text-dark">
+                          <div
+                            className={`mx-1 me-2 ${
+                              post.postActivitiesStatus?.laughStatus
+                                ? "text-info"
+                                : "text-dark"
+                            }`}
+                          >
                             {post.postPoints?.laughPoints}
                           </div>
                         </a>
@@ -133,29 +147,35 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
                       {/* confused */}
                       {post.postPoints!.confusedPoints > 0 ? (
                         <a
-                          className="border border-1 border-secondary rounded-pill me-2 d-flex text-decoration-none"
+                          className={`border border-1 rounded-pill me-2 d-flex text-decoration-none ${
+                            post.postActivitiesStatus?.confusedStatus
+                              ? "border-info"
+                              : "border-dark"
+                          }`}
                           href="#"
                           onClick={() => {
-                            interact({
-                              variables: {
-                                interactInput: {
-                                  postId: post.id,
-                                  confused: true,
-                                },
-                              },
-                              update: (cache) =>
-                                cacheUpdateAfterInteraction(
-                                  post.id,
-                                  confusedState,
-                                  "confused",
-                                  cache
-                                ),
-                            });
-                            setConfusedState(!confusedState);
+                            if (meData?.me === null) {
+                              // router.replace(`/login?next=${path}`);
+                              router.push("/login");
+                              return;
+                            }
+
+                            interactWithPost(
+                              post.id,
+                              "confused",
+                              interact,
+                              state
+                            );
                           }}
                         >
                           <div className="mx-1">&#x1F615;</div>
-                          <div className="mx-1 me-2 text-dark">
+                          <div
+                            className={`mx-1 me-2 ${
+                              post.postActivitiesStatus?.confusedStatus
+                                ? "text-info"
+                                : "text-dark"
+                            }`}
+                          >
                             {post.postPoints?.confusedPoints}
                           </div>
                         </a>

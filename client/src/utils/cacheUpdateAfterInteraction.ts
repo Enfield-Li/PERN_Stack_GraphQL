@@ -87,7 +87,7 @@ export const cacheUpdateAfterInteraction = (
       (cachedData.postActivitiesStatus?.confusedStatus ? -1 : 1);
   }
 
-  cache.writeFragment<PostActivitiesStatusAndPointsFragment>({
+  const res = cache.writeFragment<PostActivitiesStatusAndPointsFragment>({
     fragment: PostActivitiesStatusAndPointsFragmentDoc,
     fragmentName: "PostActivitiesStatusAndPoints",
     id: `Post:${id}`,

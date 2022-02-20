@@ -13,7 +13,7 @@ export type InitialStateTypes = {
 };
 
 export const initialState: InitialStateTypes = {
-  laughState: true,
+  laughState: false,
   likeState: false,
   confusedState: false,
   setLaughState: function (value: SetStateAction<boolean>): void {},

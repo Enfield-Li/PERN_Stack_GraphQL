@@ -21,32 +21,15 @@ interface EditSectionProps {
 }
 
 const EditSection: React.FC<EditSectionProps> = ({ meData, post }) => {
-  const [interactedBefore, setInteractedBefore] = useState(false);
-
   const router = useRouter();
   const { state } = useContext(GlobalContext);
-  const {
-    laughState,
-    confusedState,
-    likeState,
-    setLaughState,
-    setLikeState,
-    setConfusedState,
-  } = state;
-  console.log(likeState);
 
-  useEffect(() => {
-    post.postActivitiesStatus?.likeStatus
-      ? setLikeState(true)
-      : setLikeState(false);
-    post.postActivitiesStatus?.likeStatus ? setInteractedBefore(true) : null;
-  }, []);
-
-  const [controlledVisible, setControlledVisible] = React.useState(false);
   const [interact] = useInteractWithPostMutation();
   const [deletePost] = useDeletePostMutation();
   const apolloClient = useApolloClient();
 
+  // https://codesandbox.io/s/github/mohsinulhaq/react-popper-tooltip/tree/master/examples/controlled?file=/src/index.js:234-570
+  const [controlledVisible, setControlledVisible] = useState(false);
   const {
     getArrowProps,
     getTooltipProps,
@@ -55,6 +38,7 @@ const EditSection: React.FC<EditSectionProps> = ({ meData, post }) => {
     visible,
   } = usePopperTooltip({
     trigger: "click",
+    closeOnOutsideClick: true,
     visible: controlledVisible,
     onVisibleChange: setControlledVisible,
   });
@@ -74,33 +58,19 @@ const EditSection: React.FC<EditSectionProps> = ({ meData, post }) => {
             <div className="d-flex">
               <a
                 href="#"
-                className="me-2 text-decoration-none"
+                className={`me-2 text-decoration-none ${
+                  post.postActivitiesStatus?.likeStatus
+                    ? "bg-secondary rounded"
+                    : null
+                }`}
                 onClick={() => {
-                  interactWithPost(
-                    post.id,
-                    "like",
-                    interact,
-                    state,
-                    likeState,
-                    setLikeState
-                  );
-                  // interact({
-                  //   variables: {
-                  //     interactInput: {
-                  //       postId: post.id,
-                  //       like: true,
-                  //     },
-                  //   },
-                  //   update: (cache) =>
-                  //     cacheUpdateAfterInteraction(
-                  //       post.id,
-                  //       likeState,
-                  //       "like",
-                  //       cache
-                  //     ),
-                  // });
-                  // setLikeState(!likeState);
-                  // setControlledVisible(!controlledVisible);
+                  if (meData?.me === null) {
+                    // router.replace(`/login?next=${path}`);
+                    router.push("/login");
+                    return;
+                  }
+                  interactWithPost(post.id, "like", interact, state);
+                  setControlledVisible(!controlledVisible);
                 }}
               >
                 &#10084;
@@ -109,24 +79,18 @@ const EditSection: React.FC<EditSectionProps> = ({ meData, post }) => {
               {/* laugh */}
               <a
                 href="#"
-                className="me-2 text-decoration-none"
+                className={`me-2 text-decoration-none ${
+                  post.postActivitiesStatus?.laughStatus
+                    ? "bg-secondary rounded"
+                    : null
+                }`}
                 onClick={() => {
-                  interact({
-                    variables: {
-                      interactInput: {
-                        postId: post.id,
-                        laugh: true,
-                      },
-                    },
-                    update: (cache) =>
-                      cacheUpdateAfterInteraction(
-                        post.id,
-                        laughState,
-                        "laugh",
-                        cache
-                      ),
-                  });
-                  setLaughState(!laughState);
+                  if (meData?.me === null) {
+                    // router.replace(`/login?next=${path}`);
+                    router.push("/login");
+                    return;
+                  }
+                  interactWithPost(post.id, "laugh", interact, state);
                   setControlledVisible(!controlledVisible);
                 }}
               >
@@ -136,24 +100,18 @@ const EditSection: React.FC<EditSectionProps> = ({ meData, post }) => {
               {/* confused */}
               <a
                 href="#"
-                className="me-2 text-decoration-none"
+                className={`me-2 text-decoration-none ${
+                  post.postActivitiesStatus?.confusedStatus
+                    ? "bg-secondary rounded"
+                    : null
+                }`}
                 onClick={() => {
-                  interact({
-                    variables: {
-                      interactInput: {
-                        postId: post.id,
-                        confused: true,
-                      },
-                    },
-                    update: (cache) =>
-                      cacheUpdateAfterInteraction(
-                        post.id,
-                        confusedState,
-                        "confused",
-                        cache
-                      ),
-                  });
-                  setConfusedState(!confusedState);
+                  if (meData?.me === null) {
+                    // router.replace(`/login?next=${path}`);
+                    router.push("/login");
+                    return;
+                  }
+                  interactWithPost(post.id, "confused", interact, state);
                   setControlledVisible(!controlledVisible);
                 }}
               >

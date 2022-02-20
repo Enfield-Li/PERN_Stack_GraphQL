@@ -16,8 +16,7 @@ import withApollo from "../utils/withApollo";
 interface CreatePostProps {}
 
 const CreatePost: React.FC<CreatePostProps> = ({}) => {
-  const [createPost, { data }] = useCreatePostMutation();
-  console.log(data);
+  const [createPost] = useCreatePostMutation();
   const router = useRouter();
   useIsAuth();
 

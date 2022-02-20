@@ -8,7 +8,6 @@ type creatorIdsMapToPostType = {
 export const createPostLoader = () =>
   new DataLoader<number, Post>(async (creatorIds): Promise<Post[]> => {
     const posts = await Post.findByIds(creatorIds as number[]);
-    console.log("posts: ", posts);
 
     const creatorIdsMapToPost: creatorIdsMapToPostType = {};
 
@@ -17,6 +16,5 @@ export const createPostLoader = () =>
     });
 
     const res = creatorIds.map((creatorId) => creatorIdsMapToPost[creatorId]);
-    console.log("res: ", res);
     return res;
   });

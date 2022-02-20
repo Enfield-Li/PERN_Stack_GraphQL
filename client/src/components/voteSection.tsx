@@ -51,6 +51,11 @@ const voteSection: React.FC<VoteSectionProps> = ({ post }) => {
         }`}
         disabled={loading}
         onClick={async () => {
+          if (data?.me === null) {
+            // router.replace(`/login?next=${path}`);
+            router.push("/login");
+            return;
+          }
           const res = await interact({
             variables: { interactInput: { vote: false, postId: post.id } },
             update: (cache) =>
