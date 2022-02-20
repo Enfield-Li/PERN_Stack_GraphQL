@@ -15,9 +15,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user }) => {
           Some quick example text to build on the card title and make up the
           bulk of the card's content.
         </p>
-        <a href="#" className="btn btn-primary">
+        <div role="button" className="btn btn-primary">
           Go somewhere
-        </a>
+        </div>
       </div>
     </div>
   );

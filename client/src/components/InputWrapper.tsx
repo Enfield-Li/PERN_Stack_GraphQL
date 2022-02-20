@@ -4,13 +4,14 @@ import React, { InputHTMLAttributes } from "react";
 export type InputWrapperProps = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
   name: string;
-  type?: "textarea" | "password" | "email";
+  type?: "password" | "email";
   textarea?: boolean;
 };
 
 const InputWrapper: React.FC<InputWrapperProps> = ({
   label,
   textarea,
+  type,
   ...props
 }) => {
   const [field, { error }] = useField(props);
@@ -22,7 +23,7 @@ const InputWrapper: React.FC<InputWrapperProps> = ({
       </label>
       <InputType
         required={true}
-        type="text"
+        type={type ? type : "text"}
         className="form-control"
         id={field.name}
         {...field}

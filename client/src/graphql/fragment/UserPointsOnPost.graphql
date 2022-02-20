@@ -1,0 +1,6 @@
+fragment UserPointsOnPost on PostPointsType {
+  votePoints
+  likePoints
+  laughPoints
+  confusedPoints
+}

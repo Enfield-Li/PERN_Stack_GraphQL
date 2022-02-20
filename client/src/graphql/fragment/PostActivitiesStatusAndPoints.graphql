@@ -1,10 +1,9 @@
 fragment PostActivitiesStatusAndPoints on Post {
   id
-  ...PostActivitiesStatus
+  postActivitiesStatus {
+    ...PostStatus
+  }
   postPoints {
-    votePoints
-    likePoints
-    laughPoints
-    confusedPoints
+    ...UserPointsOnPost
   }
 }

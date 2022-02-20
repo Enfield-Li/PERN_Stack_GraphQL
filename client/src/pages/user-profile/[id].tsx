@@ -1,7 +1,7 @@
 import NextLink from "next/link";
 import React from "react";
 import ContentPlaceholder from "../../components/ContentPlaceholder";
-import EditSection from "../../components/EditSection";
+import EditSection from "../../components/editSection";
 import LayoutWrapper from "../../components/LayoutWrapper";
 import ProfileCard from "../../components/ProfileCard";
 import ProfileCardPlaceholder from "../../components/ProfileCardPlaceholder";
@@ -50,9 +50,9 @@ const UserProfile: React.FC = ({}) => {
                       <VoteSection post={post} />
                       <div className="align-self-center">
                         <NextLink href={"/post/[id]"} as={`/post/${post.id}`}>
-                          <a className="card-title text-dark text-decoration-none h3">
+                          <div role="button" className="card-title text-dark text-decoration-none h3">
                             {post.title}
-                          </a>
+                          </div>
                         </NextLink>
                         <p className="card-text mt-2 text-muted">
                           {post.contentSnippets.length === 50

@@ -44,20 +44,24 @@ const EditSection: React.FC<EditSectionProps> = ({ meData, post }) => {
   });
 
   return (
-    <div className="App">
-      <a className="bi bi-three-dots text-success" ref={setTriggerRef}></a>
+    <div>
+      <div
+        role="button"
+        className="bi bi-three-dots text-success"
+        ref={setTriggerRef}
+      ></div>
       {visible && (
         <div
           ref={setTooltipRef}
           {...getTooltipProps({ className: "card bg-info" })}
         >
           <div className="card-body">
-            <div {...getArrowProps({ className: "" })} />
+            <div {...getArrowProps({ className: "tooltip-arrow" })} />
 
             {/* like */}
-            <div className="d-flex">
-              <a
-                href="#"
+            <span className="d-flex">
+              <div
+                role="button"
                 className={`me-2 text-decoration-none ${
                   post.postActivitiesStatus?.likeStatus
                     ? "bg-secondary rounded"
@@ -74,11 +78,11 @@ const EditSection: React.FC<EditSectionProps> = ({ meData, post }) => {
                 }}
               >
                 &#10084;
-              </a>
+              </div>
 
               {/* laugh */}
-              <a
-                href="#"
+              <span
+                role="button"
                 className={`me-2 text-decoration-none ${
                   post.postActivitiesStatus?.laughStatus
                     ? "bg-secondary rounded"
@@ -95,12 +99,12 @@ const EditSection: React.FC<EditSectionProps> = ({ meData, post }) => {
                 }}
               >
                 &#128516;
-              </a>
+              </span>
 
               {/* confused */}
-              <a
-                href="#"
-                className={`me-2 text-decoration-none ${
+              <span
+                role="button"
+                className={`text-decoration-none ${
                   post.postActivitiesStatus?.confusedStatus
                     ? "bg-secondary rounded"
                     : null
@@ -116,46 +120,49 @@ const EditSection: React.FC<EditSectionProps> = ({ meData, post }) => {
                 }}
               >
                 &#x1F615;
-              </a>
-            </div>
+              </span>
+            </span>
 
+            {/* show edit/delete button or not */}
             {meData?.me?.id === post.creatorId ? (
-              <div>
+              <div className="mt-1 d-flex justify-content-center">
                 {/* edit */}
                 <NextLink href={"/post/edit/[id]"} as={`/post/edit/${post.id}`}>
-                  <a
+                  <span
+                    role="button"
                     className="me-2 text-decoration-none"
                     onClick={() => setControlledVisible(!controlledVisible)}
                   >
                     &#x1F4DD;
-                  </a>
+                  </span>
                 </NextLink>
 
                 {/* delete */}
-                <a
-                  href="#"
-                  className="me-2 ms-1 text-decoration-none"
+                <span
+                  role="button"
+                  className="me-2 text-decoration-none"
                   onClick={async () => {
                     setControlledVisible(!controlledVisible);
                     deletePost({
                       variables: { deletePostId: post.id },
-                      // update: (cache) => {
-                      //   cache.evict({ id: "Post:" + post.id });
-                      // },
-                    });
 
-                    await apolloClient.refetchQueries({
-                      include: [PostsDocument],
-                      updateCache(cache) {
-                        cache.evict({ fieldName: "posts" });
+                      update: (cache) => {
+                        cache.evict({ id: "Post:" + post.id });
                       },
                     });
+
+                    // await apolloClient.refetchQueries({
+                    //   include: [PostsDocument],
+                    //   updateCache(cache) {
+                    //     cache.evict({ fieldName: "posts" });
+                    //   },
+                    // });
                     // router.push("/");
                     // router.reload();
                   }}
                 >
                   &#x1F6BD;
-                </a>
+                </span>
               </div>
             ) : null}
           </div>

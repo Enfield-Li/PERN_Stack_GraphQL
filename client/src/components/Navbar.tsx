@@ -26,9 +26,9 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
           href={"/user-profile/[id]"}
           as={`/user-profile/${data.me.id}`}
         >
-          <a className="nav-link text-dark" href="#">
+          <div role="button" className="nav-link text-dark">
             {data.me?.username}
-          </a>
+          </div>
         </NextLink>
 
         <button
@@ -58,16 +58,16 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
       <div className="d-flex align-items-center">
         <li className="nav-item">
           <NextLink href={"/login"}>
-            <a className="nav-link text-dark" href="#">
+            <div role="button" className="nav-link text-dark">
               login
-            </a>
+            </div>
           </NextLink>
         </li>
         <li className="nav-item">
           <NextLink href={"/register"}>
-            <a className="nav-link text-dark" href="#">
+            <div role="button" className="nav-link text-dark">
               register
-            </a>
+            </div>
           </NextLink>
         </li>
       </div>
@@ -79,7 +79,8 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
       <ul className="nav justify-content-between container">
         <li className="nav-item">
           <NextLink href={"/"}>
-            <a
+            <div
+              role="button"
               className="nav-link active text-dark h2"
               aria-current="page"
               onClick={async () => {
@@ -92,7 +93,7 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
               }}
             >
               Home
-            </a>
+            </div>
           </NextLink>
         </li>
         <div className="d-flex align-items-center">

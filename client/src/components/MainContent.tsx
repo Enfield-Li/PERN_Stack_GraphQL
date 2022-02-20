@@ -1,17 +1,17 @@
 import NextLink from "next/link";
-import React, { useContext, useState } from "react";
-import { GlobalContext } from "../context/GlobalContext";
+import Router, { useRouter } from "next/router";
+import React, { useContext } from "react";
 import VoteSection from "../components/voteSection";
+import { GlobalContext } from "../context/GlobalContext";
 import {
   useInteractWithPostMutation,
   useMeQuery,
   usePostsQuery,
 } from "../generated/graphql";
-import { cacheUpdateAfterInteraction } from "../utils/cacheUpdateAfterInteraction";
+import { interactWithPost } from "../utils/interactWithPost";
 import ContentPlaceholder from "./ContentPlaceholder";
 import EditSection from "./editSection";
-import { interactWithPost } from "../utils/interactWithPost";
-import Router, { useRouter } from "next/router";
+import LayoutWrapper from "./LayoutWrapper";
 
 interface MainContentProps {}
 
@@ -31,7 +31,7 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
   const { data: meData } = useMeQuery();
 
   if (error) {
-    Router.replace("/login");
+    return <LayoutWrapper>Something went wrong..</LayoutWrapper>;
   }
 
   let contentPlaceHoder;
@@ -58,15 +58,21 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
                         href={"/user-profile/[id]"}
                         as={`/user-profile/${post.creatorId}`}
                       >
-                        <a className="fw-lighter text-decoration-none text-dark">
+                        <span
+                          role="button"
+                          className="fw-lighter text-decoration-none text-dark"
+                        >
                           {post.creator.username}
-                        </a>
+                        </span>
                       </NextLink>
                     </div>
                     <NextLink href={"/post/[id]"} as={`/post/${post.id}`}>
-                      <a className="card-title text-dark text-decoration-none h3">
+                      <div
+                        role="button"
+                        className="card-title text-dark text-decoration-none h3"
+                      >
                         {post.title}
-                      </a>
+                      </div>
                     </NextLink>
                     <p className="card-text mt-1 fs-5">
                       {post.contentSnippets.length === 50
@@ -77,13 +83,13 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
                     <div className="d-flex">
                       {/* like */}
                       {post.postPoints!.likePoints > 0 ? (
-                        <a
+                        <div
+                          role="button"
                           className={`border border-1 rounded-pill me-2 d-flex text-decoration-none ${
                             post.postActivitiesStatus?.likeStatus
                               ? "border-info"
                               : "border-dark"
                           }`}
-                          href="#"
                           onClick={async () => {
                             if (meData?.me === null) {
                               // router.replace(`/login?next=${path}`);
@@ -109,18 +115,18 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
                           >
                             {post.postPoints?.likePoints}
                           </div>
-                        </a>
+                        </div>
                       ) : null}
 
                       {/* laugh */}
                       {post.postPoints!.laughPoints > 0 ? (
-                        <a
+                        <div
+                          role="button"
                           className={`border border-1 rounded-pill me-2 d-flex text-decoration-none ${
                             post.postActivitiesStatus?.laughStatus
                               ? "border-info"
                               : "border-dark"
                           }`}
-                          href="#"
                           onClick={() => {
                             if (meData?.me === null) {
                               // router.replace(`/login?next=${path}`);
@@ -141,18 +147,18 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
                           >
                             {post.postPoints?.laughPoints}
                           </div>
-                        </a>
+                        </div>
                       ) : null}
 
                       {/* confused */}
                       {post.postPoints!.confusedPoints > 0 ? (
-                        <a
+                        <div
+                          role="button"
                           className={`border border-1 rounded-pill me-2 d-flex text-decoration-none ${
                             post.postActivitiesStatus?.confusedStatus
                               ? "border-info"
                               : "border-dark"
                           }`}
-                          href="#"
                           onClick={() => {
                             if (meData?.me === null) {
                               // router.replace(`/login?next=${path}`);
@@ -178,7 +184,7 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
                           >
                             {post.postPoints?.confusedPoints}
                           </div>
-                        </a>
+                        </div>
                       ) : null}
                     </div>
                   </div>
@@ -204,19 +210,19 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
                     data?.posts.posts[data.posts.posts.length - 1].createdAt,
                 },
 
-                // updateQuery: (previousValue, { fetchMoreResult }) => {
-                //   if (!fetchMoreResult) return previousValue;
+                updateQuery: (previousValue, { fetchMoreResult }) => {
+                  if (!fetchMoreResult) return previousValue;
 
-                //   return {
-                //     posts: {
-                //       hasMore: fetchMoreResult.posts.hasMore,
-                //       posts: [
-                //         ...previousValue.posts.posts,
-                //         ...fetchMoreResult.posts.posts,
-                //       ],
-                //     },
-                //   };
-                // },
+                  return {
+                    posts: {
+                      hasMore: fetchMoreResult.posts.hasMore,
+                      posts: [
+                        ...previousValue.posts.posts,
+                        ...fetchMoreResult.posts.posts,
+                      ],
+                    },
+                  };
+                },
               });
             }}
           >

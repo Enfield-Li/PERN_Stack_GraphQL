@@ -20,7 +20,7 @@ const ProfileCardPlaceholder: React.FC<ProfileCardPlaceholderProps> = ({}) => {
             style={{ height: 60 }}
           ></span>
         </p>
-        <a href="#" className="btn btn-primary disabled placeholder col-12"></a>
+        <div role="button" className="btn btn-primary disabled placeholder col-12"></div>
       </div>
     </div>
   );
