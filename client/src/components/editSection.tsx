@@ -1,14 +1,14 @@
-import { useApolloClient } from "@apollo/client";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext, useState } from "react";
 import { usePopperTooltip } from "react-popper-tooltip";
 import { GlobalContext } from "../context/GlobalContext";
 import {
-  PostContentsFragment, PostsSnippetFragment,
+  PostContentsFragment,
+  PostsSnippetFragment,
   useDeletePostMutation,
   useInteractWithPostMutation,
-  useMeQuery
+  useMeQuery,
 } from "../generated/graphql";
 import { interactWithPost } from "../utils/interactWithPost";
 
@@ -24,7 +24,6 @@ const EditSection: React.FC<EditSectionProps> = ({ post }) => {
 
   const [interact] = useInteractWithPostMutation();
   const [deletePost] = useDeletePostMutation();
-  const apolloClient = useApolloClient();
 
   // https://codesandbox.io/s/github/mohsinulhaq/react-popper-tooltip/tree/master/examples/controlled?file=/src/index.js:234-570
   const [controlledVisible, setControlledVisible] = useState(false);
@@ -41,13 +40,11 @@ const EditSection: React.FC<EditSectionProps> = ({ post }) => {
     onVisibleChange: setControlledVisible,
   });
 
-  console.log("meID: ", meData?.me?.id);
-  console.log("creatorId: ", post.creatorId);
   return (
     <div className="d-flex flex-column">
       <div
         role="button"
-        className="bi bi-three-dots text-success"
+        className="bi bi-three-dots text-success me-1"
         ref={setTriggerRef}
       ></div>
       {visible && (
@@ -129,7 +126,7 @@ const EditSection: React.FC<EditSectionProps> = ({ post }) => {
           <NextLink href={"/post/edit/[id]"} as={`/post/edit/${post.id}`}>
             <span
               role="button"
-              className="me-2 text-decoration-none"
+              className="text-decoration-none"
               onClick={() => setControlledVisible(!controlledVisible)}
             >
               &#x1F4DD;
@@ -139,7 +136,7 @@ const EditSection: React.FC<EditSectionProps> = ({ post }) => {
           {/* delete */}
           <span
             role="button"
-            className="me-2 mt-2 text-decoration-none"
+            className="mt-2 text-decoration-none"
             onClick={async () => {
               setControlledVisible(!controlledVisible);
               deletePost({

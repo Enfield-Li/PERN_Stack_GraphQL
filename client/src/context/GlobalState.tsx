@@ -13,6 +13,7 @@ export const GlobalProvider: React.FC<GlobalContextProps> = ({ children }) => {
 
   return (
     <GlobalContext.Provider
+      // @ts-ignore
       value={{
         state: {
           laughState,

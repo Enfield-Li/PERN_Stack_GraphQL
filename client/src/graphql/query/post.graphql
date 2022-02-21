@@ -1,5 +1,8 @@
 query Post($postId: Int!) {
   Post(id: $postId) {
     ...PostContents
+    creator {
+      ...UserInfo
+    }
   }
 }

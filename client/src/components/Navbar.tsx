@@ -6,12 +6,14 @@ import {
   useMeQuery,
 } from "../generated/graphql";
 import { useApolloClient } from "@apollo/client";
+import { Router, useRouter } from "next/router";
 
 interface NavbarProps {}
 
 const Navbar: React.FC<NavbarProps> = ({}) => {
   const [logout, { loading: logoutBtnLoading }] = useLogoutMutation();
   const apolloClient = useApolloClient();
+  const router = useRouter();
 
   const { data, loading } = useMeQuery();
 

@@ -1,21 +1,16 @@
 import NextLink from "next/link";
 import React from "react";
 import VoteSection from "../components/voteSection";
-import {
-  useInteractWithPostMutation,
-  useMeQuery,
-  usePostsQuery,
-} from "../generated/graphql";
+import { usePostsQuery } from "../generated/graphql";
 import EditSection from "./editSection";
 import ContentPlaceholder from "./layout/ContentPlaceholder";
 import LayoutWrapper from "./layout/LayoutWrapper";
 import PostCardSection from "./nestedComponents/PostCardSection";
+import PostCreatorInfo from "./nestedComponents/PostCreatorInfo";
 
 interface MainContentProps {}
 
 const MainContent: React.FC<MainContentProps> = ({}) => {
-  const [interact, { error }] = useInteractWithPostMutation();
-
   const { data, loading, fetchMore, variables } = usePostsQuery({
     variables: {
       limit: 15,
@@ -23,11 +18,6 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
     },
     notifyOnNetworkStatusChange: true,
   });
-  const { data: meData } = useMeQuery();
-
-  if (error) {
-    return <LayoutWrapper>Something went wrong..</LayoutWrapper>;
-  }
 
   return (
     <div className="mt-2">
@@ -45,23 +35,8 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
                   <VoteSection post={post} />
 
                   <div>
-                    <div className="fs-6 fw-light">
-                      Posted by{" "}
-                      <NextLink
-                        href={"/user-profile/[id]"}
-                        as={`/user-profile/${post.creatorId}`}
-                      >
-                        <span
-                          role="button"
-                          className="fw-lighter text-decoration-none text-dark"
-                        >
-                          {post.creator.username}
-                        </span>
-                      </NextLink>
-                    </div>
+                    <PostCreatorInfo creator={post.creator} />
                     <PostCardSection
-                      interact={interact}
-                      meData={meData}
                       // @ts-ignore
                       post={post}
                     />

@@ -258,7 +258,7 @@ export type PostQueryVariables = Exact<{
 }>;
 
 
-export type PostQuery = { __typename?: 'Query', Post?: { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contents: string, id: number, postActivitiesStatus?: { __typename?: 'PostActivitiesStatusType', voteStatus?: boolean | null, likeStatus?: boolean | null, laughStatus?: boolean | null, confusedStatus?: boolean | null } | null, postPoints?: { __typename?: 'PostPointsType', votePoints: number, likePoints: number, laughPoints: number, confusedPoints: number } | null } | null };
+export type PostQuery = { __typename?: 'Query', Post?: { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contents: string, id: number, creator: { __typename?: 'User', id: number, username: string, createdAt: string }, postActivitiesStatus?: { __typename?: 'PostActivitiesStatusType', voteStatus?: boolean | null, likeStatus?: boolean | null, laughStatus?: boolean | null, confusedStatus?: boolean | null } | null, postPoints?: { __typename?: 'PostPointsType', votePoints: number, likePoints: number, laughPoints: number, confusedPoints: number } | null } | null };
 
 export type PostsQueryVariables = Exact<{
   cursor?: InputMaybe<Scalars['String']>;
@@ -688,9 +688,13 @@ export const PostDocument = gql`
     query Post($postId: Int!) {
   Post(id: $postId) {
     ...PostContents
+    creator {
+      ...UserInfo
+    }
   }
 }
-    ${PostContentsFragmentDoc}`;
+    ${PostContentsFragmentDoc}
+${UserInfoFragmentDoc}`;
 
 /**
  * __usePostQuery__
