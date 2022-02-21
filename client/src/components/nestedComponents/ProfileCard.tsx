@@ -24,8 +24,8 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ user, userCard }) => {
         </div>
         <div className="card-text my-2">
           <div className="row">
-            <div className="col-6">
-              <div>Posts:</div>
+            <div className="col-5 ms-1">
+              <div>Posts</div>
               <div>📘 {user.user?.userPost?.postAmount}</div>
             </div>
 

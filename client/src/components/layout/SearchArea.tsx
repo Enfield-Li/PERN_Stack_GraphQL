@@ -17,7 +17,12 @@ const SearchArea: React.FC<searchBarProps> = ({}) => {
               as={`/user-profile/${meData.me?.id}`}
             >
               <div role="button" className="fs-5 ms-2">
-                {meData.me?.username}
+                <img
+                  src={"/_next/static/media/reddit.8fd7d10b.png"}
+                  alt="user profile"
+                  style={{ height: 40, width: 40 }}
+                  className="rounded-circle"
+                />
               </div>
             </NextLink>
             <NextLink href={"create-post"}>

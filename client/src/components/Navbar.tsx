@@ -1,7 +1,7 @@
 import { useApolloClient } from "@apollo/client";
 import NextLink from "next/link";
-import { useRouter } from "next/router";
 import React from "react";
+import { usePopperTooltip } from "react-popper-tooltip";
 import {
   PostsDocument,
   useLogoutMutation,
@@ -16,42 +16,82 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
 
   const { data, loading } = useMeQuery();
 
+  const {
+    getArrowProps,
+    getTooltipProps,
+    setTooltipRef,
+    setTriggerRef,
+    visible,
+  } = usePopperTooltip({ offset: [0, 1] });
+
   let userStatus = null;
 
   if (loading) {
     // body show nothing
   } else if (data?.me) {
     userStatus = (
-      <div className="d-flex align-items-center">
-        <NextLink
-          href={"/user-profile/[id]"}
-          as={`/user-profile/${data.me.id}`}
-        >
-          <div role="button" className="nav-link text-dark">
-            {data.me?.username}
+      <div className="d-flex align-items-center justify-content-center">
+        <div className="dropdown">
+          <div
+            className="dropdown-toggle border px-3 py-1 my-2 d-flex justify-content-center align-items-center"
+            role="button"
+            id="dropdownMenuButton1"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            <img
+              src={"/_next/static/media/reddit.8fd7d10b.png"}
+              alt="user profile"
+              style={{ height: 29, width: 29 }}
+              className="rounded"
+            />
+            <div className="ms-3 me-2 d-flex flex-column align-items-center justify-content-center">
+              <div>
+                <i className="bi bi-bookmark-star me-1"></i>
+                {data.me.username}
+              </div>
+              <div>{data.me.email}</div>
+            </div>
           </div>
-        </NextLink>
-
-        <button
-          type="button"
-          className="btn btn-link text-dark text-decoration-none"
-          disabled={logoutBtnLoading}
-          onClick={async () => {
-            await logout({
-              // update: (cache) => {
-              //   cache.writeQuery<MeQuery>({
-              //     query: MeDocument,
-              //     data: {
-              //       me: null,
-              //     },
-              //   });
-              // },
-            });
-            await apolloClient.resetStore();
-          }}
-        >
-          logout
-        </button>
+          <ul
+            className="dropdown-menu"
+            aria-labelledby="dropdownMenuButton1"
+            style={{ width: 242 }}
+          >
+            <li>
+              <div className="ms-3">MY STUFF</div>
+              <div className="dropdown-item">
+                <NextLink
+                  href={"/user-profile/[id]"}
+                  as={`/user-profile/${data.me.id}`}
+                >
+                  <div role="button" className="text-dark">
+                    <i className="bi bi-person-circle fs-5 me-2"></i> Profile
+                  </div>
+                </NextLink>
+              </div>
+              <div className="dropdown-item" role="button">
+                <div
+                  onClick={async () => {
+                    await logout({
+                      // update: (cache) => {
+                      //   cache.writeQuery<MeQuery>({
+                      //     query: MeDocument,
+                      //     data: {
+                      //       me: null,
+                      //     },
+                      //   });
+                      // },
+                    });
+                    await apolloClient.resetStore();
+                  }}
+                >
+                  <i className="bi bi-box-arrow-right fs-5 me-2"></i> Logout
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
     );
   } else {
@@ -78,7 +118,7 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
   return (
     <div className="bg-white">
       <ul className="nav justify-content-between container">
-        <li className="nav-item">
+        <li className="nav-item align-self-center">
           <NextLink href={"/"}>
             <div
               role="button"
@@ -98,11 +138,22 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
           </NextLink>
         </li>
         <div className="d-flex align-items-center">
-          <NextLink href="/create-post">
-            <button className="btn btn-link text-dark text-decoration-none me-2">
+          <div role="button" ref={setTriggerRef}>
+            <NextLink href="/create-post">
+              <button className="btn btn-link text-dark text-decoration-none me-2">
+                <i className="bi bi-plus-square fs-3"></i>
+              </button>
+            </NextLink>
+          </div>
+          {visible && (
+            <div
+              ref={setTooltipRef}
+              {...getTooltipProps({ className: "card bg-info p-1" })}
+            >
+              <div {...getArrowProps({ className: "card-content" })} />
               Create post
-            </button>
-          </NextLink>
+            </div>
+          )}
           {userStatus}
         </div>
       </ul>
