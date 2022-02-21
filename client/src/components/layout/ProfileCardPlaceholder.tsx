@@ -10,7 +10,7 @@ const ProfileCardPlaceholder: React.FC<ProfileCardPlaceholderProps> = ({}) => {
           <div className="d-flex justify-content-center ">
             <span
               className="placeholder col-4 rounded-circle"
-              style={{ height: 35 }}
+              style={{ height: 35, width: 35 }}
             ></span>
           </div>
         </div>
@@ -20,7 +20,10 @@ const ProfileCardPlaceholder: React.FC<ProfileCardPlaceholderProps> = ({}) => {
             style={{ height: 60 }}
           ></span>
         </p>
-        <div role="button" className="btn btn-primary disabled placeholder col-12"></div>
+        <div
+          role="button"
+          className="btn btn-primary disabled placeholder col-12"
+        ></div>
       </div>
     </div>
   );

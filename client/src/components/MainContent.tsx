@@ -1,10 +1,8 @@
-import NextLink from "next/link";
 import React from "react";
 import VoteSection from "../components/voteSection";
 import { usePostsQuery } from "../generated/graphql";
 import EditSection from "./editSection";
 import ContentPlaceholder from "./layout/ContentPlaceholder";
-import LayoutWrapper from "./layout/LayoutWrapper";
 import PostCardSection from "./nestedComponents/PostCardSection";
 import PostCreatorInfo from "./nestedComponents/PostCreatorInfo";
 
@@ -35,11 +33,11 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
                   <VoteSection post={post} />
 
                   <div>
-                    <PostCreatorInfo creator={post.creator} />
-                    <PostCardSection
-                      // @ts-ignore
-                      post={post}
+                    <PostCreatorInfo
+                      creator={post.creator}
+                      createdAt={post.createdAt}
                     />
+                    <PostCardSection post={post} />
                   </div>
                 </div>
 

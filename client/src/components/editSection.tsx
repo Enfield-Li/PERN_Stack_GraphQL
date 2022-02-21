@@ -14,7 +14,6 @@ import { interactWithPost } from "../utils/interactWithPost";
 
 interface EditSectionProps {
   post: PostContentsFragment | PostsSnippetFragment;
-  // meData: MeQuery | undefined;
 }
 
 const EditSection: React.FC<EditSectionProps> = ({ post }) => {

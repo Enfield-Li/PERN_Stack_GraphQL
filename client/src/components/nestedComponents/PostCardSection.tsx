@@ -1,14 +1,12 @@
-import React, { useContext } from "react";
 import NextLink from "next/link";
+import React from "react";
 import {
-  MeQuery,
-  PostsSnippetFragment,
-  UserInfoFragment,
+  PostsSnippetFragment
 } from "../../generated/graphql";
 import InteractionDisplay from "./InteractionDisplay";
 
 interface PostCardSectionProps {
-  post: PostsSnippetFragment & UserInfoFragment;
+  post: PostsSnippetFragment;
 }
 
 const PostCardSection: React.FC<PostCardSectionProps> = ({ post }) => {
@@ -23,6 +21,8 @@ const PostCardSection: React.FC<PostCardSectionProps> = ({ post }) => {
           {post.title}
         </div>
       </NextLink>
+
+      {/* text */}
       <p className="card-text mt-1 fs-5">
         {post.contentSnippets.length === 50
           ? post.contentSnippets + "..."

@@ -36,9 +36,12 @@ const Post: React.FC<PostProps> = ({}) => {
               <div className="d-flex">
                 <VoteSection post={postData.Post} />
                 <div>
-                  <PostCreatorInfo creator={postData.Post.creator} />
-                  <h3>{postData.Post.title}</h3>
-                  <p className="card-text mt-2 text-muted me-2">
+                  <PostCreatorInfo
+                    creator={postData.Post.creator}
+                    createdAt={postData.Post.createdAt}
+                  />
+                  <h3 className="my-2">{postData.Post.title}</h3>
+                  <p className="card-text mb-3 text-muted me-2">
                     {postData.Post?.contents}
                   </p>
                   <InteractionDisplay post={postData.Post} />
