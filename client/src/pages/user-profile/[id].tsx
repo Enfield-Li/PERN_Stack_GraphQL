@@ -47,7 +47,7 @@ const UserProfile: React.FC = ({}) => {
               <ContentPlaceholder />
             </div>
           ) : meData?.user?.userPost ? (
-            meData?.user?.userPost.map((post) => (
+            meData?.user?.userPost.posts.map((post) => (
               <div className="card my-2" key={post.id}>
                 <div className="card-body">
                   <div className="d-flex justify-content-between">
@@ -74,7 +74,7 @@ const UserProfile: React.FC = ({}) => {
           )}
         </div>
         <div className="col-4">
-          <ProfileCard user={meData?.user} />
+          <ProfileCard user={meData} />
         </div>
       </div>
     </LayoutWrapper>

@@ -4,9 +4,9 @@ interface ProfileCardPlaceholderProps {}
 
 const ProfileCardPlaceholder: React.FC<ProfileCardPlaceholderProps> = ({}) => {
   return (
-    <div className="card mt-2" aria-hidden="true">
+    <div className="card mt-2" aria-hidden="true" style={{ width: 300 }}>
       <div className="card-body">
-        <div className="card-title placeholder-glow">
+        <div className="card-title placeholder-glow mb-4">
           <div className="d-flex justify-content-center ">
             <span
               className="placeholder col-4 rounded-circle"
@@ -14,12 +14,12 @@ const ProfileCardPlaceholder: React.FC<ProfileCardPlaceholderProps> = ({}) => {
             ></span>
           </div>
         </div>
-        <p className="card-text placeholder-glow">
+        <div className="card-text placeholder-glow my-3">
           <span
             className="placeholder col-12 w-20 rounded"
             style={{ height: 60 }}
           ></span>
-        </p>
+        </div>
         <div
           role="button"
           className="btn btn-primary disabled placeholder col-12"

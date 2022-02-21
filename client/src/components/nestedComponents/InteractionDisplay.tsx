@@ -1,14 +1,12 @@
+import router from "next/router";
 import React, { useContext } from "react";
+import { GlobalContext } from "../../context/GlobalContext";
 import {
-  MeQuery,
   PostContentsFragment,
   PostsSnippetFragment,
   useInteractWithPostMutation,
-  useMeQuery,
-  UserInfoFragment,
+  useMeQuery
 } from "../../generated/graphql";
-import { GlobalContext } from "../../context/GlobalContext";
-import router from "next/router";
 import { interactWithPost } from "../../utils/interactWithPost";
 import LayoutWrapper from "../layout/LayoutWrapper";
 

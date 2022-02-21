@@ -3,6 +3,14 @@ import { User } from "../entities/User";
 import { ObjectType, Field, InputType, Int } from "type-graphql";
 
 @ObjectType()
+export class PostAndUserInfo {
+  @Field(() => [Post])
+  posts: Post[];
+  @Field(() => Int)
+  postAmount: number;
+}
+
+@ObjectType()
 export class FieldError {
   @Field()
   field: string;

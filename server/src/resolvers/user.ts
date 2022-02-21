@@ -1,34 +1,46 @@
-import { Post } from "./../entities/Post";
-import { FORGET_PASSWORD_PREFIX } from "./../utils/constants";
-import { UserInputField } from "./../types/resolvertypes";
-import { registerUserToDB } from "./../actions/dbQuery";
-import { COOKIE_NAME } from "../utils/constants";
-import {
-  validateSingleField,
-  validateUserInput,
-  validateFieldsFromDB,
-} from "../actions/validateUserFromDB";
-import { MyContext } from "../types/contextType";
-import { User } from "../entities/User";
+import argon2 from "argon2";
 import {
   Arg,
   Ctx,
   FieldResolver,
+  Int,
   Mutation,
   Query,
   Resolver,
   Root,
 } from "type-graphql";
-import argon2 from "argon2";
-import { UserResponse, UserInput } from "../types/resolvertypes";
 import { v4 } from "uuid";
+import {
+  validateFieldsFromDB,
+  validateSingleField,
+  validateUserInput,
+} from "../actions/validateUserFromDB";
+import { User } from "../entities/User";
+import { MyContext } from "../types/contextType";
+import {
+  PostAndUserInfo,
+  UserInput,
+  UserResponse,
+} from "../types/resolvertypes";
+import { COOKIE_NAME } from "../utils/constants";
 import sendEmail from "../utils/mailer";
+import { registerUserToDB } from "./../actions/dbQuery";
+import { Post } from "./../entities/Post";
+import { UserInputField } from "./../types/resolvertypes";
+import { FORGET_PASSWORD_PREFIX } from "./../utils/constants";
 
 @Resolver(User)
 export class UserResolver {
-  @FieldResolver(() => [Post], { nullable: true })
-  async userPost(@Root() user: User): Promise<Post[] | null> {
-    return await Post.find({ where: { creatorId: user.id } });
+  @FieldResolver(() => PostAndUserInfo, { nullable: true })
+  async userPost(@Root() user: User): Promise<PostAndUserInfo | null> {
+    const posts = await Post.find({ where: { creatorId: user.id } });
+
+    const postAmount = posts.length;
+
+    return {
+      posts,
+      postAmount,
+    };
   }
 
   @FieldResolver(() => String)
@@ -39,12 +51,10 @@ export class UserResolver {
     return "";
   }
 
-  // @Query(() => [User])
-  // async userWithMostPosts(): Promise<User[]> {
-  // }
-
   @Query(() => User, { nullable: true })
-  async user(@Arg("userId") userId: number): Promise<User | undefined> {
+  async user(
+    @Arg("userId", () => Int) userId: number
+  ): Promise<User | undefined> {
     const user = User.findOne({ where: { id: userId } });
     if (!user) return undefined;
 

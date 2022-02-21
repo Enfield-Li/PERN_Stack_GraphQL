@@ -1,12 +1,12 @@
-import React from "react";
+import { useApolloClient } from "@apollo/client";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
+import React from "react";
 import {
   PostsDocument,
   useLogoutMutation,
-  useMeQuery,
+  useMeQuery
 } from "../generated/graphql";
-import { useApolloClient } from "@apollo/client";
-import { Router, useRouter } from "next/router";
 
 interface NavbarProps {}
 

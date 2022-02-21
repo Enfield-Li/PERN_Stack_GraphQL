@@ -1,8 +1,10 @@
-import React from "react";
-import { UserInfoFragment } from "../../generated/graphql";
+import { ApolloQueryResult, useApolloClient } from "@apollo/client";
 import NextLink from "next/link";
-import { calculateTime } from "../../utils/calculaTime";
+import React, { useState } from "react";
 import { usePopperTooltip } from "react-popper-tooltip";
+import { UserCardDocument, UserInfoFragment } from "../../generated/graphql";
+import { calculateTime } from "../../utils/calculaTime";
+import ProfileCard from "./ProfileCard";
 
 interface PostCreatorInfoProps {
   creator: UserInfoFragment;
@@ -23,12 +25,31 @@ const PostCreatorInfo: React.FC<PostCreatorInfoProps> = ({
     trigger: "hover",
     delayHide: 200,
     interactive: true,
+    placement: "right",
   });
 
+  const apolloClient = useApolloClient();
+  const [userCard, setUserCard] = useState<ApolloQueryResult<any> | null>(null);
+
+  // ⬇⬇⬇ useLazyQuery block renders ⬇⬇⬇
+  // const [
+  //   fetchUserInfo,
+  //   { data: userData, loading: userLoading, error: userError },
+  // ] = useUserLazyQuery({
+  //   variables: { userId: creator.id },
+  // });
   return (
     <div className="fs-6 fw-lighter">
       Posted by{" "}
-      <span>
+      <span
+        onMouseOver={async () => {
+          let data = await apolloClient.query({
+            query: UserCardDocument,
+            variables: { userId: creator.id },
+          });
+          setUserCard(data);
+        }}
+      >
         <span role="button" ref={setTriggerRef}>
           <NextLink
             href={"/user-profile/[id]"}
@@ -43,10 +64,10 @@ const PostCreatorInfo: React.FC<PostCreatorInfoProps> = ({
           </NextLink>
         </span>
         {visible && (
-          <div ref={setTooltipRef} {...getTooltipProps({ className: "card" })}>
+          <div ref={setTooltipRef} {...getTooltipProps({ className: "" })}>
             <div {...getArrowProps({ className: "tooltip-arrow" })} />
-            <div className="card-body">
-              <div className="card">11231</div>
+            <div>
+              <ProfileCard user={userCard?.data} userCard={true} />
             </div>
           </div>
         )}

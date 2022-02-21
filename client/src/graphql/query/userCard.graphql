@@ -1,0 +1,10 @@
+query UserCard($userId: Int!) {
+  user(userId: $userId) {
+    id
+    createdAt
+    username
+    userPost {
+      postAmount
+    }
+  }
+}
