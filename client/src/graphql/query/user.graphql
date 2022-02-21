@@ -1,4 +1,4 @@
-query User($userId: Float!) {
+query User($userId: Int!) {
   user(userId: $userId) {
     ...UserInfo
     userPost {

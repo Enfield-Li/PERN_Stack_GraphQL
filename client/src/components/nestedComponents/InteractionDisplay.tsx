@@ -20,7 +20,6 @@ const InteractionDisplay: React.FC<InteractionDisplayProps> = ({ post }) => {
   const { state } = useContext(GlobalContext);
   const { data: meData } = useMeQuery();
   const [interact, { error }] = useInteractWithPostMutation();
-  console.log(post.postPoints?.likePoints);
 
   if (error) {
     return <LayoutWrapper>Something went wrong..</LayoutWrapper>;

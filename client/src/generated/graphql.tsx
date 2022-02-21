@@ -145,7 +145,7 @@ export type QueryPostsArgs = {
 
 
 export type QueryUserArgs = {
-  userId: Scalars['Float'];
+  userId: Scalars['Int'];
 };
 
 export type User = {
@@ -155,6 +155,7 @@ export type User = {
   id: Scalars['Int'];
   updatedAt: Scalars['String'];
   userPost?: Maybe<Array<Post>>;
+  userPostAmount?: Maybe<Scalars['Int']>;
   username: Scalars['String'];
 };
 
@@ -269,7 +270,7 @@ export type PostsQueryVariables = Exact<{
 export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPosts', hasMore: boolean, posts: Array<{ __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, creator: { __typename?: 'User', id: number, email: string, username: string, createdAt: string }, postActivitiesStatus?: { __typename?: 'PostActivitiesStatusType', voteStatus?: boolean | null, likeStatus?: boolean | null, laughStatus?: boolean | null, confusedStatus?: boolean | null } | null, postPoints?: { __typename?: 'PostPointsType', votePoints: number, likePoints: number, laughPoints: number, confusedPoints: number } | null }> } };
 
 export type UserQueryVariables = Exact<{
-  userId: Scalars['Float'];
+  userId: Scalars['Int'];
 }>;
 
 
@@ -768,7 +769,7 @@ export type PostsQueryHookResult = ReturnType<typeof usePostsQuery>;
 export type PostsLazyQueryHookResult = ReturnType<typeof usePostsLazyQuery>;
 export type PostsQueryResult = Apollo.QueryResult<PostsQuery, PostsQueryVariables>;
 export const UserDocument = gql`
-    query User($userId: Float!) {
+    query User($userId: Int!) {
   user(userId: $userId) {
     ...UserInfo
     userPost {
