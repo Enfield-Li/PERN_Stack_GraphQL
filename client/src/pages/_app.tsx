@@ -8,9 +8,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         {/* bootstrap responsive meta tag */}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-      
 
-        <title>Myapp</title>
+        <title>Awasome Forum</title>
       </Head>
 
       <GlobalProvider>

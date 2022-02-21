@@ -5,7 +5,7 @@ import React from "react";
 import {
   PostsDocument,
   useLogoutMutation,
-  useMeQuery
+  useMeQuery,
 } from "../generated/graphql";
 
 interface NavbarProps {}
@@ -13,7 +13,6 @@ interface NavbarProps {}
 const Navbar: React.FC<NavbarProps> = ({}) => {
   const [logout, { loading: logoutBtnLoading }] = useLogoutMutation();
   const apolloClient = useApolloClient();
-  const router = useRouter();
 
   const { data, loading } = useMeQuery();
 
@@ -94,7 +93,7 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
                 });
               }}
             >
-              Home
+              Awasome Forum
             </div>
           </NextLink>
         </li>
