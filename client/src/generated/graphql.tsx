@@ -178,7 +178,7 @@ export type PostContentsFragment = { __typename?: 'Post', createdAt: string, upd
 
 export type PostsSnippetFragment = { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, postActivitiesStatus?: { __typename?: 'PostActivitiesStatusType', voteStatus?: boolean | null, likeStatus?: boolean | null, laughStatus?: boolean | null, confusedStatus?: boolean | null } | null, postPoints?: { __typename?: 'PostPointsType', votePoints: number, likePoints: number, laughPoints: number, confusedPoints: number } | null };
 
-export type UserInfoFragment = { __typename?: 'User', id: number, username: string, createdAt: string };
+export type UserInfoFragment = { __typename?: 'User', id: number, email: string, username: string, createdAt: string };
 
 export type UserPointsOnPostFragment = { __typename?: 'PostPointsType', votePoints: number, likePoints: number, laughPoints: number, confusedPoints: number };
 
@@ -196,7 +196,7 @@ export type CreatePostMutationVariables = Exact<{
 }>;
 
 
-export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, creator: { __typename?: 'User', id: number, username: string, createdAt: string }, postActivitiesStatus?: { __typename?: 'PostActivitiesStatusType', voteStatus?: boolean | null, likeStatus?: boolean | null, laughStatus?: boolean | null, confusedStatus?: boolean | null } | null, postPoints?: { __typename?: 'PostPointsType', votePoints: number, likePoints: number, laughPoints: number, confusedPoints: number } | null } };
+export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, creator: { __typename?: 'User', id: number, email: string, username: string, createdAt: string }, postActivitiesStatus?: { __typename?: 'PostActivitiesStatusType', voteStatus?: boolean | null, likeStatus?: boolean | null, laughStatus?: boolean | null, confusedStatus?: boolean | null } | null, postPoints?: { __typename?: 'PostPointsType', votePoints: number, likePoints: number, laughPoints: number, confusedPoints: number } | null } };
 
 export type DeletePostMutationVariables = Exact<{
   deletePostId: Scalars['Float'];
@@ -225,7 +225,7 @@ export type LoginMutationVariables = Exact<{
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', user?: { __typename?: 'User', id: number, username: string, createdAt: string } | null, errors?: { __typename?: 'FieldError', field: string, message: string } | null } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'UserResponse', user?: { __typename?: 'User', id: number, email: string, username: string, createdAt: string } | null, errors?: { __typename?: 'FieldError', field: string, message: string } | null } };
 
 export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
@@ -237,7 +237,7 @@ export type RegisterMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', user?: { __typename?: 'User', id: number, username: string, createdAt: string } | null, errors?: { __typename?: 'FieldError', field: string, message: string } | null } };
+export type RegisterMutation = { __typename?: 'Mutation', register: { __typename?: 'UserResponse', user?: { __typename?: 'User', id: number, email: string, username: string, createdAt: string } | null, errors?: { __typename?: 'FieldError', field: string, message: string } | null } };
 
 export type UpdatePostMutationVariables = Exact<{
   contents: Scalars['String'];
@@ -251,14 +251,14 @@ export type UpdatePostMutation = { __typename?: 'Mutation', updatePost?: { __typ
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: number, username: string, createdAt: string } | null };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: number, email: string, username: string, createdAt: string } | null };
 
 export type PostQueryVariables = Exact<{
   postId: Scalars['Int'];
 }>;
 
 
-export type PostQuery = { __typename?: 'Query', Post?: { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contents: string, id: number, creator: { __typename?: 'User', id: number, username: string, createdAt: string }, postActivitiesStatus?: { __typename?: 'PostActivitiesStatusType', voteStatus?: boolean | null, likeStatus?: boolean | null, laughStatus?: boolean | null, confusedStatus?: boolean | null } | null, postPoints?: { __typename?: 'PostPointsType', votePoints: number, likePoints: number, laughPoints: number, confusedPoints: number } | null } | null };
+export type PostQuery = { __typename?: 'Query', Post?: { __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contents: string, id: number, creator: { __typename?: 'User', id: number, email: string, username: string, createdAt: string }, postActivitiesStatus?: { __typename?: 'PostActivitiesStatusType', voteStatus?: boolean | null, likeStatus?: boolean | null, laughStatus?: boolean | null, confusedStatus?: boolean | null } | null, postPoints?: { __typename?: 'PostPointsType', votePoints: number, likePoints: number, laughPoints: number, confusedPoints: number } | null } | null };
 
 export type PostsQueryVariables = Exact<{
   cursor?: InputMaybe<Scalars['String']>;
@@ -266,14 +266,14 @@ export type PostsQueryVariables = Exact<{
 }>;
 
 
-export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPosts', hasMore: boolean, posts: Array<{ __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, creator: { __typename?: 'User', id: number, username: string, createdAt: string }, postActivitiesStatus?: { __typename?: 'PostActivitiesStatusType', voteStatus?: boolean | null, likeStatus?: boolean | null, laughStatus?: boolean | null, confusedStatus?: boolean | null } | null, postPoints?: { __typename?: 'PostPointsType', votePoints: number, likePoints: number, laughPoints: number, confusedPoints: number } | null }> } };
+export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPosts', hasMore: boolean, posts: Array<{ __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, creator: { __typename?: 'User', id: number, email: string, username: string, createdAt: string }, postActivitiesStatus?: { __typename?: 'PostActivitiesStatusType', voteStatus?: boolean | null, likeStatus?: boolean | null, laughStatus?: boolean | null, confusedStatus?: boolean | null } | null, postPoints?: { __typename?: 'PostPointsType', votePoints: number, likePoints: number, laughPoints: number, confusedPoints: number } | null }> } };
 
 export type UserQueryVariables = Exact<{
   userId: Scalars['Float'];
 }>;
 
 
-export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: number, username: string, createdAt: string, userPost?: Array<{ __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, postActivitiesStatus?: { __typename?: 'PostActivitiesStatusType', voteStatus?: boolean | null, likeStatus?: boolean | null, laughStatus?: boolean | null, confusedStatus?: boolean | null } | null, postPoints?: { __typename?: 'PostPointsType', votePoints: number, likePoints: number, laughPoints: number, confusedPoints: number } | null }> | null } | null };
+export type UserQuery = { __typename?: 'Query', user?: { __typename?: 'User', id: number, email: string, username: string, createdAt: string, userPost?: Array<{ __typename?: 'Post', createdAt: string, updatedAt: string, title: string, creatorId: number, contentSnippets: string, id: number, postActivitiesStatus?: { __typename?: 'PostActivitiesStatusType', voteStatus?: boolean | null, likeStatus?: boolean | null, laughStatus?: boolean | null, confusedStatus?: boolean | null } | null, postPoints?: { __typename?: 'PostPointsType', votePoints: number, likePoints: number, laughPoints: number, confusedPoints: number } | null }> | null } | null };
 
 export const PostStatusFragmentDoc = gql`
     fragment PostStatus on PostActivitiesStatusType {
@@ -326,6 +326,7 @@ export const PostsSnippetFragmentDoc = gql`
 export const UserInfoFragmentDoc = gql`
     fragment UserInfo on User {
   id
+  email
   username
   createdAt
 }

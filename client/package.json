@@ -13,6 +13,7 @@
     "@graphql-codegen/cli": "^2.5.0",
     "formik": "^2.2.9",
     "graphql": "^16.3.0",
+    "moment": "^2.29.1",
     "next": "12.0.10",
     "next-apollo": "^5.0.8",
     "react": "17.0.2",

@@ -19,7 +19,11 @@ const PostCreatorInfo: React.FC<PostCreatorInfoProps> = ({
     setTooltipRef,
     setTriggerRef,
     visible,
-  } = usePopperTooltip({ trigger: "hover" });
+  } = usePopperTooltip({
+    trigger: "hover",
+    delayHide: 200,
+    interactive: true,
+  });
 
   return (
     <div className="fs-6 fw-lighter">
@@ -39,12 +43,11 @@ const PostCreatorInfo: React.FC<PostCreatorInfoProps> = ({
           </NextLink>
         </span>
         {visible && (
-          <div
-            ref={setTooltipRef}
-            {...getTooltipProps({ className: "card bg-info" })}
-          >
+          <div ref={setTooltipRef} {...getTooltipProps({ className: "card" })}>
             <div {...getArrowProps({ className: "tooltip-arrow" })} />
-            <div className="card-body">1231</div>
+            <div className="card-body">
+              <div className="card">11231</div>
+            </div>
           </div>
         )}
       </span>

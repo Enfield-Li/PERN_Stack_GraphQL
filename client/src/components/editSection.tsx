@@ -72,7 +72,7 @@ const EditSection: React.FC<EditSectionProps> = ({ post }) => {
                   setControlledVisible(!controlledVisible);
                 }}
               >
-                &#10084;
+                ❤
               </div>
 
               {/* laugh */}
@@ -92,7 +92,7 @@ const EditSection: React.FC<EditSectionProps> = ({ post }) => {
                   setControlledVisible(!controlledVisible);
                 }}
               >
-                &#128516;
+                😄
               </span>
 
               {/* confused */}
@@ -112,7 +112,7 @@ const EditSection: React.FC<EditSectionProps> = ({ post }) => {
                   setControlledVisible(!controlledVisible);
                 }}
               >
-                &#x1F615;
+                😕
               </span>
             </span>
           </div>
@@ -128,7 +128,7 @@ const EditSection: React.FC<EditSectionProps> = ({ post }) => {
               className="text-decoration-none"
               onClick={() => setControlledVisible(!controlledVisible)}
             >
-              &#x1F4DD;
+              📝
             </span>
           </NextLink>
 
@@ -156,7 +156,7 @@ const EditSection: React.FC<EditSectionProps> = ({ post }) => {
               // router.reload();
             }}
           >
-            &#128465;
+            <i className="bi bi-trash3"></i>
           </span>
         </div>
       ) : null}

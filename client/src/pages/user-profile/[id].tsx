@@ -25,12 +25,12 @@ const UserProfile: React.FC = ({}) => {
   if (!meData?.user)
     return (
       <LayoutWrapper>
-        <div className="row">
-          <div className="col-10">
+        <div className="row ms-2">
+          <div className="col-8">
             <ContentPlaceholder />
             <ContentPlaceholder />
           </div>
-          <div className="col-2">
+          <div className="col-4">
             <ProfileCardPlaceholder />
           </div>
         </div>
@@ -39,8 +39,8 @@ const UserProfile: React.FC = ({}) => {
 
   return (
     <LayoutWrapper>
-      <div className="row">
-        <div className="col-10">
+      <div className="row ms-2">
+        <div className="col-8">
           {!meData?.user?.userPost ? (
             <div>
               <ContentPlaceholder />
@@ -56,9 +56,9 @@ const UserProfile: React.FC = ({}) => {
 
                       <div className="align-items-center mt-2">
                         <PostCardSection
+                          // @ts-ignore
                           interact={interact}
                           meData={meData}
-                          // @ts-ignore
                           post={post}
                         />
                       </div>
@@ -73,7 +73,7 @@ const UserProfile: React.FC = ({}) => {
             "User hasn't posted anything yet"
           )}
         </div>
-        <div className="col-2">
+        <div className="col-4">
           <ProfileCard user={meData?.user} />
         </div>
       </div>
