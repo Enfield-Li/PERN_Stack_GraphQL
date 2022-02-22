@@ -39,12 +39,7 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
             data-bs-toggle="dropdown"
             aria-expanded="false"
           >
-            <img
-              src={"/_next/static/media/reddit.8fd7d10b.png"}
-              alt="user profile"
-              style={{ height: 29, width: 29 }}
-              className="rounded"
-            />
+            <i className="bi bi-person-circle fs-2"></i>
             <div className="ms-3 me-2 d-flex flex-column align-items-center justify-content-center">
               <div>
                 <i className="bi bi-bookmark-star me-1"></i>
@@ -125,12 +120,13 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
               className="nav-link active text-dark h2"
               aria-current="page"
               onClick={async () => {
-                await apolloClient.refetchQueries({
+                const res = await apolloClient.refetchQueries({
                   include: [PostsDocument],
-                  updateCache(cache) {
-                    cache.evict({ fieldName: "posts" });
-                  },
+                  // updateCache(cache) {
+                  //   cache.evict({ fieldName: "posts" });
+                  // },
                 });
+                console.log(res);
               }}
             >
               Awasome Forum
