@@ -32,8 +32,12 @@ const SearchArea: React.FC<searchBarProps> = ({}) => {
                 placeholder="Create post"
               ></input>
             </NextLink>
-            <i className="bi bi-image fs-3 mx-3"></i>
-            <i className="bi bi-link-45deg fs-2"></i>
+            <NextLink href={"create-post"}>
+              <i className="bi bi-image fs-3 mx-3" role="button"></i>
+            </NextLink>
+            <NextLink href={"create-post"}>
+              <i className="bi bi-link-45deg fs-2" role="button"></i>
+            </NextLink>
           </div>
         </div>
       )}

@@ -38,10 +38,10 @@ const MainContent: React.FC<MainContentProps> = ({}) => {
           <div className="card my-2" key={post.id}>
             <div className="card-body">
               <div className="d-flex justify-content-between">
-                <div className="d-flex">
+                <div className="d-flex justify-content-between align-items-center">
                   <VoteSection post={post} />
 
-                  <div>
+                  <div className="d-flex flex-column justify-content-between">
                     <PostCreatorInfo
                       creator={post.creator}
                       createdAt={post.createdAt}

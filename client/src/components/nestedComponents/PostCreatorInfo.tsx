@@ -26,6 +26,7 @@ const PostCreatorInfo: React.FC<PostCreatorInfoProps> = ({
     delayHide: 200,
     interactive: true,
     placement: "right",
+    // delayShow: 50,
   });
 
   const apolloClient = useApolloClient();
@@ -39,7 +40,7 @@ const PostCreatorInfo: React.FC<PostCreatorInfoProps> = ({
   //   variables: { userId: creator.id },
   // });
   return (
-    <div className="fs-6 fw-lighter">
+    <div className="fs-6 fw-lighter mt-2">
       Posted by{" "}
       <span
         onMouseOver={async () => {
@@ -67,7 +68,9 @@ const PostCreatorInfo: React.FC<PostCreatorInfoProps> = ({
           <div ref={setTooltipRef} {...getTooltipProps({ className: "" })}>
             <div {...getArrowProps({ className: "tooltip-arrow" })} />
             <div>
-              <ProfileCard user={userCard?.data} userCard={true} />
+              {userCard?.data ? (
+                <ProfileCard user={userCard?.data} userCard={true} />
+              ) : null}
             </div>
           </div>
         )}

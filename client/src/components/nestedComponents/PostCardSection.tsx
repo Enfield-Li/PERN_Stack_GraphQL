@@ -1,8 +1,6 @@
 import NextLink from "next/link";
 import React from "react";
-import {
-  PostsSnippetFragment
-} from "../../generated/graphql";
+import { PostsSnippetFragment } from "../../generated/graphql";
 import InteractionDisplay from "./InteractionDisplay";
 
 interface PostCardSectionProps {
@@ -11,7 +9,7 @@ interface PostCardSectionProps {
 
 const PostCardSection: React.FC<PostCardSectionProps> = ({ post }) => {
   return (
-    <div>
+    <div className="mt-2">
       {/* title */}
       <NextLink href={"/post/[id]"} as={`/post/${post.id}`}>
         <div

@@ -75,7 +75,7 @@ export class PostResolver {
 
   @Query(() => PaginatedPosts)
   async posts(
-    @Arg("limit", () => Int, { defaultValue: 10, nullable: true })
+    @Arg("limit", () => Int, { defaultValue: 10 })
     limit: number,
     @Arg("cursor", () => String, { nullable: true }) cursor: string | null
   ): Promise<PaginatedPosts> {
