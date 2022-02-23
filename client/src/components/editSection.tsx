@@ -143,6 +143,7 @@ const EditSection: React.FC<EditSectionProps> = ({ post }) => {
 
                 update: (cache) => {
                   cache.evict({ id: "Post:" + post.id });
+                  cache.gc();
                 },
               });
 

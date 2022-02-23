@@ -42,6 +42,7 @@ const Login: React.FC<loginProps> = ({}) => {
             });
 
             cache.evict({ fieldName: "posts" });
+            cache.gc();
           },
           // refetchQueries: [{ query: PostsDocument }],
         });

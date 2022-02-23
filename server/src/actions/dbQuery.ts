@@ -14,7 +14,7 @@ export const fieldInteactionWithDB = async (
   interactions: PostActivities | undefined, // userVotes
   interactionsField: boolean | undefined, // userVotes.vote
   fieldName: FieldType, // vote
-  fieldBooleanValue: boolean, // vote
+  fieldBooleanValue: boolean, // voteValue
   fieldPoints: FieldPointType, // votePoints
   userId: number,
   postId: number

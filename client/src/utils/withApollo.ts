@@ -15,25 +15,25 @@ const createClient = (ctx?: NextPageContext) =>
           : undefined) || "",
     },
     cache: new InMemoryCache({
-      // typePolicies: {
-      //   Query: {
-      //     fields: {
-      //       posts: {
-      //         keyArgs: ["limit"],
-      //         merge(
-      //           existing: PaginatedPosts | undefined,
-      //           incoming: PaginatedPosts
-      //         ): PaginatedPosts {
-      //           console.log(existing, incoming);
-      //           return {
-      //             ...incoming,
-      //             posts: [...(existing?.posts || []), ...incoming.posts],
-      //           };
-      //         },
-      //       },
-      //     },
-      //   },
-      // },
+      typePolicies: {
+        Query: {
+          fields: {
+            posts: {
+              keyArgs: ["limit"],
+              merge(
+                existing: PaginatedPosts | undefined,
+                incoming: PaginatedPosts
+              ): PaginatedPosts {
+                // console.log(existing, incoming);
+                return {
+                  ...incoming,
+                  posts: [...(existing?.posts || []), ...incoming.posts],
+                };
+              },
+            },
+          },
+        },
+      },
     }),
     credentials: "include",
   });

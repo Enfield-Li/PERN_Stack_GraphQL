@@ -28,22 +28,22 @@ const FetchMore: React.FC<FetchMoreProps> = ({
                   .createdAt,
             },
 
-            updateQuery: (
-              previousValue: { posts: { posts: any } },
-              { fetchMoreResult }: any
-            ) => {
-              if (!fetchMoreResult) return previousValue;
+            // updateQuery: (
+            //   previousValue: { posts: { posts: any } },
+            //   { fetchMoreResult }: any
+            // ) => {
+            //   if (!fetchMoreResult) return previousValue;
 
-              return {
-                posts: {
-                  hasMore: fetchMoreResult.posts.hasMore,
-                  posts: [
-                    ...previousValue.posts.posts,
-                    ...fetchMoreResult.posts.posts,
-                  ],
-                },
-              };
-            },
+            //   return {
+            //     posts: {
+            //       hasMore: fetchMoreResult.posts.hasMore,
+            //       posts: [
+            //         ...previousValue.posts.posts,
+            //         ...fetchMoreResult.posts.posts,
+            //       ],
+            //     },
+            //   };
+            // },
           });
         }}
       >

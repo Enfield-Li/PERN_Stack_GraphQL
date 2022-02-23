@@ -122,11 +122,11 @@ const Navbar: React.FC<NavbarProps> = ({}) => {
               onClick={async () => {
                 const res = await apolloClient.refetchQueries({
                   include: [PostsDocument],
-                  // updateCache(cache) {
-                  //   cache.evict({ fieldName: "posts" });
-                  // },
+                  updateCache(cache) {
+                    cache.evict({ fieldName: "posts" });
+                    cache.gc();
+                  },
                 });
-                console.log(res);
               }}
             >
               Awasome Forum

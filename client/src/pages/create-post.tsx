@@ -29,39 +29,41 @@ const CreatePost: React.FC<CreatePostProps> = ({}) => {
           const res = await createPost({
             variables: values,
             update: (cache, { data: createdPosts }) => {
-              if (!createdPosts) return;
+              cache.evict({ fieldName: "posts" });
+              cache.gc();
+              // if (!createdPosts) return;
 
-              // cache.updateQuery<PostsQuery>(
-              //   {
-              //     query: PostsDocument,
-              //     variables: { limit: 15, cursor: null },
-              //   },
-              //   (cachedPosts) => {
-              //     if (!cachedPosts) return;
-              //     cachedPosts.posts.posts = [
-              //       createdPosts?.createPost,
-              //       ...cachedPosts.posts.posts,
-              //     ];
-              //   }
-              // );
+              // // cache.updateQuery<PostsQuery>(
+              // //   {
+              // //     query: PostsDocument,
+              // //     variables: { limit: 15, cursor: null },
+              // //   },
+              // //   (cachedPosts) => {
+              // //     if (!cachedPosts) return;
+              // //     cachedPosts.posts.posts = [
+              // //       createdPosts?.createPost,
+              // //       ...cachedPosts.posts.posts,
+              // //     ];
+              // //   }
+              // // );
 
-              const cachedPost = cache.readQuery<PostsQuery>({
-                query: PostsDocument,
-                variables: { limit: 15, cursor: null },
-              });
-
-              if (!cachedPost) return;
-
-              // cache.writeQuery<PostsQuery>({
+              // const cachedPost = cache.readQuery<PostsQuery>({
               //   query: PostsDocument,
-              //   data: {
-              //     posts: {
-              //       hasMore: cachedPost.posts.hasMore,
-              //       posts: [createdPosts.createPost, ...cachedPost.posts.posts],
-              //     },
-              //   },
               //   variables: { limit: 15, cursor: null },
               // });
+
+              // if (!cachedPost) return;
+
+              // // cache.writeQuery<PostsQuery>({
+              // //   query: PostsDocument,
+              // //   data: {
+              // //     posts: {
+              // //       hasMore: cachedPost.posts.hasMore,
+              // //       posts: [createdPosts.createPost, ...cachedPost.posts.posts],
+              // //     },
+              // //   },
+              // //   variables: { limit: 15, cursor: null },
+              // // });
             },
           });
 

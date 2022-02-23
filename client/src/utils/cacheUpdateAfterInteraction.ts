@@ -25,7 +25,7 @@ export const cacheUpdateAfterInteraction = (
   let newData: PostActivitiesStatusAndPointsFragment;
 
   newData = {
-    id: cachedData.id,
+    id: id,
     postPoints: {
       ...cachedData.postPoints,
     },
@@ -44,7 +44,9 @@ export const cacheUpdateAfterInteraction = (
       newPoints =
         cachedData.postPoints.votePoints +
         // check if user voted before
-        (cachedData.postActivitiesStatus?.voteStatus === null ? 1 : 2) *
+        (cachedData.postActivitiesStatus?.voteStatus === null || undefined
+          ? 1
+          : 2) *
           incOrDec;
     }
     // user cancel vote
