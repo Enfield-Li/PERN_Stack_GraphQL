@@ -1,0 +1,18 @@
+{
+  "id": 421,
+  "postPoints": {
+    "__typename": "PostPointsType",
+    "votePoints": -1,
+    "likePoints": 0,
+    "laughPoints": 0,
+    "confusedPoints": 0
+  },
+  "postActivitiesStatus": {
+    "__typename": "PostActivitiesStatusType",
+    "voteStatus": false,
+    "likeStatus": null,
+    "laughStatus": null,
+    "confusedStatus": null
+  },
+  "__typename": "Post"
+}

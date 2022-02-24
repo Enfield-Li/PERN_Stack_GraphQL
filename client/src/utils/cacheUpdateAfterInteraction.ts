@@ -18,6 +18,7 @@ export const cacheUpdateAfterInteraction = (
     fragmentName: "PostActivitiesStatusAndPoints",
     id: `Post:${id}`,
   });
+  // console.log("cachedData: ", cachedData);
 
   if (!cachedData || !cachedData.postPoints) return;
   let newPoints!: number;
@@ -27,12 +28,27 @@ export const cacheUpdateAfterInteraction = (
   newData = {
     id: id,
     postPoints: {
+      __typename: "PostPointsType",
       ...cachedData.postPoints,
     },
     postActivitiesStatus: {
-      ...cachedData.postActivitiesStatus,
+      __typename: "PostActivitiesStatusType",
+      confusedStatus: cachedData.postActivitiesStatus?.confusedStatus
+        ? cachedData.postActivitiesStatus?.confusedStatus
+        : null,
+      likeStatus: cachedData.postActivitiesStatus?.likeStatus
+        ? cachedData.postActivitiesStatus?.likeStatus
+        : null,
+      laughStatus: cachedData.postActivitiesStatus?.laughStatus
+        ? cachedData.postActivitiesStatus?.laughStatus
+        : null,
+      voteStatus: cachedData.postActivitiesStatus?.voteStatus
+        ? cachedData.postActivitiesStatus?.voteStatus
+        : null,
     },
+    __typename: "Post",
   };
+  // console.log("newData: ", newData);
 
   // votes
   // new vote and switch to opposite vote
@@ -48,6 +64,10 @@ export const cacheUpdateAfterInteraction = (
           ? 1
           : 2) *
           incOrDec;
+
+      if (!cachedData.postActivitiesStatus) {
+        newPoints = cachedData.postPoints.votePoints + incOrDec;
+      }
     }
     // user cancel vote
     else if (cachedData.postActivitiesStatus?.voteStatus === upOrDownValue) {
@@ -95,4 +115,5 @@ export const cacheUpdateAfterInteraction = (
     id: `Post:${id}`,
     data: newData,
   });
+  console.log(res);
 };

@@ -1,0 +1,12 @@
+{
+  "__typename": "Post",
+  "id": 421,
+  "postPoints": {
+    "__typename": "PostPointsType",
+    "votePoints": 0,
+    "likePoints": 0,
+    "laughPoints": 0,
+    "confusedPoints": 0
+  },
+  "postActivitiesStatus": null
+}
