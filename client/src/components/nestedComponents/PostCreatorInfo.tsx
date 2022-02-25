@@ -15,6 +15,7 @@ const PostCreatorInfo: React.FC<PostCreatorInfoProps> = ({
   creator,
   createdAt,
 }) => {
+  const [decoration, setDecoration] = useState(false);
   const {
     getArrowProps,
     getTooltipProps,
@@ -23,7 +24,7 @@ const PostCreatorInfo: React.FC<PostCreatorInfoProps> = ({
     visible,
   } = usePopperTooltip({
     trigger: "hover",
-    delayHide: 200,
+    delayHide: 100,
     interactive: true,
     placement: "right",
     // delayShow: 50,
@@ -44,12 +45,14 @@ const PostCreatorInfo: React.FC<PostCreatorInfoProps> = ({
       Posted by{" "}
       <span
         onMouseOver={async () => {
+          setDecoration(true);
           let data = await apolloClient.query({
             query: UserCardDocument,
             variables: { userId: creator.id },
           });
           setUserCard(data);
         }}
+        onMouseLeave={() => setDecoration(false)}
       >
         <span role="button" ref={setTriggerRef}>
           <NextLink
@@ -58,7 +61,11 @@ const PostCreatorInfo: React.FC<PostCreatorInfoProps> = ({
           >
             <span
               role="button"
-              className="fw-light text-decoration-none text-dark"
+              className={`fw-light text-dark ${
+                decoration
+                  ? "text-decoration-underline"
+                  : "text-decoration-none"
+              }`}
             >
               {creator.username}
             </span>
