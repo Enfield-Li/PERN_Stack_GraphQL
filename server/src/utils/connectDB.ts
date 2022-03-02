@@ -8,10 +8,10 @@ const connectDB = () =>
   createConnection({
     type: "postgres",
     username: "postgres",
-    database: "full_stack",
+    database: "graphql",
     logging: true,
     synchronize: true,
-    migrations: [path.join(__dirname, "./migrations/*")],
+    migrations: [path.join(__dirname, "../migrations/*")],
     entities: [Post, User, PostActivities],
     password: "0492355",
   });

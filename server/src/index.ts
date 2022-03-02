@@ -12,7 +12,7 @@ import { createUserLoader } from "./utils/createUserLoader";
 
 const main = async () => {
   const conn = await connectDB();
-  await conn.runMigrations();
+  // await conn.runMigrations();
   // await Post.delete({});
 
   const app = express();
