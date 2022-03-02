@@ -18,7 +18,7 @@ export const sessionConfig = session({
   cookie: {
     httpOnly: true,
     secure: false,
-    sameSite: "none",
+    sameSite: "strict",
     maxAge: 1000 * 60 * 60 * 24, // 1 day
   },
 });

@@ -20,7 +20,7 @@ set up server:
             "dev": "concurrently \"npm run watch-server\" \"npm run server\" \"npm run client\""
         },
     5. 
-        "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js"
+        script: "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js"
     6. 
         npx typeorm migration:create -n new
 
