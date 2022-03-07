@@ -1,20 +1,22 @@
-A reddit-mimic project built by nextjs, graphql, apollo server & client with SSR
+ 仿Reddit的一个全栈 web app
+    
+    (reddit 官网: https://www.reddit.com/) 
 
-How to start:
-( Follow steps )
+作品描述：
 
-1.  npm i
+    仿Reddit论坛PC端功能，搭建的一个论坛式网站
 
-2.  cd server
-    npm i
+    前端框架：Nextjs (ssr) / Apollo Client + Context api (state 管理) / Boostrap 5 (css);
+    APi： GraphQL
+    服务器：Express.JS / Express session (auth) / Apollo Server
+    数据库：PostgreSQL / TypeORM
 
-3.  cd ../client
-    npmi
+如何使用？
 
-4.  connect to a database running on your meachine
-    change settings in file: server/src/utils/connectDB.ts
-
-5.  cd ..
-    npm run dev
-
-6.  open http://localhost:3998/ and enjoy!
+    1. npm i
+    2. 分别进入server 和 client:
+        npm i
+    3. 更改连接数据库文件： /utils/connectdb.ts （我用的PostgreSQL，另外后台还要运行redis-server)
+    4. cd.. 回到主文件夹
+    5. npm run dev
+    6. enjoy :)
