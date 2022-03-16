@@ -6,10 +6,13 @@
 
     仿Reddit论坛PC端功能，搭建的一个论坛式网站
 
-    前端框架：Nextjs (ssr) / Apollo Client + Context api (state 管理) / Boostrap 5 (css);
-    APi： GraphQL
-    服务器：Express.JS / Express session (auth) / Apollo Server
-    数据库：PostgreSQL / TypeORM
+Stack: 
+
+    语言：typescript;
+    前端框架：Nextjs (ssr) / Apollo Client + React Context api (state 管理) / Boostrap 5 (css)；
+    APi： GraphQL；
+    服务器：Express.JS / Apollo Server / Express session + Redis-server (auth) ；
+    数据库：PostgreSQL / TypeORM。
     
 现有功能：
 
