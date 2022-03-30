@@ -5,6 +5,7 @@
 作品描述：
 
     仿Reddit论坛PC端功能，搭建的一个论坛式网站
+    (这个作品是照着油管教程完成的，另一个REST api是将这个作品的实现逻辑，搬运过去，用不同的框架实现： https://github.com/Enfield-Li/PERN_Stack_REST_api）
 
 Stack: 
 
